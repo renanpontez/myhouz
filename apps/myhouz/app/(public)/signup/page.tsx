@@ -1,18 +1,41 @@
-export default function SignupPage() {
+import Link from "next/link";
+import { Suspense } from "react";
+import { AuthCard } from "@/components/auth/AuthCard";
+import { SignupForm } from "@/components/auth/SignupForm";
+import { InviteNotice } from "@/components/auth/InviteNotice";
+
+interface SignupPageProps {
+  searchParams: Promise<{ invite?: string }>;
+}
+
+export default async function SignupPage({ searchParams }: SignupPageProps) {
+  const { invite } = await searchParams;
+
+  const loginHref = invite ? `/login?invite=${invite}` : "/login";
+
   return (
-    <div className="flex min-h-screen items-center justify-center">
-      <div className="w-full max-w-md space-y-6 p-4">
-        <div className="text-center">
-          <h1 className="text-2xl font-bold">Create your account</h1>
-          <p className="mt-1 text-sm text-muted-foreground">
-            Join MyHouz to manage your household
-          </p>
-        </div>
-        {/* SignupForm + SocialLoginButtons will go here */}
-        <div className="rounded-lg border p-8 text-center text-sm text-muted-foreground">
-          Signup form placeholder
-        </div>
+    <AuthCard
+      title="Crie sua conta"
+      subtitle="Gerencie sua casa com o MyHouz"
+      footer={
+        <p className="text-sm text-muted-foreground">
+          Ja tem conta?{" "}
+          <Link href={loginHref} className="font-medium text-primary hover:underline">
+            Entrar
+          </Link>
+        </p>
+      }
+    >
+      <div className="space-y-4">
+        {invite && (
+          <Suspense>
+            <InviteNotice inviteCode={invite} />
+          </Suspense>
+        )}
+        <Suspense>
+          <SignupForm />
+        </Suspense>
       </div>
-    </div>
+    </AuthCard>
   );
 }

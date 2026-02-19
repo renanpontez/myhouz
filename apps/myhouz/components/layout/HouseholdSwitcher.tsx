@@ -1,6 +1,6 @@
 "use client";
 
-import { useHousehold } from "@home/auth";
+import { useHousehold } from "@home/auth/hooks";
 
 export function HouseholdSwitcher() {
   const { household } = useHousehold();

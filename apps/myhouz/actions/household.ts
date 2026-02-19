@@ -1,13 +1,65 @@
 "use server";
 
-// TODO: Implement household CRUD server actions
-// - createHousehold
-// - updateHousehold
-// - deleteHousehold
-// - transferOwnership
+import { cookies } from "next/headers";
+import { redirect } from "next/navigation";
+import { revalidatePath } from "next/cache";
+import { createServerClient } from "@home/db";
+import { createHouseholdSchema } from "@home/types";
 
-export async function createHousehold(_formData: FormData) {
-  throw new Error("Not implemented");
+export async function createHousehold(
+  _prevState: { error?: string } | undefined,
+  formData: FormData,
+) {
+  const parsed = createHouseholdSchema.safeParse({
+    name: formData.get("name"),
+  });
+
+  if (!parsed.success) {
+    return { error: parsed.error.flatten().fieldErrors.name?.[0] ?? "Dados invalidos" };
+  }
+
+  const supabase = createServerClient();
+
+  const { data: { session } } = await supabase.auth.getSession();
+  const { data: { user: authUser } } = await supabase.auth.getUser();
+
+  if (!authUser || !session) {
+    redirect("/login");
+  }
+
+  // Insert without .select() — the SELECT RLS policy requires membership,
+  // which only exists after the trigger fires
+  const { error: insertError } = await supabase
+    .from("household")
+    .insert({ name: parsed.data.name, owner_id: authUser.id });
+
+  if (insertError) {
+    return { error: "Erro ao criar a casa. Tente novamente." };
+  }
+
+  // Now the trigger has added us as a member — query the household
+  const { data: household, error: selectError } = await supabase
+    .from("household")
+    .select("id")
+    .eq("owner_id", authUser.id)
+    .order("created_at", { ascending: false })
+    .limit(1)
+    .single();
+
+  if (selectError || !household) {
+    return { error: "Erro ao criar a casa. Tente novamente." };
+  }
+
+  const cookieStore = await cookies();
+  cookieStore.set("activeHouseholdId", household.id, {
+    httpOnly: true,
+    path: "/",
+    maxAge: 60 * 60 * 24 * 365,
+    sameSite: "lax",
+  });
+
+  revalidatePath("/");
+  redirect("/dashboard");
 }
 
 export async function updateHousehold(

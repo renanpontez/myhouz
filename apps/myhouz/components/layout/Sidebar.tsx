@@ -1,4 +1,5 @@
-import Link from "next/link";
+"use client";
+
 import {
   LayoutDashboard,
   ShoppingCart,
@@ -8,29 +9,28 @@ import {
   Users,
   Settings,
 } from "lucide-react";
+import { SidebarNavLink } from "./SidebarNavLink";
 
 const NAV_ITEMS = [
   { href: "/dashboard", label: "Dashboard", icon: LayoutDashboard },
-  { href: "/items", label: "Items", icon: ShoppingCart },
-  { href: "/routines", label: "Routines", icon: ListChecks },
-  { href: "/reminders", label: "Reminders", icon: Bell },
-  { href: "/urgent", label: "Urgent", icon: AlertTriangle },
-  { href: "/members", label: "Members", icon: Users },
-  { href: "/settings", label: "Settings", icon: Settings },
+  { href: "/items", label: "Itens", icon: ShoppingCart },
+  { href: "/routines", label: "Rotinas", icon: ListChecks },
+  { href: "/reminders", label: "Lembretes", icon: Bell },
+  { href: "/urgent", label: "Urgente", icon: AlertTriangle },
+  { href: "/members", label: "Membros", icon: Users },
+  { href: "/settings", label: "Config", icon: Settings },
 ];
 
 export function Sidebar() {
   return (
     <nav className="flex flex-col gap-1 p-2">
       {NAV_ITEMS.map((item) => (
-        <Link
+        <SidebarNavLink
           key={item.href}
           href={item.href}
-          className="flex items-center gap-3 rounded-md px-3 py-2 text-sm font-medium hover:bg-accent"
-        >
-          <item.icon className="h-4 w-4" />
-          {item.label}
-        </Link>
+          label={item.label}
+          icon={item.icon}
+        />
       ))}
     </nav>
   );

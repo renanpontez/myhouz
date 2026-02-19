@@ -49,3 +49,10 @@ export {
   updateProfileSchema,
   type UpdateProfileInput,
 } from "./profile";
+
+export {
+  loginSchema,
+  signupSchema,
+  type LoginInput,
+  type SignupInput,
+} from "./auth";

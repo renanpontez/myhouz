@@ -52,6 +52,10 @@ export async function middleware(request: NextRequest) {
 
   // Redirect authenticated users away from login/signup
   if (user && (pathname === "/login" || pathname === "/signup")) {
+    const inviteCode = request.nextUrl.searchParams.get("invite");
+    if (inviteCode) {
+      return NextResponse.redirect(new URL(`/invite/${inviteCode}`, request.url));
+    }
     return NextResponse.redirect(new URL("/dashboard", request.url));
   }
 

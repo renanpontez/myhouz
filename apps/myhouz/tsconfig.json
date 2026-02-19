@@ -13,8 +13,14 @@
       "@home/auth": [
         "../../packages/auth/src"
       ],
+      "@home/auth/*": [
+        "../../packages/auth/src/*"
+      ],
       "@home/db": [
         "../../packages/db/src"
+      ],
+      "@home/db/*": [
+        "../../packages/db/src/*"
       ],
       "@home/types": [
         "../../packages/types/src"

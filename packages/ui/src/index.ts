@@ -14,6 +14,7 @@ export {
 } from "./components/card";
 export { Badge, badgeVariants, type BadgeProps } from "./components/badge";
 export { Skeleton } from "./components/skeleton";
+export { Label } from "./components/label";
 
 // Hooks
 export { useMediaQuery } from "./hooks/use-media-query";

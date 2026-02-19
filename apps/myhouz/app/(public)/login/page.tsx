@@ -1,18 +1,46 @@
-export default function LoginPage() {
+import Link from "next/link";
+import { Suspense } from "react";
+import { AuthCard } from "@/components/auth/AuthCard";
+import { LoginForm } from "@/components/auth/LoginForm";
+import { InviteNotice } from "@/components/auth/InviteNotice";
+
+interface LoginPageProps {
+  searchParams: Promise<{ invite?: string; redirect?: string; error?: string }>;
+}
+
+export default async function LoginPage({ searchParams }: LoginPageProps) {
+  const { invite, error } = await searchParams;
+
+  const signupHref = invite ? `/signup?invite=${invite}` : "/signup";
+
   return (
-    <div className="flex min-h-screen items-center justify-center">
-      <div className="w-full max-w-md space-y-6 p-4">
-        <div className="text-center">
-          <h1 className="text-2xl font-bold">Welcome back</h1>
-          <p className="mt-1 text-sm text-muted-foreground">
-            Sign in to MyHouz
+    <AuthCard
+      title="Bem-vindo de volta"
+      subtitle="Entre na sua conta MyHouz"
+      footer={
+        <p className="text-sm text-muted-foreground">
+          Nao tem conta?{" "}
+          <Link href={signupHref} className="font-medium text-primary hover:underline">
+            Criar conta
+          </Link>
+        </p>
+      }
+    >
+      <div className="space-y-4">
+        {invite && (
+          <Suspense>
+            <InviteNotice inviteCode={invite} />
+          </Suspense>
+        )}
+        {error === "auth_callback_error" && (
+          <p className="text-sm text-center text-destructive">
+            Erro na autenticacao. Tente novamente.
           </p>
-        </div>
-        {/* LoginForm + SocialLoginButtons will go here */}
-        <div className="rounded-lg border p-8 text-center text-sm text-muted-foreground">
-          Login form placeholder
-        </div>
+        )}
+        <Suspense>
+          <LoginForm />
+        </Suspense>
       </div>
-    </div>
+    </AuthCard>
   );
 }
