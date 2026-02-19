@@ -87,7 +87,7 @@ export async function getUserWithRole(
     .single();
 
   if (!membership) {
-    redirect("/onboarding");
+    redirect("/app/onboarding");
   }
 
   return {

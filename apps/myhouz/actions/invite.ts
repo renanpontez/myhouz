@@ -48,5 +48,5 @@ export async function acceptInvite(code: string): Promise<{ error?: string }> {
   });
 
   revalidatePath("/");
-  redirect("/dashboard");
+  redirect("/app/dashboard");
 }

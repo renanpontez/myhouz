@@ -7,15 +7,15 @@ import { OrDivider } from "@/components/auth/OrDivider";
 export default function OnboardingPage() {
   return (
     <div className="space-y-6">
-      <div className="text-center">
-        <h1 className="text-2xl font-bold">Bem-vindo ao MyHouz</h1>
-        <p className="mt-1 text-sm text-muted-foreground">
+      <div className="flex flex-col items-center gap-3 text-center">
+        <img src="/myhouz-logo.svg" alt="MyHouz" className="h-10 w-auto" />
+        <p className="text-sm text-muted-foreground">
           Crie uma nova casa ou entre em uma existente
         </p>
       </div>
 
       <div className="space-y-3">
-        <Link href="/onboarding/create">
+        <Link href="/app/onboarding/create">
           <Card className="cursor-pointer transition-colors hover:bg-accent">
             <CardContent className="flex items-center gap-4 p-4">
               <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-full bg-primary/10">

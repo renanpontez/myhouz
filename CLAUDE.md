@@ -162,8 +162,9 @@ Guest is post-MVP. For MVP, only `owner` and `member` matter.
 
 ```
 RootLayout (app/layout.tsx)
-  AuthLayout (app/(auth-required)/layout.tsx)        -- session check, UserProvider
-    HouseholdLayout (app/(auth-required)/(household)/layout.tsx)  -- sidebar, HouseholdProvider
+  LandingPage (app/page.tsx)                                       -- public, /
+  AuthLayout (app/app/(auth-required)/layout.tsx)                  -- session check, UserProvider
+    HouseholdLayout (app/app/(auth-required)/(household)/layout.tsx) -- sidebar, HouseholdProvider
       Page
 ```
 
@@ -171,29 +172,30 @@ RootLayout (app/layout.tsx)
 
 | Route | Page | Component Type |
 |---|---|---|
+| `/` | Landing page | Public, Server |
 | `/login` | Login | Public, Server |
 | `/signup` | Signup | Public, Server |
 | `/invite/[code]` | Accept invite | Public, Server |
-| `/onboarding` | Join/create household | Auth required, Server |
-| `/onboarding/create` | Create household form | Auth required, Client |
-| `/dashboard` | Home dashboard | Household, Server |
-| `/items` | Items to Buy list | Household, Server |
-| `/items/new` | Create item | Household, Client |
-| `/items/[itemId]` | Item detail/edit | Household, Server shell + Client form |
-| `/routines` | Routine Checklists list | Household, Server |
-| `/routines/new` | Create checklist | Household, Client |
-| `/routines/[checklistId]` | Checklist detail | Household, Server + Client items |
-| `/routines/[checklistId]/edit` | Edit checklist | Household, Client |
-| `/reminders` | Reminders list | Household, Server |
-| `/reminders/new` | Create reminder | Household, Client |
-| `/reminders/[reminderId]` | Reminder detail/edit | Household, Server + Client |
-| `/urgent` | Urgent Problems list | Household, Server |
-| `/urgent/new` | Report problem | Household, Client |
-| `/urgent/[problemId]` | Problem detail + resolve | Household, Server + Client |
-| `/members` | Household Members list | Household, Server |
-| `/members/invite` | Invite member (Owner) | Household, Client |
-| `/settings` | User settings | Auth required, Server + Client |
-| `/settings/household` | Household settings (Owner) | Household, Server + Client |
+| `/app/onboarding` | Join/create household | Auth required, Server |
+| `/app/onboarding/create` | Create household form | Auth required, Client |
+| `/app/dashboard` | Home dashboard | Household, Server |
+| `/app/items` | Items to Buy list | Household, Server |
+| `/app/items/new` | Create item | Household, Client |
+| `/app/items/[itemId]` | Item detail/edit | Household, Server shell + Client form |
+| `/app/routines` | Routine Checklists list | Household, Server |
+| `/app/routines/new` | Create checklist | Household, Client |
+| `/app/routines/[checklistId]` | Checklist detail | Household, Server + Client items |
+| `/app/routines/[checklistId]/edit` | Edit checklist | Household, Client |
+| `/app/reminders` | Reminders list | Household, Server |
+| `/app/reminders/new` | Create reminder | Household, Client |
+| `/app/reminders/[reminderId]` | Reminder detail/edit | Household, Server + Client |
+| `/app/urgent` | Urgent Problems list | Household, Server |
+| `/app/urgent/new` | Report problem | Household, Client |
+| `/app/urgent/[problemId]` | Problem detail + resolve | Household, Server + Client |
+| `/app/members` | Household Members list | Household, Server |
+| `/app/members/invite` | Invite member (Owner) | Household, Client |
+| `/app/settings` | User settings | Auth required, Server + Client |
+| `/app/settings/household` | Household settings (Owner) | Household, Server + Client |
 
 ### API Routes
 
@@ -371,10 +373,10 @@ export async function createItem(householdId: string, formData: FormData) {
 
   // 4. Revalidate -- bust relevant caches
   revalidateTag("items");
-  revalidatePath("/dashboard");
+  revalidatePath("/app/dashboard");
 
   // 5. Redirect (or return result)
-  redirect("/items");
+  redirect("/app/items");
 }
 ```
 
@@ -540,6 +542,13 @@ home-platform/
   apps/
     myhouz/                   # Next.js app
       app/                    # App Router pages
+        page.tsx              # Landing page (/)
+        (public)/             # /login, /signup, /invite/[code]
+        app/                  # /app/... (authenticated)
+          (auth-required)/    # AuthLayout + HouseholdLayout
+            (household)/      # dashboard, items, routines, etc.
+          onboarding/         # /app/onboarding
+        api/                  # API routes (unchanged)
       actions/                # Server Actions (grouped by module)
       components/             # App-specific components (by feature)
       lib/                    # Utilities (utils.ts, constants.ts, api-middleware.ts)
@@ -582,7 +591,8 @@ In `apps/myhouz/`, use `@/*` to reference files from the app root (maps to `./sr
 - No `any` types -- use `unknown` with type guards if truly unknown
 - Dark mode: use Tailwind `dark:` variant, `class` strategy via next-themes
 - Font: Inter via `next/font/google`
-- `/ -> /dashboard` redirect is configured in `next.config.ts`
+- `/` serves the landing page; authenticated app lives under `/app/...`
+- Backwards-compat redirects (`/dashboard` -> `/app/dashboard`, etc.) are configured in `next.config.ts`
 
 ## Common Pitfalls
 
@@ -590,7 +600,7 @@ In `apps/myhouz/`, use `@/*` to reference files from the app root (maps to `./sr
 
 2. **Using `getSession()` instead of `getUser()` for auth checks.** `getSession()` reads from the cookie and can be stale. `getUser()` verifies with Supabase Auth and is authoritative. Use `getUser()` for Server Components and Server Actions. The middleware uses `getUser()` for session refresh.
 
-3. **Forgetting to revalidate after mutations.** Every Server Action that writes data must call `revalidateTag()` or `revalidatePath()`. Also revalidate `/dashboard` since it shows summary data from all modules.
+3. **Forgetting to revalidate after mutations.** Every Server Action that writes data must call `revalidateTag()` or `revalidatePath()`. Also revalidate `/app/dashboard` since it shows summary data from all modules.
 
 4. **`resolved_at` on items is set by a DB trigger.** Do not manually set `resolved_at` when changing status to `done` -- the `handle_item_status_change` trigger handles it. Just set `status`.
 

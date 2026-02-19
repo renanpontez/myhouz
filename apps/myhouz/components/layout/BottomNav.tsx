@@ -12,11 +12,11 @@ import {
 } from "lucide-react";
 
 const NAV_ITEMS = [
-  { href: "/dashboard", label: "Inicio", icon: LayoutDashboard },
-  { href: "/items", label: "Itens", icon: ShoppingCart },
-  { href: "/routines", label: "Rotinas", icon: ListChecks },
-  { href: "/reminders", label: "Lembretes", icon: Bell },
-  { href: "/urgent", label: "Urgente", icon: AlertTriangle },
+  { href: "/app/dashboard", label: "Inicio", icon: LayoutDashboard },
+  { href: "/app/items", label: "Itens", icon: ShoppingCart },
+  { href: "/app/routines", label: "Rotinas", icon: ListChecks },
+  { href: "/app/reminders", label: "Lembretes", icon: Bell },
+  { href: "/app/urgent", label: "Urgente", icon: AlertTriangle },
 ];
 
 export function BottomNav() {

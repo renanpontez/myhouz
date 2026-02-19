@@ -59,7 +59,7 @@ export async function createHousehold(
   });
 
   revalidatePath("/");
-  redirect("/dashboard");
+  redirect("/app/dashboard");
 }
 
 export async function updateHousehold(

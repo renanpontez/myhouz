@@ -2,10 +2,11 @@ import { type NextRequest, NextResponse } from "next/server";
 import { createServerClient } from "@supabase/ssr";
 import type { CookieOptions } from "@supabase/ssr";
 
-const PUBLIC_ROUTES = ["/login", "/signup", "/invite", "/auth/callback"];
+const PUBLIC_ROUTE_PREFIXES = ["/login", "/signup", "/invite", "/auth/callback"];
 
 function isPublicRoute(pathname: string): boolean {
-  return PUBLIC_ROUTES.some((route) => pathname.startsWith(route));
+  if (pathname === "/") return true;
+  return PUBLIC_ROUTE_PREFIXES.some((route) => pathname.startsWith(route));
 }
 
 export async function middleware(request: NextRequest) {
@@ -56,7 +57,7 @@ export async function middleware(request: NextRequest) {
     if (inviteCode) {
       return NextResponse.redirect(new URL(`/invite/${inviteCode}`, request.url));
     }
-    return NextResponse.redirect(new URL("/dashboard", request.url));
+    return NextResponse.redirect(new URL("/app/dashboard", request.url));
   }
 
   return response;

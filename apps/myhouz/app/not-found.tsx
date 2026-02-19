@@ -6,7 +6,7 @@ export default function NotFound() {
       <h1 className="text-4xl font-bold">404</h1>
       <p className="mt-2 text-muted-foreground">Page not found</p>
       <Link
-        href="/dashboard"
+        href="/app/dashboard"
         className="mt-4 text-sm text-primary underline-offset-4 hover:underline"
       >
         Go to Dashboard

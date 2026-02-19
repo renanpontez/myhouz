@@ -57,7 +57,7 @@ export function LoginForm() {
       } else if (redirectTo) {
         router.push(redirectTo);
       } else {
-        router.push("/dashboard");
+        router.push("/app/dashboard");
       }
       router.refresh();
     });

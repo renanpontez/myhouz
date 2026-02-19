@@ -57,7 +57,7 @@ export function SignupForm() {
       if (inviteCode) {
         router.push(`/invite/${inviteCode}`);
       } else {
-        router.push("/onboarding");
+        router.push("/app/onboarding");
       }
       router.refresh();
     });

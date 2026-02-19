@@ -10,32 +10,32 @@ import {
 
 const SECTIONS = [
   {
-    href: "/items",
+    href: "/app/items",
     label: "Itens",
     description: "Comprar, consertar e reparar",
     icon: ShoppingCart,
   },
   {
-    href: "/routines",
+    href: "/app/routines",
     label: "Rotinas",
     description: "Checklists recorrentes",
     icon: ListChecks,
   },
   {
-    href: "/reminders",
+    href: "/app/reminders",
     label: "Lembretes",
     description: "Tarefas e prazos",
     icon: Bell,
   },
   {
-    href: "/urgent",
+    href: "/app/urgent",
     label: "Urgente",
     description: "Problemas criticos",
     icon: AlertTriangle,
     variant: "destructive" as const,
   },
   {
-    href: "/members",
+    href: "/app/members",
     label: "Membros",
     description: "Quem mora aqui",
     icon: Users,

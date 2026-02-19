@@ -34,11 +34,11 @@ export async function GET(request: Request) {
           .eq("user_id", user.id);
 
         if (!count || count === 0) {
-          return NextResponse.redirect(`${origin}/onboarding`);
+          return NextResponse.redirect(`${origin}/app/onboarding`);
         }
       }
 
-      return NextResponse.redirect(`${origin}/dashboard`);
+      return NextResponse.redirect(`${origin}/app/dashboard`);
     }
   }
 

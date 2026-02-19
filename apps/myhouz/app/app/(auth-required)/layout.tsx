@@ -17,7 +17,7 @@ export default async function AuthLayout({
     .eq("user_id", user.id);
 
   if (!count || count === 0) {
-    redirect("/onboarding");
+    redirect("/app/onboarding");
   }
 
   return <UserProvider user={user}>{children}</UserProvider>;

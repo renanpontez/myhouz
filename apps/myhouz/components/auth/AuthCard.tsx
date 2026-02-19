@@ -13,7 +13,7 @@ export function AuthCard({ title, subtitle, children, footer }: AuthCardProps) {
       <div className="w-full max-w-md p-4">
         <Card>
           <CardHeader className="text-center">
-            <h1 className="text-2xl font-bold tracking-tight">MyHouz</h1>
+            <img src="/myhouz-logo.svg" alt="MyHouz" className="mx-auto h-10 w-auto" />
             <h2 className="mt-2 text-xl font-semibold">{title}</h2>
             {subtitle && (
               <p className="mt-1 text-sm text-muted-foreground">{subtitle}</p>

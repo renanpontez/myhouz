@@ -12,13 +12,13 @@ import {
 import { SidebarNavLink } from "./SidebarNavLink";
 
 const NAV_ITEMS = [
-  { href: "/dashboard", label: "Dashboard", icon: LayoutDashboard },
-  { href: "/items", label: "Itens", icon: ShoppingCart },
-  { href: "/routines", label: "Rotinas", icon: ListChecks },
-  { href: "/reminders", label: "Lembretes", icon: Bell },
-  { href: "/urgent", label: "Urgente", icon: AlertTriangle },
-  { href: "/members", label: "Membros", icon: Users },
-  { href: "/settings", label: "Config", icon: Settings },
+  { href: "/app/dashboard", label: "Dashboard", icon: LayoutDashboard },
+  { href: "/app/items", label: "Itens", icon: ShoppingCart },
+  { href: "/app/routines", label: "Rotinas", icon: ListChecks },
+  { href: "/app/reminders", label: "Lembretes", icon: Bell },
+  { href: "/app/urgent", label: "Urgente", icon: AlertTriangle },
+  { href: "/app/members", label: "Membros", icon: Users },
+  { href: "/app/settings", label: "Config", icon: Settings },
 ];
 
 export function Sidebar() {

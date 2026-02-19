@@ -11,7 +11,7 @@ export default function CreateHouseholdPage() {
 
   return (
     <div className="space-y-6">
-      <BackLink href="/onboarding" label="Voltar" />
+      <BackLink href="/app/onboarding" label="Voltar" />
 
       <div className="text-center">
         <h1 className="text-2xl font-bold">Crie sua casa</h1>

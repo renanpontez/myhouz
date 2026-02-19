@@ -3,14 +3,20 @@ export const APP_NAME = "MyHouz";
 export const ROUTES = {
   login: "/login",
   signup: "/signup",
-  onboarding: "/onboarding",
-  dashboard: "/dashboard",
-  items: "/items",
-  routines: "/routines",
-  reminders: "/reminders",
-  urgent: "/urgent",
-  members: "/members",
-  settings: "/settings",
+  onboarding: "/app/onboarding",
+  onboardingCreate: "/app/onboarding/create",
+  dashboard: "/app/dashboard",
+  items: "/app/items",
+  itemsNew: "/app/items/new",
+  routines: "/app/routines",
+  routinesNew: "/app/routines/new",
+  reminders: "/app/reminders",
+  remindersNew: "/app/reminders/new",
+  urgent: "/app/urgent",
+  urgentNew: "/app/urgent/new",
+  members: "/app/members",
+  membersInvite: "/app/members/invite",
+  settings: "/app/settings",
 } as const;
 
 export const ITEM_TYPE_LABELS = {

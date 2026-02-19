@@ -16,7 +16,7 @@ export default async function HouseholdLayout({
   const householdId = cookieStore.get("activeHouseholdId")?.value;
 
   if (!householdId) {
-    redirect("/onboarding");
+    redirect("/app/onboarding");
   }
 
   const { membership, role } = await getUserWithRole(householdId);
@@ -42,7 +42,7 @@ export default async function HouseholdLayout({
     .single();
 
   if (!household) {
-    redirect("/onboarding");
+    redirect("/app/onboarding");
   }
 
   return (
@@ -54,7 +54,9 @@ export default async function HouseholdLayout({
     >
       <div className="flex min-h-screen">
         <aside className="hidden w-64 shrink-0 border-r bg-card lg:flex lg:flex-col">
-          <div className="p-4 text-lg font-semibold">MyHouz</div>
+          <div className="p-4">
+            <img src="/myhouz-logo.svg" alt="MyHouz" className="h-8 w-auto" />
+          </div>
           <Sidebar />
         </aside>
 
