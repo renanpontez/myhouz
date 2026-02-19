@@ -5,17 +5,22 @@ import { redirect } from "next/navigation";
 import { revalidatePath } from "next/cache";
 import { createServerClient } from "@home/db";
 import { createHouseholdSchema } from "@home/types";
+import { getTranslations } from "next-intl/server";
 
 export async function createHousehold(
   _prevState: { error?: string } | undefined,
   formData: FormData,
 ) {
-  const parsed = createHouseholdSchema.safeParse({
+  const t = await getTranslations("validation");
+  const tError = await getTranslations("error");
+
+  const schema = createHouseholdSchema(t);
+  const parsed = schema.safeParse({
     name: formData.get("name"),
   });
 
   if (!parsed.success) {
-    return { error: parsed.error.flatten().fieldErrors.name?.[0] ?? "Dados invalidos" };
+    return { error: parsed.error.flatten().fieldErrors.name?.[0] ?? t("householdNameRequired") };
   }
 
   const supabase = createServerClient();
@@ -34,7 +39,7 @@ export async function createHousehold(
     .insert({ name: parsed.data.name, owner_id: authUser.id });
 
   if (insertError) {
-    return { error: "Erro ao criar a casa. Tente novamente." };
+    return { error: tError("createHouseholdError") };
   }
 
   // Now the trigger has added us as a member — query the household
@@ -47,7 +52,7 @@ export async function createHousehold(
     .single();
 
   if (selectError || !household) {
-    return { error: "Erro ao criar a casa. Tente novamente." };
+    return { error: tError("createHouseholdError") };
   }
 
   const cookieStore = await cookies();

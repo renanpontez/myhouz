@@ -5,6 +5,7 @@ import { redirect } from "next/navigation";
 import { revalidatePath } from "next/cache";
 import { createServerClient } from "@home/db";
 import { getUser } from "@home/auth";
+import { getTranslations } from "next-intl/server";
 
 export async function generateInvite(
   _householdId: string,
@@ -21,6 +22,7 @@ export async function revokeInvite(
 }
 
 export async function acceptInvite(code: string): Promise<{ error?: string }> {
+  const tError = await getTranslations("error");
   const user = await getUser();
   const supabase = createServerClient();
 
@@ -29,14 +31,14 @@ export async function acceptInvite(code: string): Promise<{ error?: string }> {
   });
 
   if (error) {
-    return { error: "Erro ao aceitar o convite. Verifique se o codigo e valido." };
+    return { error: tError("acceptInviteError") };
   }
 
   const result = data as { household_id?: string } | null;
   const householdId = result?.household_id;
 
   if (!householdId) {
-    return { error: "Convite invalido ou expirado." };
+    return { error: tError("invalidOrExpiredInvite") };
   }
 
   const cookieStore = await cookies();

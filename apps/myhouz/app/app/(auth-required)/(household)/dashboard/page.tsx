@@ -7,51 +7,54 @@ import {
   AlertTriangle,
   Users,
 } from "lucide-react";
+import { getTranslations } from "next-intl/server";
 
-const SECTIONS = [
-  {
-    href: "/app/items",
-    label: "Itens",
-    description: "Comprar, consertar e reparar",
-    icon: ShoppingCart,
-  },
-  {
-    href: "/app/routines",
-    label: "Rotinas",
-    description: "Checklists recorrentes",
-    icon: ListChecks,
-  },
-  {
-    href: "/app/reminders",
-    label: "Lembretes",
-    description: "Tarefas e prazos",
-    icon: Bell,
-  },
-  {
-    href: "/app/urgent",
-    label: "Urgente",
-    description: "Problemas criticos",
-    icon: AlertTriangle,
-    variant: "destructive" as const,
-  },
-  {
-    href: "/app/members",
-    label: "Membros",
-    description: "Quem mora aqui",
-    icon: Users,
-  },
-];
+export default async function DashboardPage() {
+  const t = await getTranslations("dashboard");
 
-export default function DashboardPage() {
+  const sections = [
+    {
+      href: "/app/items",
+      label: t("itemsLabel"),
+      description: t("itemsDescription"),
+      icon: ShoppingCart,
+    },
+    {
+      href: "/app/routines",
+      label: t("routinesLabel"),
+      description: t("routinesDescription"),
+      icon: ListChecks,
+    },
+    {
+      href: "/app/reminders",
+      label: t("remindersLabel"),
+      description: t("remindersDescription"),
+      icon: Bell,
+    },
+    {
+      href: "/app/urgent",
+      label: t("urgentLabel"),
+      description: t("urgentDescription"),
+      icon: AlertTriangle,
+      variant: "destructive" as const,
+    },
+    {
+      href: "/app/members",
+      label: t("membersLabel"),
+      description: t("membersDescription"),
+      icon: Users,
+    },
+  ];
+
   return (
     <div className="p-6">
-      <h1 className="text-2xl font-bold">Dashboard</h1>
+      <h1 className="text-2xl font-bold">{t("title")}</h1>
       <p className="mt-1 text-sm text-muted-foreground">
-        Sua casa em um so lugar
+        {t("subtitle")}
       </p>
 
       <div className="mt-6 grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
-        {SECTIONS.map((section) => (
+        {sections.map((section) => (
           <Link key={section.href} href={section.href}>
             <Card className="cursor-pointer transition-colors hover:bg-accent">
               <CardContent className="flex items-center gap-4 p-4">

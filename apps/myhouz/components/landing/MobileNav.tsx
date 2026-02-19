@@ -4,9 +4,11 @@ import { useState } from "react";
 import Link from "next/link";
 import { X, Menu } from "lucide-react";
 import { Button } from "@home/ui";
+import { useTranslations } from "next-intl";
 
 export function MobileNav() {
   const [open, setOpen] = useState(false);
+  const t = useTranslations("landing.nav");
 
   return (
     <div className="md:hidden">
@@ -28,26 +30,26 @@ export function MobileNav() {
               onClick={() => setOpen(false)}
               className="px-3 py-2.5 text-sm font-medium text-foreground hover:text-primary hover:bg-muted rounded-lg transition-colors"
             >
-              Features
+              {t("features")}
             </Link>
             <Link
               href="#how-it-works"
               onClick={() => setOpen(false)}
               className="px-3 py-2.5 text-sm font-medium text-foreground hover:text-primary hover:bg-muted rounded-lg transition-colors"
             >
-              How It Works
+              {t("howItWorks")}
             </Link>
             <Link
               href="#pricing"
               onClick={() => setOpen(false)}
               className="px-3 py-2.5 text-sm font-medium text-foreground hover:text-primary hover:bg-muted rounded-lg transition-colors"
             >
-              Pricing
+              {t("pricing")}
             </Link>
             <div className="pt-2 border-t border-border mt-1">
               <Button asChild className="w-full" size="default">
                 <Link href="/signup" onClick={() => setOpen(false)}>
-                  Get Started
+                  {t("getStarted")}
                 </Link>
               </Button>
             </div>

@@ -1,15 +1,18 @@
 "use client";
 
+import { useTranslations } from "next-intl";
+
 export default function NewItemPage() {
+  const t = useTranslations("items");
+
   return (
     <div className="p-6">
-      <h1 className="text-2xl font-bold">Add Item</h1>
+      <h1 className="text-2xl font-bold">{t("newTitle")}</h1>
       <p className="mt-1 text-sm text-muted-foreground">
-        Add something to buy, repair, or fix
+        {t("newSubtitle")}
       </p>
-      {/* ItemForm will go here */}
       <div className="mt-6 rounded-2xl border p-8 text-center text-sm text-muted-foreground">
-        Item form placeholder
+        {t("formPlaceholder")}
       </div>
     </div>
   );

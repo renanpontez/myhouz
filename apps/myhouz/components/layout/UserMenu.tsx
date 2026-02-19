@@ -6,12 +6,14 @@ import { useUser } from "@home/auth/hooks";
 import { createBrowserClient } from "@supabase/ssr";
 import { Button } from "@home/ui";
 import { LogOut, Loader2 } from "lucide-react";
+import { useTranslations } from "next-intl";
 
 export function UserMenu() {
   const user = useUser();
   const router = useRouter();
   const [open, setOpen] = useState(false);
   const [isPending, startTransition] = useTransition();
+  const t = useTranslations("auth");
 
   function handleLogout() {
     startTransition(async () => {
@@ -57,7 +59,7 @@ export function UserMenu() {
               ) : (
                 <LogOut className="h-4 w-4" />
               )}
-              Sair
+              {t("logout")}
             </Button>
           </div>
         </>

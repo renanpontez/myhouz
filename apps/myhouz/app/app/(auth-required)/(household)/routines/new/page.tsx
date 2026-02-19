@@ -1,14 +1,18 @@
 "use client";
 
+import { useTranslations } from "next-intl";
+
 export default function NewChecklistPage() {
+  const t = useTranslations("routines");
+
   return (
     <div className="p-6">
-      <h1 className="text-2xl font-bold">New Checklist</h1>
+      <h1 className="text-2xl font-bold">{t("newTitle")}</h1>
       <p className="mt-1 text-sm text-muted-foreground">
-        Create a recurring routine checklist
+        {t("newSubtitle")}
       </p>
       <div className="mt-6 rounded-2xl border p-8 text-center text-sm text-muted-foreground">
-        Checklist form placeholder
+        {t("formPlaceholder")}
       </div>
     </div>
   );

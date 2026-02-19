@@ -1,6 +1,6 @@
 export {
   createHouseholdSchema,
-  updateHouseholdSchema,
+  createUpdateHouseholdSchema,
   type CreateHouseholdInput,
   type UpdateHouseholdInput,
 } from "./household";
@@ -10,7 +10,7 @@ export {
   itemPrioritySchema,
   itemStatusSchema,
   createItemSchema,
-  updateItemSchema,
+  createUpdateItemSchema,
   type CreateItemInput,
   type UpdateItemInput,
 } from "./household-item";
@@ -18,8 +18,8 @@ export {
 export {
   recurrenceTypeSchema,
   createChecklistSchema,
-  updateChecklistSchema,
-  addChecklistItemSchema,
+  createUpdateChecklistSchema,
+  createAddChecklistItemSchema,
   type CreateChecklistInput,
   type UpdateChecklistInput,
   type AddChecklistItemInput,
@@ -27,14 +27,14 @@ export {
 
 export {
   createReminderSchema,
-  updateReminderSchema,
+  createUpdateReminderSchema,
   type CreateReminderInput,
   type UpdateReminderInput,
 } from "./reminder";
 
 export {
   createUrgentProblemSchema,
-  updateUrgentProblemSchema,
+  createUpdateUrgentProblemSchema,
   type CreateUrgentProblemInput,
   type UpdateUrgentProblemInput,
 } from "./urgent-problem";
@@ -46,13 +46,13 @@ export {
 } from "./invite";
 
 export {
-  updateProfileSchema,
+  createUpdateProfileSchema,
   type UpdateProfileInput,
 } from "./profile";
 
 export {
-  loginSchema,
-  signupSchema,
+  createLoginSchema,
+  createSignupSchema,
   type LoginInput,
   type SignupInput,
 } from "./auth";

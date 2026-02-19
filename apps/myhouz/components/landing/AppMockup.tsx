@@ -1,10 +1,14 @@
+import { getTranslations } from "next-intl/server";
+
 /**
  * AppMockup — a pure CSS/Tailwind illustration of the MyHouz dashboard.
  * No images, no external assets.
  * Server Component.
  */
 
-export function AppMockup() {
+export async function AppMockup() {
+  const t = await getTranslations("landing.mockup");
+
   return (
     <div
       className="relative w-full max-w-md mx-auto"
@@ -21,10 +25,10 @@ export function AppMockup() {
             </div>
             <div>
               <p className="text-xs font-semibold text-foreground leading-none">
-                Our Home
+                {t("householdName")}
               </p>
               <p className="text-xs text-muted-foreground leading-none mt-0.5">
-                4 members
+                {t("memberCount")}
               </p>
             </div>
           </div>
@@ -41,38 +45,38 @@ export function AppMockup() {
         <div className="mx-3 mt-3 px-3 py-2 bg-destructive/10 border border-destructive/20 rounded-lg flex items-center gap-2">
           <div className="w-2 h-2 rounded-full bg-destructive animate-pulse-dot flex-shrink-0" />
           <p className="text-xs font-medium text-destructive flex-1">
-            Urgent: Water heater not working
+            {t("urgentBanner")}
           </p>
         </div>
 
         {/* Section heading */}
         <div className="px-4 pt-4 pb-2">
           <p className="text-xs font-semibold text-muted-foreground uppercase tracking-wide">
-            Items to buy
+            {t("itemsToBuy")}
           </p>
         </div>
 
         {/* Item cards */}
         <div className="px-3 space-y-2">
           <MockItem
-            label="Dish soap"
-            type="Buy"
+            label={t("item1")}
+            type={t("item1Type")}
             typeColor="bg-info/10 text-info"
             priority="high"
             assignee="L"
             assigneeColor="bg-primary/20 text-primary"
           />
           <MockItem
-            label="Fix kitchen faucet"
-            type="Fix"
+            label={t("item2")}
+            type={t("item2Type")}
             typeColor="bg-destructive/10 text-destructive"
             priority="medium"
             assignee="A"
             assigneeColor="bg-brand-accent/20 text-brand-accent"
           />
           <MockItem
-            label="Vacuum cleaner bag"
-            type="Buy"
+            label={t("item3")}
+            type={t("item3Type")}
             typeColor="bg-info/10 text-info"
             priority="low"
             assignee="M"
@@ -83,7 +87,7 @@ export function AppMockup() {
         {/* Section heading */}
         <div className="px-4 pt-4 pb-2">
           <p className="text-xs font-semibold text-muted-foreground uppercase tracking-wide">
-            Routines
+            {t("routines")}
           </p>
         </div>
 
@@ -92,11 +96,10 @@ export function AppMockup() {
           <div className="bg-secondary rounded-lg px-3 py-2.5">
             <div className="flex items-center justify-between mb-1.5">
               <p className="text-xs font-medium text-foreground">
-                Weekly cleaning
+                {t("routine1")}
               </p>
               <span className="text-xs text-muted-foreground">4/6</span>
             </div>
-            {/* Progress bar */}
             <div className="h-1.5 bg-border rounded-full overflow-hidden">
               <div className="h-full w-2/3 bg-primary rounded-full" />
             </div>
@@ -105,9 +108,9 @@ export function AppMockup() {
           <div className="bg-secondary rounded-lg px-3 py-2.5">
             <div className="flex items-center justify-between mb-1.5">
               <p className="text-xs font-medium text-foreground">
-                Daily: water plants
+                {t("routine2")}
               </p>
-              <span className="text-xs text-success font-medium">Done</span>
+              <span className="text-xs text-success font-medium">{t("routineDone")}</span>
             </div>
             <div className="h-1.5 bg-border rounded-full overflow-hidden">
               <div className="h-full w-full bg-success rounded-full" />

@@ -1,12 +1,14 @@
 import { z } from "zod";
 
-export const createHouseholdSchema = z.object({
-  name: z.string().min(1, "Name is required").max(200),
-});
+export const createHouseholdSchema = (t: (key: string) => string) =>
+  z.object({
+    name: z.string().min(1, t("householdNameRequired")).max(200, t("householdNameMax")),
+  });
 
-export const updateHouseholdSchema = z.object({
-  name: z.string().min(1, "Name is required").max(200),
-});
+export const createUpdateHouseholdSchema = (t: (key: string) => string) =>
+  z.object({
+    name: z.string().min(1, t("householdNameRequired")).max(200, t("householdNameMax")),
+  });
 
-export type CreateHouseholdInput = z.infer<typeof createHouseholdSchema>;
-export type UpdateHouseholdInput = z.infer<typeof updateHouseholdSchema>;
+export type CreateHouseholdInput = z.infer<ReturnType<typeof createHouseholdSchema>>;
+export type UpdateHouseholdInput = z.infer<ReturnType<typeof createUpdateHouseholdSchema>>;

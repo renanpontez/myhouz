@@ -1,4 +1,7 @@
+"use client";
+
 import { cn } from "@home/ui";
+import { useTranslations } from "next-intl";
 
 interface PriorityIndicatorProps {
   priority: "low" | "medium" | "high";
@@ -15,9 +18,11 @@ export function PriorityIndicator({
   priority,
   className,
 }: PriorityIndicatorProps) {
+  const t = useTranslations("enums");
+
   return (
-    <span className={cn("text-xs font-medium capitalize", PRIORITY_STYLES[priority], className)}>
-      {priority}
+    <span className={cn("text-xs font-medium", PRIORITY_STYLES[priority], className)}>
+      {t(`priority.${priority}`)}
     </span>
   );
 }

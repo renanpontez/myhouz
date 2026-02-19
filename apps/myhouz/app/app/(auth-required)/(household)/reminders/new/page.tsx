@@ -1,14 +1,18 @@
 "use client";
 
+import { useTranslations } from "next-intl";
+
 export default function NewReminderPage() {
+  const t = useTranslations("reminders");
+
   return (
     <div className="p-6">
-      <h1 className="text-2xl font-bold">New Reminder</h1>
+      <h1 className="text-2xl font-bold">{t("newTitle")}</h1>
       <p className="mt-1 text-sm text-muted-foreground">
-        Create a reminder for your household
+        {t("newSubtitle")}
       </p>
       <div className="mt-6 rounded-2xl border p-8 text-center text-sm text-muted-foreground">
-        Reminder form placeholder
+        {t("formPlaceholder")}
       </div>
     </div>
   );

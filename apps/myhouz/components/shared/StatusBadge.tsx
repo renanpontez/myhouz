@@ -1,5 +1,8 @@
+"use client";
+
 import { Badge } from "@home/ui";
 import { cn } from "@home/ui";
+import { useTranslations } from "next-intl";
 
 interface StatusBadgeProps {
   status: string;
@@ -15,6 +18,8 @@ const STATUS_STYLES: Record<string, string> = {
 };
 
 export function StatusBadge({ status, className }: StatusBadgeProps) {
+  const t = useTranslations("enums");
+
   return (
     <Badge
       variant="outline"
@@ -24,7 +29,7 @@ export function StatusBadge({ status, className }: StatusBadgeProps) {
         className,
       )}
     >
-      {status.replace("_", " ")}
+      {t(`status.${status}`)}
     </Badge>
   );
 }

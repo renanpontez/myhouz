@@ -4,15 +4,18 @@ import { useState, useTransition } from "react";
 import { useRouter, useSearchParams } from "next/navigation";
 import { createBrowserClient } from "@supabase/ssr";
 import type { Database } from "@home/types";
-import { signupSchema } from "@home/types";
+import { createSignupSchema } from "@home/types";
 import { Button, Input, Label } from "@home/ui";
 import { Loader2 } from "lucide-react";
+import { useTranslations } from "next-intl";
 
 export function SignupForm() {
   const router = useRouter();
   const searchParams = useSearchParams();
   const [error, setError] = useState("");
   const [isPending, startTransition] = useTransition();
+  const t = useTranslations("auth");
+  const tValidation = useTranslations("validation");
 
   const inviteCode = searchParams.get("invite");
 
@@ -21,6 +24,7 @@ export function SignupForm() {
     setError("");
 
     const formData = new FormData(e.currentTarget);
+    const signupSchema = createSignupSchema(tValidation);
     const parsed = signupSchema.safeParse({
       name: formData.get("name"),
       email: formData.get("email"),
@@ -28,7 +32,7 @@ export function SignupForm() {
     });
 
     if (!parsed.success) {
-      setError(parsed.error.errors[0]?.message ?? "Dados invalidos");
+      setError(parsed.error.errors[0]?.message ?? t("invalidData"));
       return;
     }
 
@@ -47,9 +51,9 @@ export function SignupForm() {
 
       if (authError) {
         if (authError.message.includes("already registered")) {
-          setError("Este e-mail ja esta cadastrado");
+          setError(t("emailAlreadyRegistered"));
         } else {
-          setError("Erro ao criar conta. Tente novamente.");
+          setError(t("signupError"));
         }
         return;
       }
@@ -66,34 +70,34 @@ export function SignupForm() {
   return (
     <form onSubmit={handleSubmit} className="space-y-4">
       <div className="space-y-1.5">
-        <Label htmlFor="name">Nome</Label>
+        <Label htmlFor="name">{t("name")}</Label>
         <Input
           id="name"
           name="name"
           type="text"
-          placeholder="Seu nome"
+          placeholder={t("namePlaceholder")}
           required
           autoComplete="name"
         />
       </div>
       <div className="space-y-1.5">
-        <Label htmlFor="email">E-mail</Label>
+        <Label htmlFor="email">{t("email")}</Label>
         <Input
           id="email"
           name="email"
           type="email"
-          placeholder="seu@email.com"
+          placeholder={t("emailPlaceholder")}
           required
           autoComplete="email"
         />
       </div>
       <div className="space-y-1.5">
-        <Label htmlFor="password">Senha</Label>
+        <Label htmlFor="password">{t("password")}</Label>
         <Input
           id="password"
           name="password"
           type="password"
-          placeholder="Minimo 6 caracteres"
+          placeholder={t("passwordMinPlaceholder")}
           required
           autoComplete="new-password"
         />
@@ -103,7 +107,7 @@ export function SignupForm() {
       )}
       <Button type="submit" className="w-full" disabled={isPending}>
         {isPending && <Loader2 className="mr-2 h-4 w-4 animate-spin" />}
-        Criar conta
+        {t("signup")}
       </Button>
     </form>
   );

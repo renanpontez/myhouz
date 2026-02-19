@@ -1,18 +1,20 @@
 import { z } from "zod";
 
-export const createUrgentProblemSchema = z.object({
-  title: z.string().min(1, "Title is required").max(200),
-  description: z.string().min(1, "Description is required").max(2000),
-});
+export const createUrgentProblemSchema = (t: (key: string) => string) =>
+  z.object({
+    title: z.string().min(1, t("titleRequired")).max(200, t("titleMax")),
+    description: z.string().min(1, t("descriptionRequired")).max(2000, t("descriptionMax")),
+  });
 
-export const updateUrgentProblemSchema = z.object({
-  title: z.string().min(1).max(200).optional(),
-  description: z.string().min(1).max(2000).optional(),
-});
+export const createUpdateUrgentProblemSchema = (t: (key: string) => string) =>
+  z.object({
+    title: z.string().min(1).max(200, t("titleMax")).optional(),
+    description: z.string().min(1).max(2000, t("descriptionMax")).optional(),
+  });
 
 export type CreateUrgentProblemInput = z.infer<
-  typeof createUrgentProblemSchema
+  ReturnType<typeof createUrgentProblemSchema>
 >;
 export type UpdateUrgentProblemInput = z.infer<
-  typeof updateUrgentProblemSchema
+  ReturnType<typeof createUpdateUrgentProblemSchema>
 >;

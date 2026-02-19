@@ -9,11 +9,14 @@ interface AuthCardProps {
 
 export function AuthCard({ title, subtitle, children, footer }: AuthCardProps) {
   return (
-    <div className="flex min-h-screen items-center justify-center">
+    <div className="flex flex-row min-h-screen items-center justify-center">
+      <div className="w-1/3">
+        <img src="/myhouz-logo.svg" alt="MyHouz" className="mx-auto h-32 w-auto" />
+      </div>
+
       <div className="w-full max-w-md p-4">
         <Card>
           <CardHeader className="text-center">
-            <img src="/myhouz-logo.svg" alt="MyHouz" className="mx-auto h-10 w-auto" />
             <h2 className="mt-2 text-xl font-semibold">{title}</h2>
             {subtitle && (
               <p className="mt-1 text-sm text-muted-foreground">{subtitle}</p>

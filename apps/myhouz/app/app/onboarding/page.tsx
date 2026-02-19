@@ -1,16 +1,19 @@
 import Link from "next/link";
 import { Home, UserPlus } from "lucide-react";
 import { Card, CardContent } from "@home/ui";
+import { getTranslations } from "next-intl/server";
 import { JoinByCodeForm } from "@/components/auth/JoinByCodeForm";
 import { OrDivider } from "@/components/auth/OrDivider";
 
-export default function OnboardingPage() {
+export default async function OnboardingPage() {
+  const t = await getTranslations("onboarding");
+
   return (
     <div className="space-y-6">
       <div className="flex flex-col items-center gap-3 text-center">
         <img src="/myhouz-logo.svg" alt="MyHouz" className="h-10 w-auto" />
         <p className="text-sm text-muted-foreground">
-          Crie uma nova casa ou entre em uma existente
+          {t("subtitle")}
         </p>
       </div>
 
@@ -22,9 +25,9 @@ export default function OnboardingPage() {
                 <Home className="h-5 w-5 text-primary" />
               </div>
               <div>
-                <p className="font-medium">Criar uma casa</p>
+                <p className="font-medium">{t("createHousehold")}</p>
                 <p className="text-sm text-muted-foreground">
-                  Comece do zero com uma nova casa
+                  {t("createHouseholdDescription")}
                 </p>
               </div>
             </CardContent>
@@ -40,9 +43,9 @@ export default function OnboardingPage() {
                 <UserPlus className="h-5 w-5 text-primary" />
               </div>
               <div>
-                <p className="font-medium">Tenho um convite</p>
+                <p className="font-medium">{t("hasInvite")}</p>
                 <p className="text-sm text-muted-foreground">
-                  Cole o codigo do convite abaixo
+                  {t("hasInviteDescription")}
                 </p>
               </div>
             </div>

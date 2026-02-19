@@ -5,6 +5,7 @@ import { Button } from "@home/ui";
 import { Loader2 } from "lucide-react";
 import { acceptInvite } from "@/actions/invite";
 import { toast } from "sonner";
+import { useTranslations } from "next-intl";
 
 interface AcceptInviteButtonProps {
   code: string;
@@ -13,6 +14,7 @@ interface AcceptInviteButtonProps {
 export function AcceptInviteButton({ code }: AcceptInviteButtonProps) {
   const [isPending, startTransition] = useTransition();
   const [error, setError] = useState("");
+  const t = useTranslations("invite");
 
   function handleAccept() {
     setError("");
@@ -29,7 +31,7 @@ export function AcceptInviteButton({ code }: AcceptInviteButtonProps) {
     <div className="space-y-2">
       <Button onClick={handleAccept} className="w-full" disabled={isPending}>
         {isPending && <Loader2 className="mr-2 h-4 w-4 animate-spin" />}
-        Aceitar convite
+        {t("acceptInvite")}
       </Button>
       {error && <p className="text-sm text-center text-destructive">{error}</p>}
     </div>
