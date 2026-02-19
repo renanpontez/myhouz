@@ -25,7 +25,7 @@ export async function InviteNotice({ inviteCode }: InviteNoticeProps) {
   if (!household) return null;
 
   return (
-    <div className="rounded-md bg-primary/10 px-4 py-3 text-center text-sm">
+    <div className="rounded-lg bg-primary/10 px-4 py-3 text-center text-sm">
       Entre para se juntar a <span className="font-semibold">{household.name}</span>
     </div>
   );

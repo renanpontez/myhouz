@@ -106,7 +106,7 @@ export default async function InvitePage({ params }: InvitePageProps) {
               </Link>
               <Link
                 href={`/signup?invite=${code}`}
-                className="flex-1 rounded-md bg-primary px-4 py-2 text-center text-sm font-medium text-primary-foreground hover:bg-primary/90"
+                className="flex-1 rounded-lg bg-primary px-4 py-2 text-center text-sm font-medium text-primary-foreground hover:bg-primary/90"
               >
                 Criar conta
               </Link>

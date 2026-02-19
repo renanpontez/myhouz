@@ -29,7 +29,7 @@ export function UserMenu() {
     <div className="relative">
       <button
         onClick={() => setOpen(!open)}
-        className="flex items-center gap-2 rounded-md px-2 py-1.5 hover:bg-accent"
+        className="flex items-center gap-2 rounded-lg px-2 py-1.5 hover:bg-accent"
       >
         <div className="flex h-8 w-8 items-center justify-center rounded-full bg-primary text-xs font-medium text-primary-foreground">
           {user.name ? user.name[0]?.toUpperCase() : "?"}
@@ -40,7 +40,7 @@ export function UserMenu() {
       {open && (
         <>
           <div className="fixed inset-0 z-40" onClick={() => setOpen(false)} />
-          <div className="absolute right-0 z-50 mt-1 w-48 rounded-md border bg-card py-1 shadow-lg">
+          <div className="absolute right-0 z-50 mt-1 w-48 rounded-lg border bg-card py-1 shadow-lg">
             <div className="border-b px-3 py-2">
               <p className="text-sm font-medium">{user.name}</p>
               <p className="text-xs text-muted-foreground">{user.email}</p>

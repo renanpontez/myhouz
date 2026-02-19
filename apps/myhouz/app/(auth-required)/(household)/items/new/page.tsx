@@ -8,7 +8,7 @@ export default function NewItemPage() {
         Add something to buy, repair, or fix
       </p>
       {/* ItemForm will go here */}
-      <div className="mt-6 rounded-lg border p-8 text-center text-sm text-muted-foreground">
+      <div className="mt-6 rounded-2xl border p-8 text-center text-sm text-muted-foreground">
         Item form placeholder
       </div>
     </div>

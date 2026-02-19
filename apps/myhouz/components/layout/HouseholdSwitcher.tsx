@@ -6,7 +6,7 @@ export function HouseholdSwitcher() {
   const { household } = useHousehold();
 
   return (
-    <div className="rounded-md border px-3 py-1.5 text-sm font-medium">
+    <div className="rounded-lg border px-3 py-1.5 text-sm font-medium">
       {household.name}
     </div>
   );

@@ -3,6 +3,9 @@ import { redirect } from "next/navigation";
 import { getUserWithRole } from "@home/auth";
 import { HouseholdProvider } from "@home/auth";
 import { createServerClient } from "@home/db";
+import { Sidebar } from "@/components/layout/Sidebar";
+import { TopBar } from "@/components/layout/TopBar";
+import { BottomNav } from "@/components/layout/BottomNav";
 
 export default async function HouseholdLayout({
   children,
@@ -50,11 +53,16 @@ export default async function HouseholdLayout({
       members={members ?? []}
     >
       <div className="flex min-h-screen">
-        {/* Sidebar placeholder — will be implemented */}
-        <aside className="hidden w-64 border-r bg-card lg:block">
-          <div className="p-4 font-semibold">MyHouz</div>
+        <aside className="hidden w-64 shrink-0 border-r bg-card lg:flex lg:flex-col">
+          <div className="p-4 text-lg font-semibold">MyHouz</div>
+          <Sidebar />
         </aside>
-        <main className="flex-1">{children}</main>
+
+        <div className="flex flex-1 flex-col">
+          <TopBar />
+          <main className="flex-1 pb-16 lg:pb-0">{children}</main>
+          <BottomNav />
+        </div>
       </div>
     </HouseholdProvider>
   );

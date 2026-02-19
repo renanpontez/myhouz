@@ -7,7 +7,7 @@ export default function NewReminderPage() {
       <p className="mt-1 text-sm text-muted-foreground">
         Create a reminder for your household
       </p>
-      <div className="mt-6 rounded-lg border p-8 text-center text-sm text-muted-foreground">
+      <div className="mt-6 rounded-2xl border p-8 text-center text-sm text-muted-foreground">
         Reminder form placeholder
       </div>
     </div>

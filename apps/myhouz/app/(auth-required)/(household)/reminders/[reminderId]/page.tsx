@@ -13,7 +13,7 @@ export default async function ReminderDetailPage({
       <p className="mt-1 text-sm text-muted-foreground">
         Reminder ID: {reminderId}
       </p>
-      <div className="mt-6 rounded-lg border p-8 text-center text-sm text-muted-foreground">
+      <div className="mt-6 rounded-2xl border p-8 text-center text-sm text-muted-foreground">
         Reminder detail + edit placeholder
       </div>
     </div>

@@ -13,7 +13,7 @@ export default async function ProblemDetailPage({
       <p className="mt-1 text-sm text-muted-foreground">
         Problem ID: {problemId}
       </p>
-      <div className="mt-6 rounded-lg border p-8 text-center text-sm text-muted-foreground">
+      <div className="mt-6 rounded-2xl border p-8 text-center text-sm text-muted-foreground">
         Problem detail + resolve section placeholder
       </div>
     </div>

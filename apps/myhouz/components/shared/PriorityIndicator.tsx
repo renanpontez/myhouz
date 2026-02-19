@@ -6,9 +6,9 @@ interface PriorityIndicatorProps {
 }
 
 const PRIORITY_STYLES = {
-  low: "text-gray-500",
-  medium: "text-yellow-500",
-  high: "text-red-500",
+  low: "text-success",
+  medium: "text-warning",
+  high: "text-destructive",
 };
 
 export function PriorityIndicator({
