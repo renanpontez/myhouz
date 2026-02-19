@@ -1,0 +1,41 @@
+{
+  "extends": "../../packages/config/typescript/base.json",
+  "compilerOptions": {
+    "plugins": [
+      {
+        "name": "next"
+      }
+    ],
+    "paths": {
+      "@/*": [
+        "./*"
+      ],
+      "@home/auth": [
+        "../../packages/auth/src"
+      ],
+      "@home/db": [
+        "../../packages/db/src"
+      ],
+      "@home/types": [
+        "../../packages/types/src"
+      ],
+      "@home/ui": [
+        "../../packages/ui/src"
+      ]
+    },
+    "incremental": true,
+    "noUnusedLocals": false,
+    "noUnusedParameters": false,
+    "allowJs": true,
+    "jsx": "preserve"
+  },
+  "include": [
+    "next-env.d.ts",
+    "**/*.ts",
+    "**/*.tsx",
+    ".next/types/**/*.ts"
+  ],
+  "exclude": [
+    "node_modules"
+  ]
+}

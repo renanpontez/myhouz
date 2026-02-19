@@ -1,0 +1,29 @@
+{
+  "name": "home-platform",
+  "private": true,
+  "workspaces": [
+    "apps/*",
+    "packages/*"
+  ],
+  "scripts": {
+    "dev": "turbo dev",
+    "build": "turbo build",
+    "lint": "turbo lint",
+    "test": "turbo test",
+    "test:e2e": "turbo test:e2e",
+    "format": "prettier --write \"**/*.{ts,tsx,md,json}\"",
+    "typecheck": "turbo typecheck",
+    "clean": "turbo clean",
+    "db:reset": "cd apps/myhouz && supabase db reset",
+    "db:types": "cd apps/myhouz && supabase gen types typescript --local > ../../packages/types/src/database.ts"
+  },
+  "devDependencies": {
+    "prettier": "^3.4.2",
+    "prettier-plugin-tailwindcss": "^0.6.11",
+    "turbo": "^2.3.3",
+    "typescript": "^5.7.3"
+  },
+  "engines": {
+    "node": ">=20.0.0"
+  }
+}
