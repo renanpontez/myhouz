@@ -10,20 +10,28 @@ import type {
 
 // ---- UserProvider ----
 
+interface UserHousehold {
+  id: string;
+  name: string;
+  role: MemberRole;
+}
+
 interface UserContextValue {
   user: Profile;
+  households: UserHousehold[];
 }
 
 const UserContext = createContext<UserContextValue | null>(null);
 
 interface UserProviderProps {
   user: Profile;
+  households?: UserHousehold[];
   children: ReactNode;
 }
 
-export function UserProvider({ user, children }: UserProviderProps) {
+export function UserProvider({ user, households = [], children }: UserProviderProps) {
   return (
-    <UserContext.Provider value={{ user }}>{children}</UserContext.Provider>
+    <UserContext.Provider value={{ user, households }}>{children}</UserContext.Provider>
   );
 }
 

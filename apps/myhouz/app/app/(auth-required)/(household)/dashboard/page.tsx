@@ -1,4 +1,5 @@
 import Link from "next/link";
+import { cookies } from "next/headers";
 import { Card, CardContent } from "@home/ui";
 import {
   ShoppingCart,
@@ -8,9 +9,62 @@ import {
   Users,
 } from "lucide-react";
 import { getTranslations } from "next-intl/server";
+import { createServerClient } from "@home/db";
+import { getUserWithRole } from "@home/auth";
+import { RoutineCalendar } from "@/components/dashboard/RoutineCalendar";
 
 export default async function DashboardPage() {
   const t = await getTranslations("dashboard");
+
+  const cookieStore = await cookies();
+  const householdId = cookieStore.get("activeHouseholdId")?.value;
+
+  // Fetch routine tasks if household exists
+  let tasks: {
+    id: string;
+    title: string;
+    recurrence: string;
+    recurrence_meta: unknown;
+    last_completed_at: string | null;
+    assigned_to: string | null;
+  }[] = [];
+  let completionsByTask: Record<string, { completed_at: string }[]> = {};
+
+  if (householdId) {
+    await getUserWithRole(householdId);
+    const supabase = createServerClient();
+
+    const { data: taskData } = await supabase
+      .from("routine_task")
+      .select(
+        "id, title, recurrence, recurrence_meta, last_completed_at, assigned_to",
+      )
+      .eq("household_id", householdId)
+      .eq("is_active", true)
+      .order("sort_order", { ascending: true });
+
+    tasks = taskData ?? [];
+
+    // Fetch completions for the last 90 days
+    const taskIds = tasks.map((t) => t.id);
+    if (taskIds.length > 0) {
+      const ninetyDaysAgo = new Date();
+      ninetyDaysAgo.setDate(ninetyDaysAgo.getDate() - 90);
+
+      const { data: completions } = await supabase
+        .from("routine_task_completion")
+        .select("task_id, completed_at")
+        .in("task_id", taskIds)
+        .gte("completed_at", ninetyDaysAgo.toISOString())
+        .order("completed_at", { ascending: false });
+
+      for (const c of completions ?? []) {
+        const list = completionsByTask[c.task_id] ?? [];
+        list.push({ completed_at: c.completed_at });
+        completionsByTask[c.task_id] = list;
+      }
+    }
+  }
 
   const sections = [
     {
@@ -52,6 +106,13 @@ export default async function DashboardPage() {
       <p className="mt-1 text-sm text-muted-foreground">
         {t("subtitle")}
       </p>
+
+      <div className="mt-6">
+        <RoutineCalendar
+          tasks={tasks}
+          completionsByTask={completionsByTask}
+        />
+      </div>
 
       <div className="mt-6 grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
         {sections.map((section) => (

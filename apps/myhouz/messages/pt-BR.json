@@ -13,13 +13,15 @@
     "search": "Buscar",
     "noResults": "Nenhum resultado encontrado",
     "tryAgain": "Tentar novamente",
-    "appName": "MyHouz"
+    "appName": "myhouz",
+    "switchHousehold": "Trocar de casa",
+    "createNewHousehold": "Criar nova casa"
   },
   "metadata": {
-    "title": "MyHouz",
+    "title": "myhouz",
     "description": "App de gestao compartilhada do lar",
-    "landingTitle": "MyHouz — Sua casa, finalmente organizada",
-    "landingDescription": "MyHouz da a todos da sua casa um unico lugar para acompanhar tarefas, gerenciar necessidades e resolver o que importa. Comece gratis."
+    "landingTitle": "myhouz — Sua casa, finalmente organizada",
+    "landingDescription": "myhouz da a todos da sua casa um unico lugar para acompanhar tarefas, gerenciar necessidades e resolver o que importa. Comece gratis."
   },
   "nav": {
     "dashboard": "Dashboard",
@@ -43,9 +45,9 @@
     "signup": "Criar conta",
     "logout": "Sair",
     "welcomeBack": "Bem-vindo de volta",
-    "loginSubtitle": "Entre na sua conta MyHouz",
+    "loginSubtitle": "Entre na sua conta myhouz",
     "createAccount": "Crie sua conta",
-    "signupSubtitle": "Gerencie sua casa com o MyHouz",
+    "signupSubtitle": "Gerencie sua casa com o myhouz",
     "noAccount": "Nao tem conta?",
     "hasAccount": "Ja tem conta?",
     "authError": "Erro na autenticacao. Tente novamente.",
@@ -89,13 +91,22 @@
     "itemsLabel": "Itens",
     "itemsDescription": "Comprar, consertar e reparar",
     "routinesLabel": "Rotinas",
-    "routinesDescription": "Checklists recorrentes",
+    "routinesDescription": "Tarefas e rotinas diarias",
     "remindersLabel": "Lembretes",
     "remindersDescription": "Tarefas e prazos",
     "urgentLabel": "Urgente",
     "urgentDescription": "Problemas criticos",
     "membersLabel": "Membros",
-    "membersDescription": "Quem mora aqui"
+    "membersDescription": "Quem mora aqui",
+    "calendar": {
+      "title": "Calendario de Rotinas",
+      "noTasks": "Nenhuma tarefa para este dia",
+      "tasksForDay": "Tarefas de {date}",
+      "today": "Hoje",
+      "tasksCompleted": "{done}/{total} feitas",
+      "noRoutines": "Nenhuma tarefa de rotina ainda",
+      "noRoutinesAction": "Crie sua primeira tarefa"
+    }
   },
   "items": {
     "title": "Itens",
@@ -110,16 +121,36 @@
   },
   "routines": {
     "title": "Rotinas",
-    "subtitle": "Checklists recorrentes da sua casa",
-    "addButton": "Nova rotina",
-    "empty": "Nenhuma rotina ainda. Crie a primeira!",
-    "newTitle": "Nova checklist",
-    "newSubtitle": "Crie uma checklist recorrente",
-    "detailTitle": "Detalhe da checklist",
-    "editTitle": "Editar checklist",
-    "formPlaceholder": "Formulario de checklist em breve",
-    "detailPlaceholder": "Detalhe e itens da checklist em breve",
-    "editPlaceholder": "Formulario de edicao em breve"
+    "subtitle": "Suas tarefas e rotinas diarias",
+    "addButton": "Nova tarefa",
+    "empty": "Nenhuma tarefa ainda. Crie a primeira!",
+    "newTitle": "Nova tarefa",
+    "newSubtitle": "Crie uma tarefa recorrente",
+    "detailTitle": "Detalhe da tarefa",
+    "editTitle": "Editar tarefa",
+    "titleLabel": "Titulo",
+    "titlePlaceholder": "Ex: Regar plantas",
+    "recurrenceLabel": "Recorrencia",
+    "assignedToLabel": "Responsavel",
+    "unassigned": "Sem responsavel",
+    "createButton": "Criar tarefa",
+    "saveButton": "Salvar alteracoes",
+    "deleteButton": "Excluir tarefa",
+    "deleteConfirm": "Excluir esta tarefa e todo seu historico?",
+    "completedAt": "Feito {time}",
+    "notActiveToday": "Nao programado para hoje",
+    "todayProgress": "{done} de {total} feitas hoje",
+    "allDoneToday": "Tudo feito por hoje!",
+    "otherDays": "Outros dias",
+    "streak": "{count} dias seguidos",
+    "completionHistory": "Historico de conclusoes",
+    "noCompletions": "Nenhuma conclusao ainda",
+    "customDaysOfWeek": "Dias da semana",
+    "customInterval": "Repetir a cada",
+    "selectDaysHint": "Selecione em quais dias esta tarefa deve rodar",
+    "selectAtLeastOneDay": "Selecione pelo menos um dia",
+    "intervalHint": "Defina com que frequencia esta tarefa se repete",
+    "every": "A cada"
   },
   "reminders": {
     "title": "Lembretes",
@@ -147,10 +178,32 @@
     "title": "Membros",
     "subtitle": "Quem mora na sua casa",
     "inviteButton": "Convidar",
-    "empty": "Lista de membros em breve",
+    "empty": "Nenhum membro encontrado",
     "inviteTitle": "Convidar membro",
     "inviteSubtitle": "Gere um link de convite para compartilhar",
-    "invitePlaceholder": "Formulario de convite em breve"
+    "owner": "Dono",
+    "you": "(voce)",
+    "role": "Funcao",
+    "removeMember": "Remover membro",
+    "changeRole": "Alterar funcao",
+    "leave": "Sair da casa",
+    "leaveConfirm": "Tem certeza que deseja sair desta casa?",
+    "removeConfirm": "Remover {name} da casa?",
+    "pendingInvites": "Convites pendentes",
+    "noPendingInvites": "Nenhum convite pendente",
+    "linkInvite": "Convite por link",
+    "revoke": "Revogar",
+    "revokeConfirm": "Revogar este convite?",
+    "emailLabel": "E-mail (opcional)",
+    "emailPlaceholder": "pessoa@email.com",
+    "roleLabel": "Funcao",
+    "generateLink": "Gerar link de convite",
+    "linkGenerated": "Link de convite gerado!",
+    "copyLink": "Copiar link",
+    "linkCopied": "Link copiado!",
+    "sendAnother": "Enviar outro",
+    "inviteSent": "Convite enviado para {email}",
+    "inviteExpiry": "Expira em 7 dias"
   },
   "settings": {
     "title": "Configuracoes",
@@ -167,6 +220,11 @@
     "householdSubtitle": "Gerencie sua casa (apenas dono)",
     "householdInfoSection": "Informacoes da casa",
     "householdInfoPlaceholder": "Editar nome da casa em breve",
+    "householdNameLabel": "Nome da casa",
+    "householdNameSaved": "Nome da casa atualizado",
+    "deleteHousehold": "Excluir casa",
+    "deleteHouseholdConfirm": "Digite \"{name}\" para confirmar a exclusao",
+    "deleteHouseholdWarning": "Isso excluira permanentemente a casa e todos os seus dados.",
     "dangerZone": "Zona de perigo",
     "dangerZonePlaceholder": "Transferir propriedade / excluir casa em breve"
   },
@@ -201,7 +259,20 @@
     "goToDashboard": "Ir para o Dashboard",
     "createHouseholdError": "Erro ao criar a casa. Tente novamente.",
     "acceptInviteError": "Erro ao aceitar o convite. Verifique se o codigo e valido.",
-    "invalidOrExpiredInvite": "Convite invalido ou expirado."
+    "invalidOrExpiredInvite": "Convite invalido ou expirado.",
+    "generateInviteError": "Erro ao gerar convite. Tente novamente.",
+    "revokeInviteError": "Erro ao revogar convite.",
+    "removeMemberError": "Erro ao remover membro.",
+    "changeRoleError": "Erro ao alterar funcao.",
+    "leaveHouseholdError": "Erro ao sair da casa.",
+    "ownerCannotLeave": "Transfira a propriedade antes de sair.",
+    "updateHouseholdError": "Erro ao atualizar a casa.",
+    "deleteHouseholdError": "Erro ao excluir a casa.",
+    "mustBeSoleMember": "Voce deve ser o unico membro para excluir a casa.",
+    "createTaskError": "Erro ao criar tarefa.",
+    "updateTaskError": "Erro ao atualizar tarefa.",
+    "deleteTaskError": "Erro ao excluir tarefa.",
+    "toggleTaskError": "Erro ao marcar tarefa."
   },
   "enums": {
     "priority": {
@@ -230,7 +301,23 @@
       "daily": "Diario",
       "weekly": "Semanal",
       "monthly": "Mensal",
+      "weekdays": "Dias uteis",
+      "weekends": "Fins de semana",
       "custom": "Personalizado"
+    },
+    "dayShort": {
+      "0": "D",
+      "1": "S",
+      "2": "T",
+      "3": "Q",
+      "4": "Q",
+      "5": "S",
+      "6": "S"
+    },
+    "intervalUnit": {
+      "days": "dias",
+      "weeks": "semanas",
+      "months": "meses"
     }
   },
   "landing": {
@@ -244,7 +331,7 @@
       "eyebrow": "Gestao compartilhada do lar",
       "titleStart": "Sua casa,",
       "titleHighlight": "finalmente organizada.",
-      "subtitle": "MyHouz da a todos da sua casa um unico lugar para acompanhar tarefas, gerenciar necessidades e resolver o que importa — sem o caos dos grupos de mensagem.",
+      "subtitle": "myhouz da a todos da sua casa um unico lugar para acompanhar tarefas, gerenciar necessidades e resolver o que importa — sem o caos dos grupos de mensagem.",
       "ctaPrimary": "Comecar — Gratis",
       "ctaSecondary": "Veja como funciona",
       "trustNoCreditCard": "Sem cartao de credito",
@@ -262,7 +349,7 @@
       "pain3Body": "Foi mencionado tres semanas atras. Alguem disse que ia resolver. Nada aconteceu.",
       "pain4Title": "Um cano estoura e ninguem sabe pra quem ligar",
       "pain4Body": "O numero do encanador esta nas mensagens antigas de alguem. O contato do sindico e desconhecido.",
-      "fixesAll": "O MyHouz resolve tudo isso."
+      "fixesAll": "O myhouz resolve tudo isso."
     },
     "features": {
       "title": "Tudo que sua casa precisa.",
@@ -298,7 +385,7 @@
       "quote1": "Parei de ser a unica que sabia o que a casa precisava. Agora nos dois vemos.",
       "name1": "Lucas",
       "location1": "Sao Paulo",
-      "quote2": "O grupo do WhatsApp era um caos. O MyHouz realmente mantem as coisas organizadas — ate meu colega usa.",
+      "quote2": "O grupo do WhatsApp era um caos. O myhouz realmente mantem as coisas organizadas — ate meu colega usa.",
       "name2": "Mariana",
       "location2": "Rio de Janeiro",
       "quote3": "Simples o suficiente para minha esposa realmente usar. Esse e o verdadeiro teste.",
@@ -353,8 +440,22 @@
       "contact": "Contato",
       "privacy": "Privacidade",
       "terms": "Termos",
-      "copyright": "2026 MyHouz. Todos os direitos reservados.",
+      "copyright": "2026 myhouz. Todos os direitos reservados.",
       "madeWith": "Feito com carinho para casas de todo lugar."
+    },
+    "team": {
+      "title": "Quem faz o myhouz",
+      "subtitle": "Um projeto pequeno, feito com cuidado. Duas pessoas que acreditam que organizar a casa nao precisa ser complicado.",
+      "renan": {
+        "name": "Renan Martins",
+        "role": "Tech & Produto",
+        "bio": "Desenvolve e cuida da experiencia do produto. Acredita que bom software e aquele que ninguem percebe que esta la."
+      },
+      "andressa": {
+        "name": "Andressa Hora",
+        "role": "Marketing & Negocios",
+        "bio": "Cuida de como o myhouz chega ate as pessoas certas e faz sentido para elas desde o primeiro contato."
+      }
     },
     "mockup": {
       "householdName": "Nossa casa",

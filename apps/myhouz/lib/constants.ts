@@ -1,4 +1,4 @@
-export const APP_NAME = "MyHouz";
+export const APP_NAME = "myhouz";
 
 export const ROUTES = {
   login: "/login",

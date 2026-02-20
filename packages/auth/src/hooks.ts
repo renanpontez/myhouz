@@ -7,6 +7,11 @@ export function useUser() {
   return user;
 }
 
+export function useUserHouseholds() {
+  const { households } = useUserContext();
+  return households;
+}
+
 export function useHousehold() {
   const context = useHouseholdContext();
   return context;

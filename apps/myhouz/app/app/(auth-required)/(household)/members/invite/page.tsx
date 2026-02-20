@@ -1,18 +1,31 @@
-"use client";
+import { cookies } from "next/headers";
+import { redirect } from "next/navigation";
+import { getTranslations } from "next-intl/server";
+import { getUserWithRole } from "@home/auth";
+import { BackLink } from "@/components/shared/BackLink";
+import { InviteForm } from "@/components/members/InviteForm";
 
-import { useTranslations } from "next-intl";
+export default async function InviteMemberPage() {
+  const t = await getTranslations("members");
+  const cookieStore = await cookies();
+  const householdId = cookieStore.get("activeHouseholdId")?.value;
 
-export default function InviteMemberPage() {
-  const t = useTranslations("members");
+  if (!householdId) redirect("/app/onboarding");
+
+  const { role } = await getUserWithRole(householdId);
+  if (role !== "owner") redirect("/app/members");
 
   return (
     <div className="p-6">
-      <h1 className="text-2xl font-bold">{t("inviteTitle")}</h1>
-      <p className="mt-1 text-sm text-muted-foreground">
-        {t("inviteSubtitle")}
-      </p>
-      <div className="mt-6 rounded-2xl border p-8 text-center text-sm text-muted-foreground">
-        {t("invitePlaceholder")}
+      <BackLink href="/app/members" />
+      <div className="mt-4">
+        <h1 className="text-2xl font-bold">{t("inviteTitle")}</h1>
+        <p className="mt-1 text-sm text-muted-foreground">
+          {t("inviteSubtitle")}
+        </p>
+      </div>
+      <div className="mt-6 max-w-md">
+        <InviteForm />
       </div>
     </div>
   );

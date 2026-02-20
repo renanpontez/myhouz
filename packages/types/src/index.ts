@@ -11,10 +11,11 @@ export type {
   ItemStatus,
 } from "./household-item";
 export type {
-  RoutineChecklist,
-  RoutineChecklistItem,
+  RoutineTask,
+  RoutineTaskCompletion,
   RecurrenceType,
-} from "./routine-checklist";
+  RecurrenceMeta,
+} from "./routine-task";
 export type { Reminder } from "./reminder";
 export type { UrgentProblem } from "./urgent-problem";
 export type { HouseholdInvite, InviteStatus } from "./invite";

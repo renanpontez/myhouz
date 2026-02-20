@@ -1,6 +1,6 @@
 import { Skeleton } from "@home/ui";
 
-export default function ChecklistDetailLoading() {
+export default function TaskDetailLoading() {
   return (
     <div className="p-6">
       <Skeleton className="h-8 w-48" />

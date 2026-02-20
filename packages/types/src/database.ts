@@ -12,31 +12,6 @@ export type Database = {
   __InternalSupabase: {
     PostgrestVersion: "14.1"
   }
-  graphql_public: {
-    Tables: {
-      [_ in never]: never
-    }
-    Views: {
-      [_ in never]: never
-    }
-    Functions: {
-      graphql: {
-        Args: {
-          extensions?: Json
-          operationName?: string
-          query?: string
-          variables?: Json
-        }
-        Returns: Json
-      }
-    }
-    Enums: {
-      [_ in never]: never
-    }
-    CompositeTypes: {
-      [_ in never]: never
-    }
-  }
   public: {
     Tables: {
       bill: {
@@ -542,47 +517,76 @@ export type Database = {
           },
         ]
       }
-      routine_checklist: {
+      routine_task: {
         Row: {
+          assigned_to: string | null
+          completed_by: string | null
           created_at: string
           created_by: string
           household_id: string
           id: string
           is_active: boolean
+          last_completed_at: string | null
           recurrence: Database["public"]["Enums"]["recurrence_type"]
+          recurrence_meta: Json | null
+          sort_order: number
           title: string
           updated_at: string
         }
         Insert: {
+          assigned_to?: string | null
+          completed_by?: string | null
           created_at?: string
           created_by: string
           household_id: string
           id?: string
           is_active?: boolean
+          last_completed_at?: string | null
           recurrence?: Database["public"]["Enums"]["recurrence_type"]
+          recurrence_meta?: Json | null
+          sort_order?: number
           title: string
           updated_at?: string
         }
         Update: {
+          assigned_to?: string | null
+          completed_by?: string | null
           created_at?: string
           created_by?: string
           household_id?: string
           id?: string
           is_active?: boolean
+          last_completed_at?: string | null
           recurrence?: Database["public"]["Enums"]["recurrence_type"]
+          recurrence_meta?: Json | null
+          sort_order?: number
           title?: string
           updated_at?: string
         }
         Relationships: [
           {
-            foreignKeyName: "routine_checklist_created_by_fkey"
+            foreignKeyName: "routine_task_assigned_to_fkey"
+            columns: ["assigned_to"]
+            isOneToOne: false
+            referencedRelation: "profile"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "routine_task_completed_by_fkey"
+            columns: ["completed_by"]
+            isOneToOne: false
+            referencedRelation: "profile"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "routine_task_created_by_fkey"
             columns: ["created_by"]
             isOneToOne: false
             referencedRelation: "profile"
             referencedColumns: ["id"]
           },
           {
-            foreignKeyName: "routine_checklist_household_id_fkey"
+            foreignKeyName: "routine_task_household_id_fkey"
             columns: ["household_id"]
             isOneToOne: false
             referencedRelation: "household"
@@ -590,50 +594,41 @@ export type Database = {
           },
         ]
       }
-      routine_checklist_item: {
+      routine_task_completion: {
         Row: {
-          checklist_id: string
-          completed_by: string | null
+          completed_at: string
+          completed_by: string
           created_at: string
           id: string
-          label: string
-          last_completed_at: string | null
-          sort_order: number
-          updated_at: string
+          task_id: string
         }
         Insert: {
-          checklist_id: string
-          completed_by?: string | null
+          completed_at?: string
+          completed_by: string
           created_at?: string
           id?: string
-          label: string
-          last_completed_at?: string | null
-          sort_order?: number
-          updated_at?: string
+          task_id: string
         }
         Update: {
-          checklist_id?: string
-          completed_by?: string | null
+          completed_at?: string
+          completed_by?: string
           created_at?: string
           id?: string
-          label?: string
-          last_completed_at?: string | null
-          sort_order?: number
-          updated_at?: string
+          task_id?: string
         }
         Relationships: [
           {
-            foreignKeyName: "routine_checklist_item_checklist_id_fkey"
-            columns: ["checklist_id"]
-            isOneToOne: false
-            referencedRelation: "routine_checklist"
-            referencedColumns: ["id"]
-          },
-          {
-            foreignKeyName: "routine_checklist_item_completed_by_fkey"
+            foreignKeyName: "routine_task_completion_completed_by_fkey"
             columns: ["completed_by"]
             isOneToOne: false
             referencedRelation: "profile"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "routine_task_completion_task_id_fkey"
+            columns: ["task_id"]
+            isOneToOne: false
+            referencedRelation: "routine_task"
             referencedColumns: ["id"]
           },
         ]
@@ -706,17 +701,6 @@ export type Database = {
     Functions: {
       accept_invite: { Args: { p_invite_code: string }; Returns: Json }
       expire_pending_invites: { Args: never; Returns: number }
-      get_checklist_completion: {
-        Args: { p_checklist_id: string }
-        Returns: {
-          completed_by: string
-          is_completed_this_cycle: boolean
-          item_id: string
-          label: string
-          last_completed_at: string
-          sort_order: number
-        }[]
-      }
       get_cycle_start: {
         Args: { p_recurrence: Database["public"]["Enums"]["recurrence_type"] }
         Returns: string
@@ -744,7 +728,13 @@ export type Database = {
       item_status: "pending" | "in_progress" | "done"
       item_type: "buy" | "repair" | "fix"
       member_role: "owner" | "member" | "guest"
-      recurrence_type: "daily" | "weekly" | "monthly" | "custom"
+      recurrence_type:
+        | "daily"
+        | "weekly"
+        | "monthly"
+        | "custom"
+        | "weekdays"
+        | "weekends"
       secret_category: "password" | "contact" | "code" | "other"
     }
     CompositeTypes: {
@@ -871,9 +861,6 @@ export type CompositeTypes<
     : never
 
 export const Constants = {
-  graphql_public: {
-    Enums: {},
-  },
   public: {
     Enums: {
       bill_recurrence: ["one_off", "weekly", "monthly", "quarterly", "yearly"],
@@ -883,7 +870,14 @@ export const Constants = {
       item_status: ["pending", "in_progress", "done"],
       item_type: ["buy", "repair", "fix"],
       member_role: ["owner", "member", "guest"],
-      recurrence_type: ["daily", "weekly", "monthly", "custom"],
+      recurrence_type: [
+        "daily",
+        "weekly",
+        "monthly",
+        "custom",
+        "weekdays",
+        "weekends",
+      ],
       secret_category: ["password", "contact", "code", "other"],
     },
   },

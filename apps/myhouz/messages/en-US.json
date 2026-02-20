@@ -13,13 +13,15 @@
     "search": "Search",
     "noResults": "No results found",
     "tryAgain": "Try again",
-    "appName": "MyHouz"
+    "appName": "myhouz",
+    "switchHousehold": "Switch household",
+    "createNewHousehold": "Create new household"
   },
   "metadata": {
-    "title": "MyHouz",
+    "title": "myhouz",
     "description": "Shared household management app",
-    "landingTitle": "MyHouz — Your Home, Finally Organized",
-    "landingDescription": "MyHouz gives everyone under your roof one place to track tasks, manage household needs, and handle what matters. Start free today."
+    "landingTitle": "myhouz — Your Home, Finally Organized",
+    "landingDescription": "myhouz gives everyone under your roof one place to track tasks, manage household needs, and handle what matters. Start free today."
   },
   "nav": {
     "dashboard": "Dashboard",
@@ -43,9 +45,9 @@
     "signup": "Create account",
     "logout": "Sign out",
     "welcomeBack": "Welcome back",
-    "loginSubtitle": "Sign in to your MyHouz account",
+    "loginSubtitle": "Sign in to your myhouz account",
     "createAccount": "Create your account",
-    "signupSubtitle": "Manage your home with MyHouz",
+    "signupSubtitle": "Manage your home with myhouz",
     "noAccount": "Don't have an account?",
     "hasAccount": "Already have an account?",
     "authError": "Authentication error. Please try again.",
@@ -89,13 +91,22 @@
     "itemsLabel": "Items",
     "itemsDescription": "Buy, repair, and fix",
     "routinesLabel": "Routines",
-    "routinesDescription": "Recurring checklists",
+    "routinesDescription": "Daily tasks and routines",
     "remindersLabel": "Reminders",
     "remindersDescription": "Tasks and deadlines",
     "urgentLabel": "Urgent",
     "urgentDescription": "Critical problems",
     "membersLabel": "Members",
-    "membersDescription": "Who lives here"
+    "membersDescription": "Who lives here",
+    "calendar": {
+      "title": "Routine Calendar",
+      "noTasks": "No tasks for this day",
+      "tasksForDay": "Tasks for {date}",
+      "today": "Today",
+      "tasksCompleted": "{done}/{total} done",
+      "noRoutines": "No routine tasks yet",
+      "noRoutinesAction": "Create your first task"
+    }
   },
   "items": {
     "title": "Items",
@@ -110,16 +121,36 @@
   },
   "routines": {
     "title": "Routines",
-    "subtitle": "Recurring checklists for your household",
-    "addButton": "New routine",
-    "empty": "No routines yet. Create the first one!",
-    "newTitle": "New checklist",
-    "newSubtitle": "Create a recurring routine checklist",
-    "detailTitle": "Checklist detail",
-    "editTitle": "Edit checklist",
-    "formPlaceholder": "Checklist form placeholder",
-    "detailPlaceholder": "Checklist detail + items placeholder",
-    "editPlaceholder": "Edit checklist form placeholder"
+    "subtitle": "Your daily tasks and routines",
+    "addButton": "New task",
+    "empty": "No tasks yet. Create the first one!",
+    "newTitle": "New task",
+    "newSubtitle": "Create a recurring task",
+    "detailTitle": "Task detail",
+    "editTitle": "Edit task",
+    "titleLabel": "Title",
+    "titlePlaceholder": "e.g. Water plants",
+    "recurrenceLabel": "Recurrence",
+    "assignedToLabel": "Assigned to",
+    "unassigned": "Unassigned",
+    "createButton": "Create task",
+    "saveButton": "Save changes",
+    "deleteButton": "Delete task",
+    "deleteConfirm": "Delete this task and all its history?",
+    "completedAt": "Done {time}",
+    "notActiveToday": "Not scheduled for today",
+    "todayProgress": "{done} of {total} done today",
+    "allDoneToday": "All done for today!",
+    "otherDays": "Other days",
+    "streak": "{count} day streak",
+    "completionHistory": "Completion history",
+    "noCompletions": "No completions yet",
+    "customDaysOfWeek": "Days of week",
+    "customInterval": "Repeat every",
+    "selectDaysHint": "Select which days this task should run",
+    "selectAtLeastOneDay": "Select at least one day",
+    "intervalHint": "Set how often this task repeats",
+    "every": "Every"
   },
   "reminders": {
     "title": "Reminders",
@@ -147,10 +178,32 @@
     "title": "Members",
     "subtitle": "Who lives in your household",
     "inviteButton": "Invite",
-    "empty": "Member list coming soon",
+    "empty": "No members found",
     "inviteTitle": "Invite a member",
     "inviteSubtitle": "Generate an invite link to share with someone",
-    "invitePlaceholder": "Invite form + link display placeholder"
+    "owner": "Owner",
+    "you": "(you)",
+    "role": "Role",
+    "removeMember": "Remove member",
+    "changeRole": "Change role",
+    "leave": "Leave household",
+    "leaveConfirm": "Are you sure you want to leave this household?",
+    "removeConfirm": "Remove {name} from the household?",
+    "pendingInvites": "Pending invites",
+    "noPendingInvites": "No pending invites",
+    "linkInvite": "Link invite",
+    "revoke": "Revoke",
+    "revokeConfirm": "Revoke this invite?",
+    "emailLabel": "Email (optional)",
+    "emailPlaceholder": "person@email.com",
+    "roleLabel": "Role",
+    "generateLink": "Generate invite link",
+    "linkGenerated": "Invite link generated!",
+    "copyLink": "Copy link",
+    "linkCopied": "Link copied!",
+    "sendAnother": "Send another",
+    "inviteSent": "Invite sent to {email}",
+    "inviteExpiry": "Expires in 7 days"
   },
   "settings": {
     "title": "Settings",
@@ -167,6 +220,11 @@
     "householdSubtitle": "Manage your household (owner only)",
     "householdInfoSection": "Household info",
     "householdInfoPlaceholder": "Edit household name placeholder",
+    "householdNameLabel": "Household name",
+    "householdNameSaved": "Household name updated",
+    "deleteHousehold": "Delete household",
+    "deleteHouseholdConfirm": "Type \"{name}\" to confirm deletion",
+    "deleteHouseholdWarning": "This will permanently delete the household and all its data.",
     "dangerZone": "Danger zone",
     "dangerZonePlaceholder": "Transfer ownership / delete household placeholder"
   },
@@ -201,7 +259,20 @@
     "goToDashboard": "Go to Dashboard",
     "createHouseholdError": "Error creating household. Please try again.",
     "acceptInviteError": "Error accepting invite. Check if the code is valid.",
-    "invalidOrExpiredInvite": "Invalid or expired invite."
+    "invalidOrExpiredInvite": "Invalid or expired invite.",
+    "generateInviteError": "Error generating invite. Try again.",
+    "revokeInviteError": "Error revoking invite.",
+    "removeMemberError": "Error removing member.",
+    "changeRoleError": "Error changing role.",
+    "leaveHouseholdError": "Error leaving household.",
+    "ownerCannotLeave": "Transfer ownership before leaving.",
+    "updateHouseholdError": "Error updating household.",
+    "deleteHouseholdError": "Error deleting household.",
+    "mustBeSoleMember": "You must be the only member to delete the household.",
+    "createTaskError": "Error creating task.",
+    "updateTaskError": "Error updating task.",
+    "deleteTaskError": "Error deleting task.",
+    "toggleTaskError": "Error toggling task."
   },
   "enums": {
     "priority": {
@@ -230,7 +301,23 @@
       "daily": "Daily",
       "weekly": "Weekly",
       "monthly": "Monthly",
+      "weekdays": "Weekdays",
+      "weekends": "Weekends",
       "custom": "Custom"
+    },
+    "dayShort": {
+      "0": "S",
+      "1": "M",
+      "2": "T",
+      "3": "W",
+      "4": "T",
+      "5": "F",
+      "6": "S"
+    },
+    "intervalUnit": {
+      "days": "days",
+      "weeks": "weeks",
+      "months": "months"
     }
   },
   "landing": {
@@ -244,7 +331,7 @@
       "eyebrow": "Shared household management",
       "titleStart": "Your home,",
       "titleHighlight": "finally organized.",
-      "subtitle": "MyHouz gives everyone under your roof a single place to track tasks, manage household needs, and handle what matters — without the chaos of group chats.",
+      "subtitle": "myhouz gives everyone under your roof a single place to track tasks, manage household needs, and handle what matters — without the chaos of group chats.",
       "ctaPrimary": "Get Started — Free",
       "ctaSecondary": "See How It Works",
       "trustNoCreditCard": "No credit card required",
@@ -262,7 +349,7 @@
       "pain3Body": "It was mentioned three weeks ago. Someone said they'd handle it. Nothing happened.",
       "pain4Title": "A pipe bursts and no one knows who to call",
       "pain4Body": "The plumber's number is in someone's old texts. The building manager's contact is unknown.",
-      "fixesAll": "MyHouz fixes all of this."
+      "fixesAll": "myhouz fixes all of this."
     },
     "features": {
       "title": "Everything your household needs.",
@@ -298,7 +385,7 @@
       "quote1": "I stopped being the only one who knew what the house needed. Now we both see it.",
       "name1": "Lucas",
       "location1": "Sao Paulo",
-      "quote2": "The WhatsApp group was chaos. MyHouz actually keeps things organized — even my roommate uses it.",
+      "quote2": "The WhatsApp group was chaos. myhouz actually keeps things organized — even my roommate uses it.",
       "name2": "Mariana",
       "location2": "Rio de Janeiro",
       "quote3": "Simple enough that my spouse actually uses it. That is the real test.",
@@ -353,8 +440,22 @@
       "contact": "Contact",
       "privacy": "Privacy",
       "terms": "Terms",
-      "copyright": "2026 MyHouz. All rights reserved.",
+      "copyright": "2026 myhouz. All rights reserved.",
       "madeWith": "Made with care for households everywhere."
+    },
+    "team": {
+      "title": "The people behind myhouz",
+      "subtitle": "A small project, built with care. Two people who believe organizing your home should not be complicated.",
+      "renan": {
+        "name": "Renan Martins",
+        "role": "Tech & Product",
+        "bio": "Builds the product and shapes the experience. Believes the best software is the kind no one notices is there."
+      },
+      "andressa": {
+        "name": "Andressa Hora",
+        "role": "Marketing & Business",
+        "bio": "Makes sure myhouz reaches the right people and makes sense to them from the very first moment."
+      }
     },
     "mockup": {
       "householdName": "Our Home",

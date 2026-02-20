@@ -1,4 +1,4 @@
-# MyHouz Landing Page — AI Generation Prompt
+# myhouz Landing Page — AI Generation Prompt
 
 Copy everything below the horizontal rule and paste it into v0, Bolt, or your AI design tool of choice.
 
@@ -6,13 +6,13 @@ Copy everything below the horizontal rule and paste it into v0, Bolt, or your AI
 
 ## PROMPT START
 
-Build a complete, production-ready marketing landing page for **MyHouz** — a shared household management web app. Output a single Next.js page file (or a set of clearly labeled component files) using **Tailwind CSS** and **shadcn/ui** component patterns. The page must be fully responsive, accessible (WCAG 2.1 AA), and visually polished on first generation.
+Build a complete, production-ready marketing landing page for **myhouz** — a shared household management web app. Output a single Next.js page file (or a set of clearly labeled component files) using **Tailwind CSS** and **shadcn/ui** component patterns. The page must be fully responsive, accessible (WCAG 2.1 AA), and visually polished on first generation.
 
 ---
 
 ### PRODUCT CONTEXT
 
-**App name:** MyHouz (the "z" is intentional — never write "MyHouse")
+**App name:** myhouz (the "z" is intentional — never write "MyHouse")
 
 **One-liner:** A shared household management app that centralizes tasks, household needs, reminders, and critical info for everyone living under the same roof.
 
@@ -20,7 +20,7 @@ Build a complete, production-ready marketing landing page for **MyHouz** — a s
 **Secondary tagline (EN):** "Stop texting the group chat. Start managing your home."
 **Brazilian tagline (PT-BR, shown as supporting copy):** "A casa toda na mesma página."
 
-**Value proposition:** MyHouz replaces the patchwork of WhatsApp groups, sticky notes, shared spreadsheets, and verbal agreements that most households rely on today. It gives every person in a household — couples, roommates, multi-generational families — one organized space where nothing falls through the cracks.
+**Value proposition:** myhouz replaces the patchwork of WhatsApp groups, sticky notes, shared spreadsheets, and verbal agreements that most households rely on today. It gives every person in a household — couples, roommates, multi-generational families — one organized space where nothing falls through the cracks.
 
 **Primary market:** Brazil (pt-BR), with simultaneous US English launch.
 
@@ -101,7 +101,7 @@ Layout: Full-width, centered, two-column on desktop (text left, visual right), s
 **Content (left column):**
 - Small eyebrow label above headline: "Household Management" — small caps, `--primary` color, `font-medium`, `text-sm`
 - H1 headline: **"Your home, finally organized."** — `text-5xl` (desktop), `text-4xl` (mobile), `font-bold`, `--text-primary` color, line-height 1.1
-- Subheadline paragraph: "MyHouz gives every person in your household one shared space for tasks, reminders, checklists, and urgent problems — so nothing gets lost in the group chat again." — `text-lg`, `--text-secondary`, `leading-relaxed`, max-width 480px
+- Subheadline paragraph: "myhouz gives every person in your household one shared space for tasks, reminders, checklists, and urgent problems — so nothing gets lost in the group chat again." — `text-lg`, `--text-secondary`, `leading-relaxed`, max-width 480px
 - Two CTA buttons side by side (stacked on mobile):
   1. Primary: "Get Started Free" — filled `--primary`
   2. Secondary: "See How It Works" — outlined `--primary`
@@ -126,7 +126,7 @@ Layout: Centered, max-width 720px, text-focused.
 **Content:**
 - Section label: "Sound familiar?" — `text-sm`, `font-medium`, `--accent` color
 - H2: "Tired of scattered messages and forgotten tasks?" — `text-3xl`, `font-bold`
-- Paragraph: "Most households run on group chats, sticky notes, and wishful thinking. Things fall through the cracks. Responsibilities go unacknowledged. And when something urgent happens — a broken appliance, an unpaid bill — there's no structured way to handle it. MyHouz gives your household a proper operating system, without the complexity of a project management tool."
+- Paragraph: "Most households run on group chats, sticky notes, and wishful thinking. Things fall through the cracks. Responsibilities go unacknowledged. And when something urgent happens — a broken appliance, an unpaid bill — there's no structured way to handle it. myhouz gives your household a proper operating system, without the complexity of a project management tool."
 - Three problem cards in a row (stacked on mobile), each with:
   - A Lucide icon (MessageCircle, AlertTriangle, Clock — all in `--accent` color, 28px)
   - A short bold label: "Lost in the chat", "No one knows who did it", "Urgent issues go unnoticed"
@@ -142,7 +142,7 @@ Layout: Centered, max-width 720px, text-focused.
 Layout: Centered heading + subheading, then a 2x2 or 2x3 grid of feature cards below (2 columns on tablet, 3 on desktop, 1 on mobile).
 
 **Section heading:** "Everything your household needs, in one place" — `text-3xl`, `font-bold`, centered
-**Section subheading:** "From the weekly grocery run to the burst pipe at midnight — MyHouz has a module for it." — `text-lg`, `--text-secondary`, centered
+**Section subheading:** "From the weekly grocery run to the burst pipe at midnight — myhouz has a module for it." — `text-lg`, `--text-secondary`, centered
 
 **Feature cards — use exactly these 5:**
 
@@ -226,19 +226,19 @@ Layout: Centered heading + 3 testimonial cards in a row (stacked on mobile).
 1. **Lucas & Ana, São Paulo**
    - Avatar: Placeholder circle with initials "LA", `--primary` background
    - Star rating: 5 stars (use five `★` characters in `--accent` color)
-   - Quote: "We used to argue about who was supposed to buy dishwasher tabs or fix the leaking faucet. Now everything is in MyHouz and we both see it. No more arguments — just a shared list that actually gets done."
+   - Quote: "We used to argue about who was supposed to buy dishwasher tabs or fix the leaking faucet. Now everything is in myhouz and we both see it. No more arguments — just a shared list that actually gets done."
    - Attribution: "Lucas & Ana — couple, apartment in São Paulo"
 
 2. **Mariana, Fernanda & Clara, Rio de Janeiro**
    - Avatar: Three small overlapping circles with initials "M", "F", "C"
    - Star rating: 5 stars
-   - Quote: "The WhatsApp group was chaos. Important tasks were getting buried. MyHouz gave us one place where chores are assigned, visible, and actually completed. The cleaning rotation alone saved us from a dozen arguments."
+   - Quote: "The WhatsApp group was chaos. Important tasks were getting buried. myhouz gave us one place where chores are assigned, visible, and actually completed. The cleaning rotation alone saved us from a dozen arguments."
    - Attribution: "Three roommates, apartment in Rio de Janeiro"
 
 3. **Jordan & Sarah, Austin TX**
    - Avatar: Placeholder circle with initials "JS", `--primary` background
    - Star rating: 5 stars
-   - Quote: "I needed something simple enough that Sarah would actually use it alongside me. MyHouz nailed it. The Urgent Problems alert alone was worth it — we had a pipe issue at 11pm and both of us knew instantly."
+   - Quote: "I needed something simple enough that Sarah would actually use it alongside me. myhouz nailed it. The Urgent Problems alert alone was worth it — we had a pipe issue at 11pm and both of us knew instantly."
    - Attribution: "Jordan & Sarah — homeowners, Austin, Texas"
 
 **Card style:** `bg-white`, `rounded-xl`, `shadow-sm`, `p-6`, `border border-[--border]`
@@ -278,7 +278,7 @@ Layout: Dark footer. Four columns on desktop, two on mobile, one on smallest scr
 **Footer links hover:** white
 
 **Column 1 — Brand:**
-- App name "MyHouz" in white, `font-bold`, `text-xl`
+- App name "myhouz" in white, `font-bold`, `text-xl`
 - Tagline: "Your home, finally organized." in muted gray
 - Small paragraph: "A shared household management app built for couples, roommates, and families."
 - Social icons (placeholder): Twitter/X, Instagram, TikTok — use `ExternalLink` Lucide icon as placeholder for each
@@ -296,7 +296,7 @@ Layout: Dark footer. Four columns on desktop, two on mobile, one on smallest scr
 - Links: Privacy Policy, Terms of Service, Cookie Policy
 
 **Bottom bar:** Full-width divider line, then copyright row:
-- Left: "© 2026 MyHouz. All rights reserved."
+- Left: "© 2026 myhouz. All rights reserved."
 - Right: Language toggle — two links: "English" (active, white) | "Português" (muted)
 
 ---
@@ -305,7 +305,7 @@ Layout: Dark footer. Four columns on desktop, two on mobile, one on smallest scr
 
 Sticky top navbar. Background: `bg-white/95` with `backdrop-blur-sm`. Bottom border: 1px `--border`. Height: 64px.
 
-**Left:** App name "MyHouz" in `--primary`, `font-bold`, `text-xl`. Optionally prepend a small house icon (`Home` Lucide, 18px).
+**Left:** App name "myhouz" in `--primary`, `font-bold`, `text-xl`. Optionally prepend a small house icon (`Home` Lucide, 18px).
 
 **Center (desktop only):** Navigation links — Features, How It Works, Pricing (ghost text links, `--text-secondary`, hover `--text-primary`)
 
@@ -346,19 +346,19 @@ Sticky top navbar. Background: `bg-white/95` with `backdrop-blur-sm`. Bottom bor
 **Meta tags (include in the page's `<head>` via Next.js Metadata API):**
 ```typescript
 export const metadata: Metadata = {
-  title: "MyHouz — Your Home, Finally Organized | Household Management App",
-  description: "MyHouz gives your household one shared space for tasks, reminders, checklists, and urgent problems. Free to start. Built for couples, roommates, and families.",
+  title: "myhouz — Your Home, Finally Organized | Household Management App",
+  description: "myhouz gives your household one shared space for tasks, reminders, checklists, and urgent problems. Free to start. Built for couples, roommates, and families.",
   keywords: ["household management app", "shared to-do list for roommates", "home organization app", "chore tracker", "household tasks app"],
   openGraph: {
-    title: "MyHouz — Your Home, Finally Organized",
+    title: "myhouz — Your Home, Finally Organized",
     description: "Replace scattered messages with one organized space for your entire household.",
     url: "https://myhouz.app",
-    siteName: "MyHouz",
+    siteName: "myhouz",
     type: "website",
   },
   twitter: {
     card: "summary_large_image",
-    title: "MyHouz — Your Home, Finally Organized",
+    title: "myhouz — Your Home, Finally Organized",
     description: "Replace scattered messages with one organized space for your entire household.",
   },
   robots: { index: true, follow: true },
@@ -377,7 +377,7 @@ export const metadata: Metadata = {
 {
   "@context": "https://schema.org",
   "@type": "SoftwareApplication",
-  "name": "MyHouz",
+  "name": "myhouz",
   "applicationCategory": "LifestyleApplication",
   "operatingSystem": "Web",
   "description": "A shared household management app that centralizes tasks, household needs, reminders, and critical info for everyone living under the same roof.",

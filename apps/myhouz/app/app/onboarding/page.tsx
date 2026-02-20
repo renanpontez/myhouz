@@ -11,7 +11,7 @@ export default async function OnboardingPage() {
   return (
     <div className="space-y-6">
       <div className="flex flex-col items-center gap-3 text-center">
-        <img src="/myhouz-logo.svg" alt="MyHouz" className="h-10 w-auto" />
+        <img src="/myhouz-logo.svg" alt="myhouz" className="h-10 w-auto" />
         <p className="text-sm text-muted-foreground">
           {t("subtitle")}
         </p>

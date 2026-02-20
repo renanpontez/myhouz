@@ -11,7 +11,7 @@ export function AuthCard({ title, subtitle, children, footer }: AuthCardProps) {
   return (
     <div className="flex flex-row min-h-screen items-center justify-center">
       <div className="w-1/3">
-        <img src="/myhouz-logo.svg" alt="MyHouz" className="mx-auto h-32 w-auto" />
+        <img src="/myhouz-logo.svg" alt="myhouz" className="mx-auto h-32 w-auto" />
       </div>
 
       <div className="w-full max-w-md p-4">

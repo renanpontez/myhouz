@@ -1,18 +1,21 @@
-"use client";
+import { getTranslations } from "next-intl/server";
+import { BackLink } from "@/components/shared/BackLink";
+import { TaskForm } from "@/components/routines/TaskForm";
 
-import { useTranslations } from "next-intl";
-
-export default function NewChecklistPage() {
-  const t = useTranslations("routines");
+export default async function NewTaskPage() {
+  const t = await getTranslations("routines");
 
   return (
     <div className="p-6">
-      <h1 className="text-2xl font-bold">{t("newTitle")}</h1>
-      <p className="mt-1 text-sm text-muted-foreground">
-        {t("newSubtitle")}
-      </p>
-      <div className="mt-6 rounded-2xl border p-8 text-center text-sm text-muted-foreground">
-        {t("formPlaceholder")}
+      <BackLink href="/app/routines" />
+      <div className="mt-4">
+        <h1 className="text-2xl font-bold">{t("newTitle")}</h1>
+        <p className="mt-1 text-sm text-muted-foreground">
+          {t("newSubtitle")}
+        </p>
+      </div>
+      <div className="mt-6 max-w-md">
+        <TaskForm mode="create" />
       </div>
     </div>
   );

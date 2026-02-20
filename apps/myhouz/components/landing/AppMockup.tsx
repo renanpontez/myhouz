@@ -1,7 +1,7 @@
 import { getTranslations } from "next-intl/server";
 
 /**
- * AppMockup — a pure CSS/Tailwind illustration of the MyHouz dashboard.
+ * AppMockup — a pure CSS/Tailwind illustration of the myhouz dashboard.
  * No images, no external assets.
  * Server Component.
  */

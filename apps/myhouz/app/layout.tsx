@@ -12,7 +12,7 @@ const inter = Inter({
 });
 
 export const metadata: Metadata = {
-  title: "MyHouz",
+  title: "myhouz | home management",
   description: "Shared household management app",
 };
 

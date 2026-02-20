@@ -25,22 +25,22 @@ import { AppMockup } from "@/components/landing/AppMockup";
 // ---------------------------------------------------------------------------
 
 export const metadata: Metadata = {
-  title: "MyHouz — Your Home, Finally Organized",
+  title: "myhouz — Your Home, Finally Organized",
   description:
-    "MyHouz gives everyone under your roof one place to track tasks, manage household needs, and handle what matters. Start free today.",
+    "myhouz gives everyone under your roof one place to track tasks, manage household needs, and handle what matters. Start free today.",
   robots: { index: true, follow: true },
   alternates: { canonical: "https://myhouz.app/" },
   openGraph: {
     type: "website",
     url: "https://myhouz.app/",
-    title: "MyHouz — Your Home, Finally Organized",
+    title: "myhouz — Your Home, Finally Organized",
     description:
       "One place for tasks, items to buy, routines, reminders, and urgent problems. Built for everyone under your roof.",
-    siteName: "MyHouz",
+    siteName: "myhouz",
   },
   twitter: {
     card: "summary_large_image",
-    title: "MyHouz — Your Home, Finally Organized",
+    title: "myhouz — Your Home, Finally Organized",
     description:
       "One place for tasks, items to buy, routines, reminders, and urgent problems. Built for everyone under your roof.",
   },
@@ -63,6 +63,7 @@ export default async function LandingPage() {
         <HowItWorks t={t} />
         <SocialProof t={t} />
         <Pricing t={t} />
+        <Team t={t} />
         <FinalCta t={t} />
       </main>
       <Footer t={t} />
@@ -93,7 +94,7 @@ function Nav({ t }: SectionProps) {
             href="/"
             className="text-xl font-bold text-primary tracking-tight"
           >
-            MyHouz
+            myhouz
           </Link>
 
           <nav className="hidden md:flex items-center gap-6" aria-label="Main navigation">
@@ -728,6 +729,95 @@ function PricingFeature({
 }
 
 // ---------------------------------------------------------------------------
+// Team
+// ---------------------------------------------------------------------------
+
+function Team({ t }: SectionProps) {
+  const members = [
+    {
+      nameKey: "renan" as const,
+      initials: "RM",
+      avatarColor: "bg-primary/20 text-primary",
+    },
+    {
+      nameKey: "andressa" as const,
+      initials: "AH",
+      avatarColor: "bg-brand-accent/20 text-brand-accent",
+    },
+  ];
+
+  return (
+    <section
+      aria-labelledby="team-heading"
+      className="py-20 md:py-28 bg-secondary/40"
+    >
+      <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
+        <div className="text-center mb-14">
+          <h2
+            id="team-heading"
+            className="text-3xl md:text-4xl font-bold tracking-tight text-foreground"
+          >
+            {t("team.title")}
+          </h2>
+          <p className="mt-3 text-muted-foreground text-lg max-w-2xl mx-auto">
+            {t("team.subtitle")}
+          </p>
+        </div>
+
+        <div className="grid sm:grid-cols-2 gap-6 max-w-2xl mx-auto">
+          {members.map((member) => (
+            <TeamMemberCard
+              key={member.nameKey}
+              name={t(`team.${member.nameKey}.name`)}
+              role={t(`team.${member.nameKey}.role`)}
+              bio={t(`team.${member.nameKey}.bio`)}
+              initials={member.initials}
+              avatarColor={member.avatarColor}
+            />
+          ))}
+        </div>
+      </div>
+    </section>
+  );
+}
+
+function TeamMemberCard({
+  name,
+  role,
+  bio,
+  initials,
+  avatarColor,
+}: {
+  name: string;
+  role: string;
+  bio: string;
+  initials: string;
+  avatarColor: string;
+}) {
+  return (
+    <div className="bg-card border border-border rounded-xl p-6 shadow-sm flex flex-col gap-4">
+      <div className="flex items-center gap-4">
+        <div
+          className={`w-14 h-14 rounded-2xl flex items-center justify-center text-base font-bold flex-shrink-0 ${avatarColor}`}
+          aria-hidden="true"
+        >
+          {initials}
+        </div>
+        <div>
+          <p className="text-base font-semibold text-foreground leading-snug">
+            {name}
+          </p>
+          <span className="inline-block mt-1 text-xs font-medium text-primary bg-primary/10 px-2 py-0.5 rounded-full">
+            {role}
+          </span>
+        </div>
+      </div>
+      <p className="text-sm text-muted-foreground leading-relaxed">{bio}</p>
+    </div>
+  );
+}
+
+// ---------------------------------------------------------------------------
 // Final CTA
 // ---------------------------------------------------------------------------
 
@@ -800,7 +890,7 @@ function Footer({ t }: SectionProps) {
               href="/"
               className="text-xl font-bold text-primary tracking-tight"
             >
-              MyHouz
+              myhouz
             </Link>
             <p className="mt-3 text-sm text-muted-foreground leading-relaxed">
               {t("footer.tagline")}
@@ -810,7 +900,7 @@ function Footer({ t }: SectionProps) {
                 href="https://twitter.com/myhouz"
                 target="_blank"
                 rel="noopener noreferrer"
-                aria-label="MyHouz on X (Twitter)"
+                aria-label="myhouz on X (Twitter)"
                 className="w-9 h-9 rounded-lg bg-secondary flex items-center justify-center text-muted-foreground hover:text-foreground hover:bg-muted transition-colors"
               >
                 <Twitter size={16} />
@@ -819,7 +909,7 @@ function Footer({ t }: SectionProps) {
                 href="https://instagram.com/myhouz"
                 target="_blank"
                 rel="noopener noreferrer"
-                aria-label="MyHouz on Instagram"
+                aria-label="myhouz on Instagram"
                 className="w-9 h-9 rounded-lg bg-secondary flex items-center justify-center text-muted-foreground hover:text-foreground hover:bg-muted transition-colors"
               >
                 <Instagram size={16} />
