@@ -38,7 +38,7 @@ Always read the relevant context doc before making architectural decisions or im
 - **Styling:** Tailwind CSS 3 + shadcn/ui (Radix UI primitives)
 - **Package Manager:** npm 9+
 - **Monorepo:** Turborepo
-- **Key Libraries:** date-fns (dates), sonner (toasts), lucide-react (icons), zod (validation), next-themes (dark mode)
+- **Key Libraries:** date-fns (dates), sonner (toasts), lucide-react 0.575+ (icons, includes `lucide-react/dynamic` for DynamicIcon), zod (validation), next-themes (dark mode)
 - **React:** v19 (supports `useOptimistic`, `useTransition`, `use`)
 
 ## Commands
@@ -55,15 +55,12 @@ npm format               # Prettier format all files
 npm test                 # Vitest unit/integration tests
 npm test:e2e             # Playwright E2E tests
 
-# Database
-npm db:reset             # Reset local Supabase DB (applies all migrations + seed)
-npm db:types             # Regenerate TypeScript types from DB schema -> packages/types/src/database.ts
+# Database (remote only -- no local Supabase / Docker)
+npm db:types             # Regenerate TypeScript types from remote DB -> packages/types/src/database.ts
 
 # Supabase CLI (from apps/myhouz/)
 supabase migration new <name>           # Create a new migration file
-supabase db reset                       # Apply migrations from scratch locally
-supabase db push                        # Push migrations to remote
-supabase gen types typescript --local   # Generate TS types from local schema
+supabase db push                        # Push migrations to remote (use this, NOT db reset)
 
 # App-specific (from apps/myhouz/)
 npm dev                  # next dev --turbopack
@@ -615,3 +612,11 @@ In `apps/myhouz/`, use `@/*` to reference files from the app root (maps to `./sr
 9. **`ON DELETE RESTRICT` on `household.owner_id`.** You cannot delete a user who owns a household. Ownership must be transferred first.
 
 10. **Tailwind content paths must include shared packages.** The `tailwind.config.ts` must include `"../../packages/ui/src/**/*.{ts,tsx}"` in its content array, or shared component styles will be purged.
+
+11. **No local Supabase / Docker.** The project only uses remote Supabase. Never run `supabase start`, `supabase db reset`, or use `--local` flags. Use `supabase db push` to apply migrations and `npm run db:types` (which uses `--linked`) to regenerate types.
+
+12. **`supabase gen types` prints noise to stdout.** The CLI outputs "Initialising login role..." before the actual TypeScript. The `db:types` script filters this with `grep -v 'Initialising'`. If you pipe output manually, remember to filter or the generated file won't compile.
+
+13. **`lucide-react/dynamic` requires >= 0.471.0.** The `DynamicIcon` component and `IconName` type are imported from `lucide-react/dynamic`. This subpath does not exist in older versions. The project is on 0.575.0+.
+
+14. **Adding a new DB column requires 3 steps.** (1) Create migration with `supabase migration new`, (2) push with `supabase db push`, (3) regenerate types with `npm run db:types`. The build will fail until types are regenerated because Supabase's generated types enforce column existence at compile time.
