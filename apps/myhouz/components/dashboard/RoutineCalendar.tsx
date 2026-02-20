@@ -210,7 +210,7 @@ export function RoutineCalendar({
         {/* Day header row */}
         <div
           className="mb-3 grid items-center gap-2"
-          style={{ gridTemplateColumns: "1fr repeat(7, 2rem)" }}
+          style={{ gridTemplateColumns: "minmax(2.5rem, auto) repeat(7, 2rem)" }}
         >
           <span />
           {weekDays.map((day) => {

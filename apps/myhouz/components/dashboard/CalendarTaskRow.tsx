@@ -68,22 +68,23 @@ export function CalendarTaskRow({
         "grid items-center gap-2 transition-opacity",
         isPending && "opacity-60",
       )}
-      style={{ gridTemplateColumns: "1fr repeat(7, 2rem)" }}
+      style={{ gridTemplateColumns: "minmax(2.5rem, auto) repeat(7, 2rem)" }}
     >
-      {/* Task name + assignee */}
-      <div className="flex items-center gap-2 overflow-hidden pr-2">
+      {/* Task icon + name */}
+      <div className="flex items-center gap-2 overflow-hidden">
+        {/* Icon — always visible */}
         {(() => {
           const TaskIcon = getTaskIcon(task.icon);
           if (TaskIcon) {
             return (
-              <div className="flex h-6 w-6 shrink-0 items-center justify-center rounded-full bg-primary/10">
+              <div className="flex h-7 w-7 shrink-0 items-center justify-center rounded-full bg-primary/10">
                 <TaskIcon className="h-3.5 w-3.5 text-primary" />
               </div>
             );
           }
           if (task.icon) {
             return (
-              <div className="flex h-6 w-6 shrink-0 items-center justify-center rounded-full bg-primary/10">
+              <div className="flex h-7 w-7 shrink-0 items-center justify-center rounded-full bg-primary/10">
                 <DynamicIcon name={task.icon as IconName} className="h-3.5 w-3.5 text-primary" />
               </div>
             );
@@ -92,22 +93,23 @@ export function CalendarTaskRow({
             return assignee.avatar_url ? (
               <img
                 src={assignee.avatar_url}
-                alt=""
-                className="h-6 w-6 shrink-0 rounded-full object-cover"
+                alt={assignee.name ?? ""}
+                className="h-7 w-7 shrink-0 rounded-full object-cover"
               />
             ) : (
-              <div className="flex h-6 w-6 shrink-0 items-center justify-center rounded-full bg-primary/10 text-[10px] font-semibold text-primary">
+              <div className="flex h-7 w-7 shrink-0 items-center justify-center rounded-full bg-primary/10 text-[10px] font-semibold text-primary">
                 {(assignee.name ?? assignee.email).charAt(0).toUpperCase()}
               </div>
             );
           }
           return (
-            <div className="flex h-6 w-6 shrink-0 items-center justify-center rounded-full bg-muted">
-              <User className="h-3 w-3 text-muted-foreground" />
+            <div className="flex h-7 w-7 shrink-0 items-center justify-center rounded-full bg-muted">
+              <User className="h-3.5 w-3.5 text-muted-foreground" />
             </div>
           );
         })()}
-        <div className="min-w-0">
+        {/* Name — hidden on mobile, visible from md */}
+        <div className="hidden min-w-0 md:block">
           <p className="truncate text-sm font-medium leading-tight">{task.title}</p>
           {assignee && (
             <p className="truncate text-[11px] leading-tight text-muted-foreground">
