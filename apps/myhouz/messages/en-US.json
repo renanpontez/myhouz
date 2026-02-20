@@ -134,8 +134,35 @@
     "newTitle": "Add item",
     "newSubtitle": "Add something to buy, repair, or fix",
     "detailTitle": "Item detail",
-    "formPlaceholder": "Item form placeholder",
-    "detailPlaceholder": "Item detail placeholder"
+    "editTitle": "Edit item",
+    "nameLabel": "Name",
+    "namePlaceholder": "e.g. Dish soap",
+    "typeLabel": "Type",
+    "priorityLabel": "Priority",
+    "priceLabel": "Price",
+    "pricePlaceholder": "0.00",
+    "linkLabel": "Link to buy",
+    "linkPlaceholder": "https://...",
+    "photosLabel": "Photos",
+    "addPhoto": "Add photo",
+    "photosHint": "Up to 5 photos. Images are compressed automatically.",
+    "photosMaxReached": "Maximum 5 photos reached",
+    "uploadError": "Failed to upload image",
+    "tagsLabel": "Tags",
+    "tagsPlaceholder": "Type and press Enter",
+    "assignedToLabel": "Assigned to",
+    "unassigned": "Unassigned",
+    "notesLabel": "Notes",
+    "notesPlaceholder": "Additional details...",
+    "createButton": "Add item",
+    "saveButton": "Save changes",
+    "deleteButton": "Delete item",
+    "deleteConfirm": "Delete this item?",
+    "doneSection": "Done",
+    "photoCount": "{count, plural, one {# photo} other {# photos}}",
+    "statusLabel": "Status",
+    "openLink": "Open link",
+    "noNotes": "No notes"
   },
   "routines": {
     "title": "Routines",
@@ -267,7 +294,14 @@
     "labelRequired": "Label is required",
     "labelMax": "Label is too long",
     "atLeastOneItem": "At least one item is required",
-    "notesMax": "Notes are too long"
+    "notesMax": "Notes are too long",
+    "priceMin": "Price must be 0 or more",
+    "priceMax": "Price is too high",
+    "photosMax": "Maximum 5 photos",
+    "linkInvalid": "Invalid URL",
+    "linkMax": "Link is too long",
+    "tagMax": "Tag is too long (max 50 characters)",
+    "tagsMax": "Maximum 10 tags"
   },
   "error": {
     "somethingWentWrong": "Something went wrong",
@@ -293,7 +327,10 @@
     "createTaskError": "Error creating task.",
     "updateTaskError": "Error updating task.",
     "deleteTaskError": "Error deleting task.",
-    "toggleTaskError": "Error toggling task."
+    "toggleTaskError": "Error toggling task.",
+    "createItemError": "Error creating item.",
+    "updateItemError": "Error updating item.",
+    "deleteItemError": "Error deleting item."
   },
   "enums": {
     "priority": {

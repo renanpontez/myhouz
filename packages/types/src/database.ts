@@ -228,11 +228,15 @@ export type Database = {
           created_at: string
           household_id: string
           id: string
+          link: string | null
           name: string
           notes: string | null
+          photos: string[] | null
+          price: number | null
           priority: Database["public"]["Enums"]["item_priority"]
           resolved_at: string | null
           status: Database["public"]["Enums"]["item_status"]
+          tags: string[] | null
           type: Database["public"]["Enums"]["item_type"]
           updated_at: string
         }
@@ -242,11 +246,15 @@ export type Database = {
           created_at?: string
           household_id: string
           id?: string
+          link?: string | null
           name: string
           notes?: string | null
+          photos?: string[] | null
+          price?: number | null
           priority?: Database["public"]["Enums"]["item_priority"]
           resolved_at?: string | null
           status?: Database["public"]["Enums"]["item_status"]
+          tags?: string[] | null
           type?: Database["public"]["Enums"]["item_type"]
           updated_at?: string
         }
@@ -256,11 +264,15 @@ export type Database = {
           created_at?: string
           household_id?: string
           id?: string
+          link?: string | null
           name?: string
           notes?: string | null
+          photos?: string[] | null
+          price?: number | null
           priority?: Database["public"]["Enums"]["item_priority"]
           resolved_at?: string | null
           status?: Database["public"]["Enums"]["item_status"]
+          tags?: string[] | null
           type?: Database["public"]["Enums"]["item_type"]
           updated_at?: string
         }

@@ -134,8 +134,35 @@
     "newTitle": "Adicionar item",
     "newSubtitle": "Adicione algo para comprar, consertar ou reparar",
     "detailTitle": "Detalhe do item",
-    "formPlaceholder": "Formulario de item em breve",
-    "detailPlaceholder": "Detalhe do item em breve"
+    "editTitle": "Editar item",
+    "nameLabel": "Nome",
+    "namePlaceholder": "Ex: Detergente",
+    "typeLabel": "Tipo",
+    "priorityLabel": "Prioridade",
+    "priceLabel": "Preco",
+    "pricePlaceholder": "0,00",
+    "linkLabel": "Link para comprar",
+    "linkPlaceholder": "https://...",
+    "photosLabel": "Fotos",
+    "addPhoto": "Adicionar foto",
+    "photosHint": "Ate 5 fotos. As imagens sao comprimidas automaticamente.",
+    "photosMaxReached": "Maximo de 5 fotos atingido",
+    "uploadError": "Falha ao enviar imagem",
+    "tagsLabel": "Tags",
+    "tagsPlaceholder": "Digite e pressione Enter",
+    "assignedToLabel": "Responsavel",
+    "unassigned": "Sem responsavel",
+    "notesLabel": "Observacoes",
+    "notesPlaceholder": "Detalhes adicionais...",
+    "createButton": "Adicionar item",
+    "saveButton": "Salvar alteracoes",
+    "deleteButton": "Excluir item",
+    "deleteConfirm": "Excluir este item?",
+    "doneSection": "Concluidos",
+    "photoCount": "{count, plural, one {# foto} other {# fotos}}",
+    "statusLabel": "Status",
+    "openLink": "Abrir link",
+    "noNotes": "Sem observacoes"
   },
   "routines": {
     "title": "Rotinas",
@@ -267,7 +294,14 @@
     "labelRequired": "Rotulo e obrigatorio",
     "labelMax": "Rotulo muito longo",
     "atLeastOneItem": "Pelo menos um item e obrigatorio",
-    "notesMax": "Observacoes muito longas"
+    "notesMax": "Observacoes muito longas",
+    "priceMin": "O preco deve ser 0 ou mais",
+    "priceMax": "Preco muito alto",
+    "photosMax": "Maximo de 5 fotos",
+    "linkInvalid": "URL invalida",
+    "linkMax": "Link muito longo",
+    "tagMax": "Tag muito longa (max 50 caracteres)",
+    "tagsMax": "Maximo de 10 tags"
   },
   "error": {
     "somethingWentWrong": "Algo deu errado",
@@ -293,7 +327,10 @@
     "createTaskError": "Erro ao criar tarefa.",
     "updateTaskError": "Erro ao atualizar tarefa.",
     "deleteTaskError": "Erro ao excluir tarefa.",
-    "toggleTaskError": "Erro ao marcar tarefa."
+    "toggleTaskError": "Erro ao marcar tarefa.",
+    "createItemError": "Erro ao criar item.",
+    "updateItemError": "Erro ao atualizar item.",
+    "deleteItemError": "Erro ao excluir item."
   },
   "enums": {
     "priority": {

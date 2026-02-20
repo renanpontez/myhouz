@@ -21,6 +21,7 @@ interface Item {
   type: "buy" | "repair" | "fix";
   priority: "low" | "medium" | "high";
   status: "pending" | "in_progress" | "done";
+  price: number | null;
 }
 
 interface ItemsWidgetProps {
@@ -82,6 +83,11 @@ export async function ItemsWidget({ items }: ItemsWidgetProps) {
                   <span className="flex-1 truncate text-sm font-medium">
                     {item.name}
                   </span>
+                  {item.price != null && (
+                    <span className="shrink-0 text-xs font-medium text-muted-foreground">
+                      R$ {item.price.toFixed(2)}
+                    </span>
+                  )}
                   <Badge
                     variant="outline"
                     className="shrink-0 border-none text-[10px]"
