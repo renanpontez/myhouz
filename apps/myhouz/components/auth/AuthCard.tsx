@@ -9,7 +9,7 @@ interface AuthCardProps {
 
 export function AuthCard({ title, subtitle, children, footer }: AuthCardProps) {
   return (
-    <div className="flex flex-row min-h-screen items-center justify-center">
+    <div className="flex flex-col md:flex-row min-h-screen items-center justify-center">
       <div className="w-1/3">
         <img src="/myhouz-logo.svg" alt="myhouz" className="mx-auto h-32 w-auto" />
       </div>
