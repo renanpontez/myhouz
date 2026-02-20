@@ -9,7 +9,8 @@ import {
   hasCompletionOnDate,
 } from "@/lib/cycle";
 import { isToday as isDateToday, isFuture } from "date-fns";
-import { Check } from "lucide-react";
+import { Check, User } from "lucide-react";
+import { useHousehold } from "@home/auth/hooks";
 import { cn } from "@home/ui";
 import type { RecurrenceMeta } from "@home/types";
 
@@ -31,7 +32,12 @@ export function CalendarTaskRow({
   completions,
   weekDays,
 }: CalendarTaskRowProps) {
+  const { members } = useHousehold();
   const meta = task.recurrence_meta as RecurrenceMeta;
+
+  const assignee = task.assigned_to
+    ? members.find((m) => m.id === task.assigned_to)
+    : null;
 
   const todayCompleted = isCompletedThisCycle(
     task.last_completed_at,
@@ -61,8 +67,34 @@ export function CalendarTaskRow({
       )}
       style={{ gridTemplateColumns: "1fr repeat(7, 2rem)" }}
     >
-      {/* Task name */}
-      <span className="truncate pr-2 text-sm font-medium">{task.title}</span>
+      {/* Task name + assignee */}
+      <div className="flex items-center gap-2 overflow-hidden pr-2">
+        {assignee ? (
+          assignee.avatar_url ? (
+            <img
+              src={assignee.avatar_url}
+              alt=""
+              className="h-6 w-6 shrink-0 rounded-full object-cover"
+            />
+          ) : (
+            <div className="flex h-6 w-6 shrink-0 items-center justify-center rounded-full bg-primary/10 text-[10px] font-semibold text-primary">
+              {(assignee.name ?? assignee.email).charAt(0).toUpperCase()}
+            </div>
+          )
+        ) : (
+          <div className="flex h-6 w-6 shrink-0 items-center justify-center rounded-full bg-muted">
+            <User className="h-3 w-3 text-muted-foreground" />
+          </div>
+        )}
+        <div className="min-w-0">
+          <p className="truncate text-sm font-medium leading-tight">{task.title}</p>
+          {assignee && (
+            <p className="truncate text-[11px] leading-tight text-muted-foreground">
+              {assignee.name ?? assignee.email}
+            </p>
+          )}
+        </div>
+      </div>
 
       {/* 7 day dots */}
       {weekDays.map((day) => {
