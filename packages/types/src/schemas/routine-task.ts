@@ -34,6 +34,7 @@ export const createTaskSchema = (t: (key: string) => string) =>
     recurrence: recurrenceTypeSchema.default("daily"),
     recurrence_meta: recurrenceMetaSchema.nullable().optional(),
     assigned_to: z.string().uuid().optional(),
+    icon: z.string().max(50).nullable().optional(),
   });
 
 export const createUpdateTaskSchema = (t: (key: string) => string) =>
@@ -43,6 +44,7 @@ export const createUpdateTaskSchema = (t: (key: string) => string) =>
     recurrence_meta: recurrenceMetaSchema.nullable().optional(),
     assigned_to: z.string().uuid().nullable().optional(),
     is_active: z.boolean().optional(),
+    icon: z.string().max(50).nullable().optional(),
   });
 
 export type CreateTaskInput = z.infer<ReturnType<typeof createTaskSchema>>;

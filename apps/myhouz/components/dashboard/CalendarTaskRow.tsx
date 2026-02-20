@@ -10,8 +10,10 @@ import {
 } from "@/lib/cycle";
 import { isToday as isDateToday, isFuture } from "date-fns";
 import { Check, User } from "lucide-react";
+import { DynamicIcon, type IconName } from "lucide-react/dynamic";
 import { useHousehold } from "@home/auth/hooks";
 import { cn } from "@home/ui";
+import { getTaskIcon } from "@/lib/task-icons";
 import type { RecurrenceMeta } from "@home/types";
 
 interface CalendarTaskRowProps {
@@ -22,6 +24,7 @@ interface CalendarTaskRowProps {
     recurrence_meta: unknown;
     last_completed_at: string | null;
     assigned_to: string | null;
+    icon: string | null;
   };
   completions: { completed_at: string }[];
   weekDays: Date[];
@@ -69,23 +72,41 @@ export function CalendarTaskRow({
     >
       {/* Task name + assignee */}
       <div className="flex items-center gap-2 overflow-hidden pr-2">
-        {assignee ? (
-          assignee.avatar_url ? (
-            <img
-              src={assignee.avatar_url}
-              alt=""
-              className="h-6 w-6 shrink-0 rounded-full object-cover"
-            />
-          ) : (
-            <div className="flex h-6 w-6 shrink-0 items-center justify-center rounded-full bg-primary/10 text-[10px] font-semibold text-primary">
-              {(assignee.name ?? assignee.email).charAt(0).toUpperCase()}
+        {(() => {
+          const TaskIcon = getTaskIcon(task.icon);
+          if (TaskIcon) {
+            return (
+              <div className="flex h-6 w-6 shrink-0 items-center justify-center rounded-full bg-primary/10">
+                <TaskIcon className="h-3.5 w-3.5 text-primary" />
+              </div>
+            );
+          }
+          if (task.icon) {
+            return (
+              <div className="flex h-6 w-6 shrink-0 items-center justify-center rounded-full bg-primary/10">
+                <DynamicIcon name={task.icon as IconName} className="h-3.5 w-3.5 text-primary" />
+              </div>
+            );
+          }
+          if (assignee) {
+            return assignee.avatar_url ? (
+              <img
+                src={assignee.avatar_url}
+                alt=""
+                className="h-6 w-6 shrink-0 rounded-full object-cover"
+              />
+            ) : (
+              <div className="flex h-6 w-6 shrink-0 items-center justify-center rounded-full bg-primary/10 text-[10px] font-semibold text-primary">
+                {(assignee.name ?? assignee.email).charAt(0).toUpperCase()}
+              </div>
+            );
+          }
+          return (
+            <div className="flex h-6 w-6 shrink-0 items-center justify-center rounded-full bg-muted">
+              <User className="h-3 w-3 text-muted-foreground" />
             </div>
-          )
-        ) : (
-          <div className="flex h-6 w-6 shrink-0 items-center justify-center rounded-full bg-muted">
-            <User className="h-3 w-3 text-muted-foreground" />
-          </div>
-        )}
+          );
+        })()}
         <div className="min-w-0">
           <p className="truncate text-sm font-medium leading-tight">{task.title}</p>
           {assignee && (

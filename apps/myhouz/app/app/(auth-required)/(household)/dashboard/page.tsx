@@ -34,6 +34,7 @@ export default async function DashboardPage() {
     recurrence_meta: unknown;
     last_completed_at: string | null;
     assigned_to: string | null;
+    icon: string | null;
   }[] = [];
   let completionsByTask: Record<string, { completed_at: string }[]> = {};
 
@@ -62,7 +63,7 @@ export default async function DashboardPage() {
       supabase
         .from("routine_task")
         .select(
-          "id, title, recurrence, recurrence_meta, last_completed_at, assigned_to",
+          "id, title, recurrence, recurrence_meta, last_completed_at, assigned_to, icon",
         )
         .eq("household_id", householdId)
         .eq("is_active", true)
@@ -100,17 +101,18 @@ export default async function DashboardPage() {
       <p className="mt-1 text-sm text-muted-foreground">{t("subtitle")}</p>
 
       <div className="mt-6 grid gap-4 lg:grid-cols-3">
+        {/* Column 3: Routine Calendar */}
+        <RoutineCalendar
+          tasks={tasks}
+          completionsByTask={completionsByTask}
+        />
         {/* Column 1: Items to Buy */}
         <ItemsWidget items={items} />
 
         {/* Column 2: Reminders */}
         <RemindersWidget reminders={reminders} />
 
-        {/* Column 3: Routine Calendar */}
-        <RoutineCalendar
-          tasks={tasks}
-          completionsByTask={completionsByTask}
-        />
+
       </div>
     </div>
   );

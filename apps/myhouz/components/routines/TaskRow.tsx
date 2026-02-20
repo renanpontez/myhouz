@@ -8,7 +8,9 @@ import { toggleTask } from "@/actions/routines";
 import { toast } from "sonner";
 import { formatDistanceToNow } from "date-fns";
 import { User, Flame } from "lucide-react";
+import { DynamicIcon, type IconName } from "lucide-react/dynamic";
 import { RecurrenceBadgeClient } from "./RecurrenceBadgeClient";
+import { getTaskIcon } from "@/lib/task-icons";
 import type { RecurrenceMeta } from "@home/types";
 
 interface TaskRowProps {
@@ -19,6 +21,7 @@ interface TaskRowProps {
     recurrence_meta: unknown;
     last_completed_at: string | null;
     assigned_to: string | null;
+    icon?: string | null;
   };
   isCompletedThisCycle: boolean;
   isActiveToday: boolean;
@@ -102,7 +105,12 @@ export function TaskRow({
           />
           {assignee && (
             <span className="flex items-center gap-1 text-xs text-muted-foreground">
-              <User className="h-3 w-3" />
+              {(() => {
+                const StaticIcon = getTaskIcon(task.icon ?? null);
+                if (StaticIcon) return <StaticIcon className="h-3 w-3 text-primary" />;
+                if (task.icon) return <DynamicIcon name={task.icon as IconName} className="h-3 w-3 text-primary" />;
+                return <User className="h-3 w-3" />;
+              })()}
               {assignee.name ?? assignee.email}
             </span>
           )}

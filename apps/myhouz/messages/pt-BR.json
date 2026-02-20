@@ -105,7 +105,9 @@
       "today": "Hoje",
       "tasksCompleted": "{done}/{total} feitas",
       "noRoutines": "Nenhuma tarefa de rotina ainda",
-      "noRoutinesAction": "Crie sua primeira tarefa"
+      "noRoutinesAction": "Crie sua primeira tarefa",
+      "addTask": "Nova tarefa",
+      "viewAll": "Ver todas"
     },
     "itemsWidget": {
       "title": "Itens",
@@ -166,7 +168,10 @@
     "selectDaysHint": "Selecione em quais dias esta tarefa deve rodar",
     "selectAtLeastOneDay": "Selecione pelo menos um dia",
     "intervalHint": "Defina com que frequencia esta tarefa se repete",
-    "every": "A cada"
+    "every": "A cada",
+    "iconLabel": "Icone",
+    "selectIcon": "Escolher icone",
+    "noIcon": "Nenhum"
   },
   "reminders": {
     "title": "Lembretes",

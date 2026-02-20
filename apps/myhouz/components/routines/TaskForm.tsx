@@ -7,6 +7,7 @@ import { Button, Input } from "@home/ui";
 import { Loader2 } from "lucide-react";
 import { createTask, updateTask } from "@/actions/routines";
 import { toast } from "sonner";
+import { IconPicker } from "./IconPicker";
 import type { RecurrenceType, RecurrenceMeta } from "@home/types";
 
 interface TaskFormProps {
@@ -17,6 +18,7 @@ interface TaskFormProps {
     recurrence: RecurrenceType;
     recurrence_meta?: RecurrenceMeta;
     assigned_to?: string | null;
+    icon?: string | null;
   };
 }
 
@@ -64,6 +66,9 @@ export function TaskForm({ mode, taskId, defaultValues }: TaskFormProps) {
   const { household, members } = useHousehold();
   const [isPending, startTransition] = useTransition();
 
+  const [icon, setIcon] = useState<string | null>(
+    defaultValues?.icon ?? null,
+  );
   const [assignedTo, setAssignedTo] = useState(
     defaultValues?.assigned_to ?? "",
   );
@@ -118,6 +123,9 @@ export function TaskForm({ mode, taskId, defaultValues }: TaskFormProps) {
     const meta = buildRecurrenceMeta();
     formData.set("recurrence_meta", meta ? JSON.stringify(meta) : "");
 
+    // Set icon
+    formData.set("icon", icon ?? "");
+
     // Set assigned_to
     if (assignedTo) {
       formData.set("assigned_to", assignedTo);
@@ -154,6 +162,9 @@ export function TaskForm({ mode, taskId, defaultValues }: TaskFormProps) {
           required
         />
       </div>
+
+      {/* Icon picker */}
+      <IconPicker value={icon} onChange={setIcon} />
 
       {/* Recurrence selector */}
       <div className="space-y-1.5">

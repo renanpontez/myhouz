@@ -105,7 +105,9 @@
       "today": "Today",
       "tasksCompleted": "{done}/{total} done",
       "noRoutines": "No routine tasks yet",
-      "noRoutinesAction": "Create your first task"
+      "noRoutinesAction": "Create your first task",
+      "addTask": "New task",
+      "viewAll": "View all"
     },
     "itemsWidget": {
       "title": "Items",
@@ -166,7 +168,10 @@
     "selectDaysHint": "Select which days this task should run",
     "selectAtLeastOneDay": "Select at least one day",
     "intervalHint": "Set how often this task repeats",
-    "every": "Every"
+    "every": "Every",
+    "iconLabel": "Icon",
+    "selectIcon": "Select icon",
+    "noIcon": "None"
   },
   "reminders": {
     "title": "Reminders",

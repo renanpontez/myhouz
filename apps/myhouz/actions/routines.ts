@@ -31,12 +31,15 @@ export async function createTask(
     formData.get("recurrence_meta") as string | null,
   );
 
+  const rawIcon = formData.get("icon") as string | null;
+
   const schema = createTaskSchema(t);
   const parsed = schema.safeParse({
     title: formData.get("title"),
     recurrence: formData.get("recurrence") || "daily",
     recurrence_meta: recurrenceMeta,
     assigned_to: (formData.get("assigned_to") as string) || undefined,
+    icon: rawIcon || null,
   });
 
   if (!parsed.success) {
@@ -54,6 +57,7 @@ export async function createTask(
     recurrence: parsed.data.recurrence,
     recurrence_meta: parsed.data.recurrence_meta ?? null,
     assigned_to: parsed.data.assigned_to ?? null,
+    icon: parsed.data.icon ?? null,
     created_by: profile.id,
   });
 
@@ -79,6 +83,7 @@ export async function updateTask(
   const rawMeta = formData.get("recurrence_meta") as string | null;
   const recurrenceMeta = parseRecurrenceMeta(rawMeta);
   const rawAssignedTo = formData.get("assigned_to") as string | null;
+  const rawIcon = formData.get("icon") as string | null;
 
   const schema = createUpdateTaskSchema(t);
   const parsed = schema.safeParse({
@@ -86,6 +91,7 @@ export async function updateTask(
     recurrence: formData.get("recurrence") || undefined,
     recurrence_meta: recurrenceMeta,
     assigned_to: rawAssignedTo || null,
+    icon: rawIcon || null,
   });
 
   if (!parsed.success) {
@@ -105,6 +111,7 @@ export async function updateTask(
     updateData.is_active = parsed.data.is_active;
   if (parsed.data.assigned_to !== undefined)
     updateData.assigned_to = parsed.data.assigned_to;
+  if (parsed.data.icon !== undefined) updateData.icon = parsed.data.icon;
   // Always set recurrence_meta when recurrence is provided
   if (parsed.data.recurrence) {
     updateData.recurrence_meta = parsed.data.recurrence_meta ?? null;

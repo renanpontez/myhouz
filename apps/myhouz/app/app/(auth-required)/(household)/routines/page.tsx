@@ -26,7 +26,7 @@ export default async function RoutinesPage() {
   const { data: tasks } = await supabase
     .from("routine_task")
     .select(
-      "id, title, recurrence, recurrence_meta, assigned_to, last_completed_at, sort_order",
+      "id, title, recurrence, recurrence_meta, assigned_to, last_completed_at, sort_order, icon",
     )
     .eq("household_id", householdId)
     .eq("is_active", true)

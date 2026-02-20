@@ -15,6 +15,18 @@ export {
 export { Badge, badgeVariants, type BadgeProps } from "./components/badge";
 export { Skeleton } from "./components/skeleton";
 export { Label } from "./components/label";
+export {
+  Popover,
+  PopoverTrigger,
+  PopoverContent,
+  PopoverAnchor,
+} from "./components/popover";
+export {
+  Tooltip,
+  TooltipTrigger,
+  TooltipContent,
+  TooltipProvider,
+} from "./components/tooltip";
 
 // Hooks
 export { useMediaQuery } from "./hooks/use-media-query";

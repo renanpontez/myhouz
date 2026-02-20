@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useMemo } from "react";
+import { useState, useMemo, useOptimistic, useTransition } from "react";
 import { useTranslations, useLocale } from "next-intl";
 import type { Locale } from "date-fns";
 import {
@@ -13,11 +13,21 @@ import {
   isToday as isDateToday,
 } from "date-fns";
 import { ptBR, enUS } from "date-fns/locale";
-import { ChevronLeft, ChevronRight, ListChecks } from "lucide-react";
+import {
+  ChevronLeft,
+  ChevronRight,
+  ListChecks,
+  Plus,
+  Check,
+  Circle,
+} from "lucide-react";
 import { Card, CardContent } from "@home/ui";
 import { cn } from "@home/ui";
 import Link from "next/link";
 import { CalendarTaskRow } from "./CalendarTaskRow";
+import { isActiveToday, isCompletedThisCycle } from "@/lib/cycle";
+import { toggleTask } from "@/actions/routines";
+import { toast } from "sonner";
 import type { RecurrenceMeta } from "@home/types";
 
 interface Task {
@@ -27,6 +37,7 @@ interface Task {
   recurrence_meta: unknown;
   last_completed_at: string | null;
   assigned_to: string | null;
+  icon: string | null;
 }
 
 interface RoutineCalendarProps {
@@ -38,6 +49,53 @@ const DATE_FNS_LOCALES: Record<string, Locale> = {
   "pt-BR": ptBR,
   "en-US": enUS,
 };
+
+/* ── Inline pill for today's task strip ── */
+
+function TodayTaskPill({
+  task,
+  isCompleted,
+}: {
+  task: Task;
+  isCompleted: boolean;
+}) {
+  const [isPending, startTransition] = useTransition();
+  const [optimisticCompleted, setOptimisticCompleted] =
+    useOptimistic(isCompleted);
+
+  function handleToggle() {
+    startTransition(async () => {
+      setOptimisticCompleted(!optimisticCompleted);
+      const result = await toggleTask(task.id);
+      if (result.error) {
+        toast.error(result.error);
+      }
+    });
+  }
+
+  return (
+    <button
+      type="button"
+      onClick={handleToggle}
+      className={cn(
+        "inline-flex shrink-0 items-center gap-1.5 rounded-full border px-3 py-1.5 text-xs font-medium transition-all",
+        isPending && "opacity-60",
+        optimisticCompleted
+          ? "border-primary/20 bg-primary/5 text-muted-foreground line-through"
+          : "border-border bg-background text-foreground hover:bg-accent",
+      )}
+    >
+      {optimisticCompleted ? (
+        <Check className="h-3 w-3 shrink-0 text-primary" strokeWidth={3} />
+      ) : (
+        <Circle className="h-3 w-3 shrink-0 text-muted-foreground" />
+      )}
+      <span className="max-w-[8rem] truncate">{task.title}</span>
+    </button>
+  );
+}
+
+/* ── Main component ── */
 
 export function RoutineCalendar({
   tasks,
@@ -69,6 +127,21 @@ export function RoutineCalendar({
       ? `${format(weekStart, "MMM d", { locale: dateFnsLocale })} – ${format(weekEnd, "d", { locale: dateFnsLocale })}`
       : `${format(weekStart, "MMM d", { locale: dateFnsLocale })} – ${format(weekEnd, "MMM d", { locale: dateFnsLocale })}`;
 
+  // Today's active tasks for the strip
+  const todayTasks = useMemo(
+    () =>
+      tasks.filter((task) => {
+        const meta = task.recurrence_meta as RecurrenceMeta | undefined;
+        return isActiveToday(task.recurrence, meta);
+      }),
+    [tasks],
+  );
+
+  const todayDoneCount = todayTasks.filter((task) => {
+    const meta = task.recurrence_meta as RecurrenceMeta | undefined;
+    return isCompletedThisCycle(task.last_completed_at, task.recurrence, meta);
+  }).length;
+
   // Empty state
   if (tasks.length === 0) {
     return (
@@ -92,7 +165,16 @@ export function RoutineCalendar({
       <CardContent className="p-4 sm:p-5">
         {/* Header */}
         <div className="mb-5 flex items-center justify-between">
-          <h2 className="text-lg font-semibold">{t("title")}</h2>
+          <div className="flex items-center gap-2">
+            <h2 className="text-lg font-semibold">{t("title")}</h2>
+            <Link
+              href="/app/routines/new"
+              className="inline-flex h-7 w-7 items-center justify-center rounded-md text-muted-foreground transition-colors hover:bg-accent hover:text-foreground"
+              aria-label={t("addTask")}
+            >
+              <Plus className="h-4 w-4" />
+            </Link>
+          </div>
           <div className="flex items-center gap-1">
             {!isCurrentWeek && (
               <button
@@ -161,6 +243,57 @@ export function RoutineCalendar({
             />
           ))}
         </div>
+
+        {/* Footer — today's tasks strip + View all */}
+        {todayTasks.length > 0 && (
+          <div className="mt-4 border-t pt-4">
+            <div className="mb-2 flex items-center justify-between">
+              <span className="text-xs font-medium text-muted-foreground">
+                {t("tasksCompleted", {
+                  done: todayDoneCount,
+                  total: todayTasks.length,
+                })}
+              </span>
+              <Link
+                href="/app/routines"
+                className="text-xs font-medium text-muted-foreground transition-colors hover:text-foreground"
+              >
+                {t("viewAll")}
+              </Link>
+            </div>
+            <div className="flex gap-2 overflow-x-auto pb-1">
+              {todayTasks.map((task) => {
+                const meta = task.recurrence_meta as
+                  | RecurrenceMeta
+                  | undefined;
+                const completed = isCompletedThisCycle(
+                  task.last_completed_at,
+                  task.recurrence,
+                  meta,
+                );
+                return (
+                  <TodayTaskPill
+                    key={task.id}
+                    task={task}
+                    isCompleted={completed}
+                  />
+                );
+              })}
+            </div>
+          </div>
+        )}
+
+        {/* View all fallback when no today tasks */}
+        {todayTasks.length === 0 && (
+          <div className="mt-4 border-t pt-3 text-right">
+            <Link
+              href="/app/routines"
+              className="text-xs font-medium text-muted-foreground transition-colors hover:text-foreground"
+            >
+              {t("viewAll")}
+            </Link>
+          </div>
+        )}
       </CardContent>
     </Card>
   );

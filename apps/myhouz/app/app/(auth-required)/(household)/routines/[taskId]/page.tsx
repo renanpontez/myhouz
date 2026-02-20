@@ -36,7 +36,7 @@ export default async function TaskDetailPage({ params }: TaskDetailPageProps) {
   const { data: task } = await supabase
     .from("routine_task")
     .select(
-      "id, title, recurrence, recurrence_meta, is_active, household_id, assigned_to, last_completed_at, created_by, created_at",
+      "id, title, recurrence, recurrence_meta, is_active, household_id, assigned_to, last_completed_at, created_by, created_at, icon",
     )
     .eq("id", taskId)
     .eq("household_id", householdId)
