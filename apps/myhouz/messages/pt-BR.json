@@ -99,13 +99,29 @@
     "membersLabel": "Membros",
     "membersDescription": "Quem mora aqui",
     "calendar": {
-      "title": "Calendario de Rotinas",
+      "title": "Rotinas",
       "noTasks": "Nenhuma tarefa para este dia",
       "tasksForDay": "Tarefas de {date}",
       "today": "Hoje",
       "tasksCompleted": "{done}/{total} feitas",
       "noRoutines": "Nenhuma tarefa de rotina ainda",
       "noRoutinesAction": "Crie sua primeira tarefa"
+    },
+    "itemsWidget": {
+      "title": "Itens",
+      "viewAll": "Ver todos",
+      "empty": "Nenhum item pendente",
+      "emptyAction": "Adicionar item",
+      "pendingCount": "{count} pendentes"
+    },
+    "remindersWidget": {
+      "title": "Lembretes",
+      "viewAll": "Ver todos",
+      "empty": "Nenhum lembrete pendente",
+      "emptyAction": "Adicionar lembrete",
+      "overdue": "Atrasado",
+      "dueToday": "Vence hoje",
+      "upcoming": "Proximo"
     }
   },
   "items": {

@@ -99,13 +99,29 @@
     "membersLabel": "Members",
     "membersDescription": "Who lives here",
     "calendar": {
-      "title": "Routine Calendar",
+      "title": "Routines",
       "noTasks": "No tasks for this day",
       "tasksForDay": "Tasks for {date}",
       "today": "Today",
       "tasksCompleted": "{done}/{total} done",
       "noRoutines": "No routine tasks yet",
       "noRoutinesAction": "Create your first task"
+    },
+    "itemsWidget": {
+      "title": "Items",
+      "viewAll": "View all",
+      "empty": "No pending items",
+      "emptyAction": "Add item",
+      "pendingCount": "{count} pending"
+    },
+    "remindersWidget": {
+      "title": "Reminders",
+      "viewAll": "View all",
+      "empty": "No upcoming reminders",
+      "emptyAction": "Add reminder",
+      "overdue": "Overdue",
+      "dueToday": "Due today",
+      "upcoming": "Upcoming"
     }
   },
   "items": {

@@ -1,16 +1,9 @@
-import Link from "next/link";
 import { cookies } from "next/headers";
-import { Card, CardContent } from "@home/ui";
-import {
-  ShoppingCart,
-  ListChecks,
-  Bell,
-  AlertTriangle,
-  Users,
-} from "lucide-react";
 import { getTranslations } from "next-intl/server";
 import { createServerClient } from "@home/db";
 import { getUserWithRole } from "@home/auth";
+import { ItemsWidget } from "@/components/dashboard/ItemsWidget";
+import { RemindersWidget } from "@/components/dashboard/RemindersWidget";
 import { RoutineCalendar } from "@/components/dashboard/RoutineCalendar";
 
 export default async function DashboardPage() {
@@ -19,7 +12,21 @@ export default async function DashboardPage() {
   const cookieStore = await cookies();
   const householdId = cookieStore.get("activeHouseholdId")?.value;
 
-  // Fetch routine tasks if household exists
+  let items: {
+    id: string;
+    name: string;
+    type: "buy" | "repair" | "fix";
+    priority: "low" | "medium" | "high";
+    status: "pending" | "in_progress" | "done";
+  }[] = [];
+
+  let reminders: {
+    id: string;
+    title: string;
+    due_at: string;
+    is_completed: boolean;
+  }[] = [];
+
   let tasks: {
     id: string;
     title: string;
@@ -34,16 +41,37 @@ export default async function DashboardPage() {
     await getUserWithRole(householdId);
     const supabase = createServerClient();
 
-    const { data: taskData } = await supabase
-      .from("routine_task")
-      .select(
-        "id, title, recurrence, recurrence_meta, last_completed_at, assigned_to",
-      )
-      .eq("household_id", householdId)
-      .eq("is_active", true)
-      .order("sort_order", { ascending: true });
+    // Fetch all three datasets in parallel
+    const [itemsResult, remindersResult, tasksResult] = await Promise.all([
+      supabase
+        .from("household_item")
+        .select("id, name, type, priority, status")
+        .eq("household_id", householdId)
+        .neq("status", "done")
+        .order("priority", { ascending: false })
+        .limit(10),
 
-    tasks = taskData ?? [];
+      supabase
+        .from("reminder")
+        .select("id, title, due_at, is_completed")
+        .eq("household_id", householdId)
+        .eq("is_completed", false)
+        .order("due_at", { ascending: true })
+        .limit(10),
+
+      supabase
+        .from("routine_task")
+        .select(
+          "id, title, recurrence, recurrence_meta, last_completed_at, assigned_to",
+        )
+        .eq("household_id", householdId)
+        .eq("is_active", true)
+        .order("sort_order", { ascending: true }),
+    ]);
+
+    items = (itemsResult.data ?? []) as typeof items;
+    reminders = (remindersResult.data ?? []) as typeof reminders;
+    tasks = tasksResult.data ?? [];
 
     // Fetch completions for the last 90 days
     const taskIds = tasks.map((t) => t.id);
@@ -66,78 +94,23 @@ export default async function DashboardPage() {
     }
   }
 
-  const sections = [
-    {
-      href: "/app/items",
-      label: t("itemsLabel"),
-      description: t("itemsDescription"),
-      icon: ShoppingCart,
-    },
-    {
-      href: "/app/routines",
-      label: t("routinesLabel"),
-      description: t("routinesDescription"),
-      icon: ListChecks,
-    },
-    {
-      href: "/app/reminders",
-      label: t("remindersLabel"),
-      description: t("remindersDescription"),
-      icon: Bell,
-    },
-    {
-      href: "/app/urgent",
-      label: t("urgentLabel"),
-      description: t("urgentDescription"),
-      icon: AlertTriangle,
-      variant: "destructive" as const,
-    },
-    {
-      href: "/app/members",
-      label: t("membersLabel"),
-      description: t("membersDescription"),
-      icon: Users,
-    },
-  ];
-
   return (
     <div className="p-6">
       <h1 className="text-2xl font-bold">{t("title")}</h1>
-      <p className="mt-1 text-sm text-muted-foreground">
-        {t("subtitle")}
-      </p>
+      <p className="mt-1 text-sm text-muted-foreground">{t("subtitle")}</p>
 
-      <div className="mt-6">
+      <div className="mt-6 grid gap-4 lg:grid-cols-3">
+        {/* Column 1: Items to Buy */}
+        <ItemsWidget items={items} />
+
+        {/* Column 2: Reminders */}
+        <RemindersWidget reminders={reminders} />
+
+        {/* Column 3: Routine Calendar */}
         <RoutineCalendar
           tasks={tasks}
           completionsByTask={completionsByTask}
         />
-      </div>
-
-      <div className="mt-6 grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
-        {sections.map((section) => (
-          <Link key={section.href} href={section.href}>
-            <Card className="cursor-pointer transition-colors hover:bg-accent">
-              <CardContent className="flex items-center gap-4 p-4">
-                <div
-                  className={`flex h-10 w-10 shrink-0 items-center justify-center rounded-full ${
-                    section.variant === "destructive"
-                      ? "bg-destructive/10 text-destructive"
-                      : "bg-primary/10 text-primary"
-                  }`}
-                >
-                  <section.icon className="h-5 w-5" />
-                </div>
-                <div>
-                  <p className="font-medium">{section.label}</p>
-                  <p className="text-sm text-muted-foreground">
-                    {section.description}
-                  </p>
-                </div>
-              </CardContent>
-            </Card>
-          </Link>
-        ))}
       </div>
     </div>
   );
