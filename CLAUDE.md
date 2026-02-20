@@ -1,4 +1,4 @@
-# MyHouz
+# myhouz
 
 A shared household management app that centralizes tasks, household needs, reminders, and critical info for everyone living under the same roof.
 
@@ -80,7 +80,7 @@ SUPABASE_SERVICE_ROLE_KEY=eyJ...                         # Server-only, never ex
 
 # Required -- App
 NEXT_PUBLIC_APP_URL=http://localhost:3000
-NEXT_PUBLIC_APP_NAME="MyHouz"
+NEXT_PUBLIC_APP_NAME="myhouz"
 
 # Required -- Email
 RESEND_API_KEY=re_...
@@ -127,8 +127,8 @@ RESEND_API_KEY=re_...
 | `household_member` | `HouseholdMember` | Core | Yes |
 | `household_invite` | `HouseholdInvite` | Invites | Yes |
 | `household_item` | `HouseholdItem` | Items to Buy | Yes |
-| `routine_checklist` | `RoutineChecklist` | Routines | Yes |
-| `routine_checklist_item` | `RoutineChecklistItem` | Routines | Yes |
+| `routine_task` | `RoutineTask` | Routines | Yes |
+| `routine_task_completion` | `RoutineTaskCompletion` | Routines | Yes |
 | `reminder` | `Reminder` | Reminders | Yes |
 | `urgent_problem` | `UrgentProblem` | Urgent | Yes |
 | `notification` | `Notification` | Notifications | Yes |
@@ -143,7 +143,7 @@ RESEND_API_KEY=re_...
 | `item_type` | `buy`, `repair`, `fix` | `household_item.type` |
 | `item_priority` | `low`, `medium`, `high` | `household_item.priority` |
 | `item_status` | `pending`, `in_progress`, `done` | `household_item.status` |
-| `recurrence_type` | `daily`, `weekly`, `monthly`, `custom` | `routine_checklist.recurrence` |
+| `recurrence_type` | `daily`, `weekly`, `monthly`, `custom` | `routine_task.recurrence` |
 | `invite_status` | `pending`, `accepted`, `revoked`, `expired` | `household_invite.status` |
 
 ### User Roles
@@ -182,10 +182,10 @@ RootLayout (app/layout.tsx)
 | `/app/items` | Items to Buy list | Household, Server |
 | `/app/items/new` | Create item | Household, Client |
 | `/app/items/[itemId]` | Item detail/edit | Household, Server shell + Client form |
-| `/app/routines` | Routine Checklists list | Household, Server |
-| `/app/routines/new` | Create checklist | Household, Client |
-| `/app/routines/[checklistId]` | Checklist detail | Household, Server + Client items |
-| `/app/routines/[checklistId]/edit` | Edit checklist | Household, Client |
+| `/app/routines` | Today's tasks list | Household, Server |
+| `/app/routines/new` | Create task | Household, Client |
+| `/app/routines/[taskId]` | Task detail + history | Household, Server + Client |
+| `/app/routines/[taskId]/edit` | Edit task | Household, Client |
 | `/app/reminders` | Reminders list | Household, Server |
 | `/app/reminders/new` | Create reminder | Household, Client |
 | `/app/reminders/[reminderId]` | Reminder detail/edit | Household, Server + Client |
@@ -205,9 +205,7 @@ All under `/api/household/[householdId]/`:
 /items                    GET, POST
 /items/[itemId]           GET, PATCH, DELETE
 /routines                 GET, POST
-/routines/[checklistId]   GET, PATCH, DELETE
-/routines/[checklistId]/items              GET, POST
-/routines/[checklistId]/items/[itemId]     PATCH, DELETE
+/routines/[taskId]        GET, PATCH, DELETE
 /reminders                GET, POST
 /reminders/[reminderId]   GET, PATCH, DELETE
 /urgent                   GET, POST
@@ -387,7 +385,7 @@ export async function createItem(householdId: string, formData: FormData) {
 | `actions/household.ts` | `createHousehold`, `updateHousehold`, `deleteHousehold`, `transferOwnership` |
 | `actions/members.ts` | `changeRole`, `removeMember`, `leaveHousehold` |
 | `actions/items.ts` | `createItem`, `updateItem`, `deleteItem`, `markItemDone`, `changeItemStatus` |
-| `actions/routines.ts` | `createChecklist`, `updateChecklist`, `deleteChecklist`, `toggleChecklistItem`, `addChecklistItem`, `removeChecklistItem` |
+| `actions/routines.ts` | `createTask`, `updateTask`, `deleteTask`, `toggleTask` |
 | `actions/reminders.ts` | `createReminder`, `updateReminder`, `deleteReminder`, `toggleReminderComplete` |
 | `actions/urgent.ts` | `createUrgentProblem`, `resolveUrgentProblem`, `deleteUrgentProblem` |
 | `actions/invite.ts` | `generateInvite`, `revokeInvite`, `acceptInvite` |
@@ -439,23 +437,23 @@ ListPage (Server Component)
 ```typescript
 "use client";
 import { useOptimistic, useTransition } from "react";
-import { toggleChecklistItem } from "@/actions/routines";
+import { toggleTask } from "@/actions/routines";
 
-function ChecklistItemRow({ item }: { item: RoutineChecklistItem }) {
+function TaskRow({ task, isCompleted }: { task: RoutineTask; isCompleted: boolean }) {
   const [isPending, startTransition] = useTransition();
-  const [optimisticItem, setOptimisticItem] = useOptimistic(item);
+  const [optimisticCompleted, setOptimisticCompleted] = useOptimistic(isCompleted);
 
   function handleToggle() {
-    setOptimisticItem({ ...optimisticItem, completed: !optimisticItem.completed });
     startTransition(async () => {
-      await toggleChecklistItem(item.id);
+      setOptimisticCompleted(!optimisticCompleted);
+      await toggleTask(task.id);
     });
   }
 
   return (
     <div className={isPending ? "opacity-70" : ""}>
-      <Checkbox checked={optimisticItem.completed} onCheckedChange={handleToggle} />
-      <span>{optimisticItem.label}</span>
+      <Checkbox checked={optimisticCompleted} onCheckedChange={handleToggle} />
+      <span>{task.title}</span>
     </div>
   );
 }
@@ -513,11 +511,13 @@ export const GET = withHouseholdAuth(async (request, { supabase, household }) =>
 - **`resolved_at` auto-set** when `household_item.status` changes to `done` (and cleared if reverted)
 - **`updated_at` auto-set** on every UPDATE for all tables via `set_updated_at` trigger
 
-### Checklist Cycle Logic
-Completion is per-cycle, not permanent. An item is "done for this cycle" when `last_completed_at >= cycle_start`. Use the `get_cycle_start(recurrence)` DB function or calculate in app code:
+### Task Cycle Logic
+Completion is per-cycle, not permanent. A task is "done for this cycle" when `last_completed_at >= cycle_start`. Use the `get_cycle_start(recurrence)` DB function or calculate in app code:
 - `daily` -> start of today
 - `weekly` -> start of this week
 - `monthly` -> start of this month
+
+Completions are also logged in `routine_task_completion` for streak tracking and history.
 
 ### Invite Acceptance
 Uses the `accept_invite(code)` DB function (SECURITY DEFINER). This atomically validates the invite, creates the membership, and marks the invite as accepted. Invites expire after 7 days.
@@ -571,7 +571,7 @@ In `apps/myhouz/`, use `@/*` to reference files from the app root (maps to `./sr
 - Household creation + invite-based member onboarding
 - Household Members management (add, assign role, remove)
 - Items to Buy (buy, repair, fix -- with priority and status)
-- Routine Checklists (create, set recurrence, mark complete)
+- Routine Tasks (create, set recurrence, mark complete, streak tracking)
 - Reminders (basic, assignable)
 - Urgent Problems (in-app flag + dashboard banner)
 - Web app only
@@ -604,7 +604,7 @@ In `apps/myhouz/`, use `@/*` to reference files from the app root (maps to `./sr
 
 4. **`resolved_at` on items is set by a DB trigger.** Do not manually set `resolved_at` when changing status to `done` -- the `handle_item_status_change` trigger handles it. Just set `status`.
 
-5. **Checklist items "reset" each cycle.** `last_completed_at` persists the timestamp of the last completion. The app must compare it against the cycle boundary to determine current-cycle status. There is no boolean `is_completed` column.
+5. **Routine tasks "reset" each cycle.** `last_completed_at` persists the timestamp of the last completion. The app must compare it against the cycle boundary to determine current-cycle status. There is no boolean `is_completed` column. Completions are also logged in `routine_task_completion` for streak tracking.
 
 6. **Household switcher uses a cookie.** The `activeHouseholdId` cookie determines which household is loaded. Switching sets this cookie and calls `router.refresh()`. The HouseholdLayout reads it.
 
