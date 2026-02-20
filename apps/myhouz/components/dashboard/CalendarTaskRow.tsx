@@ -9,9 +9,8 @@ import {
   hasCompletionOnDate,
 } from "@/lib/cycle";
 import { isToday as isDateToday, isFuture } from "date-fns";
-import { Check, User } from "lucide-react";
+import { Check, ListChecks } from "lucide-react";
 import { DynamicIcon, type IconName } from "lucide-react/dynamic";
-import { useHousehold } from "@home/auth/hooks";
 import { cn } from "@home/ui";
 import { getTaskIcon } from "@/lib/task-icons";
 import type { RecurrenceMeta } from "@home/types";
@@ -35,12 +34,7 @@ export function CalendarTaskRow({
   completions,
   weekDays,
 }: CalendarTaskRowProps) {
-  const { members } = useHousehold();
   const meta = task.recurrence_meta as RecurrenceMeta;
-
-  const assignee = task.assigned_to
-    ? members.find((m) => m.id === task.assigned_to)
-    : null;
 
   const todayCompleted = isCompletedThisCycle(
     task.last_completed_at,
@@ -68,55 +62,20 @@ export function CalendarTaskRow({
         "grid items-center gap-2 transition-opacity",
         isPending && "opacity-60",
       )}
-      style={{ gridTemplateColumns: "minmax(2.5rem, auto) repeat(7, 2rem)" }}
+      style={{ gridTemplateColumns: "1.25rem repeat(7, 1fr)" }}
     >
-      {/* Task icon + name */}
-      <div className="flex items-center gap-2 overflow-hidden">
-        {/* Icon — always visible */}
+      {/* Task icon */}
+      <div className="flex items-center justify-center">
         {(() => {
           const TaskIcon = getTaskIcon(task.icon);
           if (TaskIcon) {
-            return (
-              <div className="flex h-7 w-7 shrink-0 items-center justify-center rounded-full bg-primary/10">
-                <TaskIcon className="h-3.5 w-3.5 text-primary" />
-              </div>
-            );
+            return <TaskIcon className="h-4 w-4 text-primary" />;
           }
           if (task.icon) {
-            return (
-              <div className="flex h-7 w-7 shrink-0 items-center justify-center rounded-full bg-primary/10">
-                <DynamicIcon name={task.icon as IconName} className="h-3.5 w-3.5 text-primary" />
-              </div>
-            );
+            return <DynamicIcon name={task.icon as IconName} className="h-4 w-4 text-primary" />;
           }
-          if (assignee) {
-            return assignee.avatar_url ? (
-              <img
-                src={assignee.avatar_url}
-                alt={assignee.name ?? ""}
-                className="h-7 w-7 shrink-0 rounded-full object-cover"
-              />
-            ) : (
-              <div className="flex h-7 w-7 shrink-0 items-center justify-center rounded-full bg-primary/10 text-[10px] font-semibold text-primary">
-                {(assignee.name ?? assignee.email).charAt(0).toUpperCase()}
-              </div>
-            );
-          }
-          return (
-            <div className="flex h-7 w-7 shrink-0 items-center justify-center rounded-full bg-muted">
-              <User className="h-3.5 w-3.5 text-muted-foreground" />
-            </div>
-          );
+          return <ListChecks className="h-4 w-4 text-muted-foreground" />;
         })()}
-        {/* Name — hidden on mobile, visible from md */}
-        <div className="hidden min-w-0 md:block">
-          <p className="truncate text-sm font-medium leading-tight">{task.title}</p>
-          {assignee && (
-            <p className="truncate text-[11px] leading-tight text-muted-foreground">
-              {assignee.name ?? assignee.email}
-            </p>
-          )}
-        </div>
       </div>
 
       {/* 7 day dots */}

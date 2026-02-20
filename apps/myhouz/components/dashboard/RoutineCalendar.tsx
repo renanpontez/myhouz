@@ -19,15 +19,17 @@ import {
   ListChecks,
   Plus,
   Check,
-  Circle,
 } from "lucide-react";
+import { DynamicIcon, type IconName } from "lucide-react/dynamic";
 import { Card, CardContent } from "@home/ui";
 import { cn } from "@home/ui";
 import Link from "next/link";
 import { CalendarTaskRow } from "./CalendarTaskRow";
 import { isActiveToday, isCompletedThisCycle } from "@/lib/cycle";
+import { getTaskIcon } from "@/lib/task-icons";
 import { toggleTask } from "@/actions/routines";
 import { toast } from "sonner";
+import { useHousehold } from "@home/auth/hooks";
 import type { RecurrenceMeta } from "@home/types";
 
 interface Task {
@@ -50,18 +52,25 @@ const DATE_FNS_LOCALES: Record<string, Locale> = {
   "en-US": enUS,
 };
 
-/* ── Inline pill for today's task strip ── */
+/* ── Today task row for footer list ── */
 
-function TodayTaskPill({
+function TodayTaskRow({
   task,
   isCompleted,
+  recurrenceLabel,
 }: {
   task: Task;
   isCompleted: boolean;
+  recurrenceLabel: string;
 }) {
+  const { members } = useHousehold();
   const [isPending, startTransition] = useTransition();
   const [optimisticCompleted, setOptimisticCompleted] =
     useOptimistic(isCompleted);
+
+  const assignee = task.assigned_to
+    ? members.find((m) => m.id === task.assigned_to)
+    : null;
 
   function handleToggle() {
     startTransition(async () => {
@@ -73,24 +82,56 @@ function TodayTaskPill({
     });
   }
 
+  const TaskIcon = getTaskIcon(task.icon);
+
   return (
     <button
       type="button"
       onClick={handleToggle}
       className={cn(
-        "inline-flex shrink-0 items-center gap-1.5 rounded-full border px-3 py-1.5 text-xs font-medium transition-all",
+        "flex w-full items-center gap-2.5 rounded-lg px-2 py-2 text-left transition-colors hover:bg-accent",
         isPending && "opacity-60",
-        optimisticCompleted
-          ? "border-primary/20 bg-primary/5 text-muted-foreground line-through"
-          : "border-border bg-background text-foreground hover:bg-accent",
       )}
     >
-      {optimisticCompleted ? (
-        <Check className="h-3 w-3 shrink-0 text-primary" strokeWidth={3} />
-      ) : (
-        <Circle className="h-3 w-3 shrink-0 text-muted-foreground" />
-      )}
-      <span className="max-w-[8rem] truncate">{task.title}</span>
+      {/* Task icon */}
+      <div className="flex h-6 w-6 shrink-0 items-center justify-center rounded-full bg-primary/10">
+        {TaskIcon ? (
+          <TaskIcon className="h-3 w-3 text-primary" />
+        ) : task.icon ? (
+          <DynamicIcon name={task.icon as IconName} className="h-3 w-3 text-primary" />
+        ) : (
+          <ListChecks className="h-3 w-3 text-primary" />
+        )}
+      </div>
+
+      {/* Title + recurrence */}
+      <div className="min-w-0 flex-1">
+        <p
+          className={cn(
+            "truncate text-sm leading-tight",
+            optimisticCompleted && "text-muted-foreground line-through",
+          )}
+        >
+          {task.title}
+        </p>
+        <p className="truncate text-[11px] leading-tight text-muted-foreground">
+          {assignee ? `${assignee.name ?? assignee.email} · ${recurrenceLabel}` : recurrenceLabel}
+        </p>
+      </div>
+
+      {/* Check icon */}
+      <div
+        className={cn(
+          "flex h-5 w-5 shrink-0 items-center justify-center rounded-full border transition-colors",
+          optimisticCompleted
+            ? "border-primary bg-primary text-primary-foreground"
+            : "border-muted-foreground/30",
+        )}
+      >
+        {optimisticCompleted && (
+          <Check className="h-3 w-3" strokeWidth={3} />
+        )}
+      </div>
     </button>
   );
 }
@@ -102,6 +143,7 @@ export function RoutineCalendar({
   completionsByTask,
 }: RoutineCalendarProps) {
   const t = useTranslations("dashboard.calendar");
+  const tEnums = useTranslations("enums");
   const locale = useLocale();
   const dateFnsLocale = DATE_FNS_LOCALES[locale] ?? enUS;
 
@@ -210,7 +252,7 @@ export function RoutineCalendar({
         {/* Day header row */}
         <div
           className="mb-3 grid items-center gap-2"
-          style={{ gridTemplateColumns: "minmax(2.5rem, auto) repeat(7, 2rem)" }}
+          style={{ gridTemplateColumns: "1.25rem repeat(7, 1fr)" }}
         >
           <span />
           {weekDays.map((day) => {
@@ -261,7 +303,7 @@ export function RoutineCalendar({
                 {t("viewAll")}
               </Link>
             </div>
-            <div className="flex gap-2 overflow-x-auto pb-1">
+            <div className="-mx-2 space-y-0.5">
               {todayTasks.map((task) => {
                 const meta = task.recurrence_meta as
                   | RecurrenceMeta
@@ -271,11 +313,13 @@ export function RoutineCalendar({
                   task.recurrence,
                   meta,
                 );
+                const label = tEnums(`recurrence.${task.recurrence}`);
                 return (
-                  <TodayTaskPill
+                  <TodayTaskRow
                     key={task.id}
                     task={task}
                     isCompleted={completed}
+                    recurrenceLabel={label}
                   />
                 );
               })}
