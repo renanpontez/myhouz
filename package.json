@@ -15,7 +15,7 @@
     "typecheck": "turbo typecheck",
     "clean": "turbo clean",
     "db:reset": "cd apps/myhouz && supabase db reset",
-    "db:types": "cd apps/myhouz && supabase gen types typescript --linked > ../../packages/types/src/database.ts"
+    "db:types": "cd apps/myhouz && supabase gen types typescript --linked 2>/dev/null | grep -v 'Initialising' > ../../packages/types/src/database.ts"
   },
   "devDependencies": {
     "prettier": "^3.4.2",
