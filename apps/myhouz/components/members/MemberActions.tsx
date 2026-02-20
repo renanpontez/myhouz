@@ -37,9 +37,9 @@ export function MemberActions({ membership, memberName }: MemberActionsProps) {
   }
 
   function handleChangeRole() {
-    const newRole = membership.role === "member" ? "guest" : "member";
+    const newRole = membership.role === "member" ? "owner" : "member";
     startTransition(async () => {
-      const result = await changeRole(household.id, membership.id, newRole as "member" | "guest");
+      const result = await changeRole(household.id, membership.id, newRole);
       if (result.error) {
         toast.error(result.error);
       }
@@ -65,6 +65,13 @@ export function MemberActions({ membership, memberName }: MemberActionsProps) {
             onClick={() => setOpen(false)}
           />
           <div className="absolute right-0 z-20 mt-1 w-48 rounded-lg border bg-popover p-1 shadow-md">
+            <button
+              onClick={handleChangeRole}
+              className="flex w-full items-center gap-2 rounded-md px-2 py-1.5 text-sm hover:bg-accent"
+            >
+              <Shield className="h-4 w-4" />
+              {t("changeRole")}
+            </button>
             <button
               onClick={handleRemove}
               className="flex w-full items-center gap-2 rounded-md px-2 py-1.5 text-sm text-destructive hover:bg-destructive/10"

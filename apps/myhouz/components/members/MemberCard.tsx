@@ -44,7 +44,7 @@ export function MemberCard({ member, membership }: MemberCardProps) {
       </div>
       <div className="flex items-center gap-2">
         <RoleBadge role={membership.role} />
-        {isOwner && !isCurrentUser && membership.role !== "owner" && (
+        {isOwner && !isCurrentUser && (
           <MemberActions membership={membership} memberName={member.name ?? member.email} />
         )}
       </div>

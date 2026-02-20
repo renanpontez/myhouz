@@ -10,7 +10,7 @@ import { getTranslations } from "next-intl/server";
 export async function changeRole(
   householdId: string,
   memberId: string,
-  role: "member" | "guest",
+  role: "owner" | "member",
 ): Promise<{ error?: string }> {
   const tError = await getTranslations("error");
 
