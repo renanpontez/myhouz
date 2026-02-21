@@ -124,6 +124,12 @@
       "overdue": "Atrasado",
       "dueToday": "Vence hoje",
       "upcoming": "Proximo"
+    },
+    "urgentBanner": {
+      "title": "Problemas Urgentes",
+      "viewAll": "Ver todos",
+      "reportedBy": "por {name}",
+      "moreCount": "+{count} mais"
     }
   },
   "items": {
@@ -208,8 +214,28 @@
     "newTitle": "Novo lembrete",
     "newSubtitle": "Crie um lembrete para sua casa",
     "detailTitle": "Detalhe do lembrete",
-    "formPlaceholder": "Formulario de lembrete em breve",
-    "detailPlaceholder": "Detalhe e edicao do lembrete em breve"
+    "editTitle": "Editar lembrete",
+    "titleLabel": "Titulo",
+    "titlePlaceholder": "Ex: Pagar conta de luz",
+    "dueAtLabel": "Data limite",
+    "assignedToLabel": "Responsavel",
+    "unassigned": "Sem responsavel",
+    "createButton": "Criar lembrete",
+    "saveButton": "Salvar alteracoes",
+    "deleteButton": "Excluir lembrete",
+    "deleteConfirm": "Excluir este lembrete?",
+    "markComplete": "Marcar como concluido",
+    "markIncomplete": "Marcar como pendente",
+    "overdue": "Atrasado",
+    "dueToday": "Vence hoje",
+    "completed": "Concluido",
+    "completedSection": "Concluidos",
+    "filterUpcoming": "Pendentes",
+    "filterCompleted": "Concluidos",
+    "filterAll": "Todos",
+    "createdBy": "Criado por",
+    "completedBy": "Concluido por",
+    "noReminders": "Nenhum lembrete neste filtro"
   },
   "urgent": {
     "title": "Problemas Urgentes",
@@ -219,8 +245,25 @@
     "newTitle": "Reportar problema",
     "newSubtitle": "Alerte todos os membros sobre um problema urgente",
     "detailTitle": "Detalhe do problema",
-    "formPlaceholder": "Formulario de problema em breve",
-    "detailPlaceholder": "Detalhe e resolucao do problema em breve"
+    "editTitle": "Editar problema",
+    "titleLabel": "Titulo",
+    "titlePlaceholder": "Ex: Aquecedor de agua nao funciona",
+    "descriptionLabel": "Descricao",
+    "descriptionPlaceholder": "Descreva o problema em detalhes...",
+    "createButton": "Reportar problema",
+    "saveButton": "Salvar alteracoes",
+    "deleteButton": "Excluir problema",
+    "deleteConfirm": "Excluir este problema?",
+    "resolveButton": "Marcar como resolvido",
+    "resolveConfirm": "Marcar este problema como resolvido?",
+    "reportedBy": "Reportado por",
+    "resolvedBy": "Resolvido por",
+    "active": "Ativo",
+    "resolved": "Resolvido",
+    "filterActive": "Ativos",
+    "filterResolved": "Resolvidos",
+    "activeSection": "Problemas ativos",
+    "resolvedSection": "Resolvidos"
   },
   "members": {
     "title": "Membros",
@@ -330,7 +373,15 @@
     "toggleTaskError": "Erro ao marcar tarefa.",
     "createItemError": "Erro ao criar item.",
     "updateItemError": "Erro ao atualizar item.",
-    "deleteItemError": "Erro ao excluir item."
+    "deleteItemError": "Erro ao excluir item.",
+    "createReminderError": "Erro ao criar lembrete.",
+    "updateReminderError": "Erro ao atualizar lembrete.",
+    "deleteReminderError": "Erro ao excluir lembrete.",
+    "toggleReminderError": "Erro ao marcar lembrete.",
+    "createUrgentError": "Erro ao reportar problema.",
+    "updateUrgentError": "Erro ao atualizar problema.",
+    "resolveUrgentError": "Erro ao resolver problema.",
+    "deleteUrgentError": "Erro ao excluir problema."
   },
   "enums": {
     "priority": {

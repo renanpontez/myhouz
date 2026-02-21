@@ -124,6 +124,12 @@
       "overdue": "Overdue",
       "dueToday": "Due today",
       "upcoming": "Upcoming"
+    },
+    "urgentBanner": {
+      "title": "Urgent Problems",
+      "viewAll": "View all",
+      "reportedBy": "by {name}",
+      "moreCount": "+{count} more"
     }
   },
   "items": {
@@ -208,8 +214,28 @@
     "newTitle": "New reminder",
     "newSubtitle": "Create a reminder for your household",
     "detailTitle": "Reminder detail",
-    "formPlaceholder": "Reminder form placeholder",
-    "detailPlaceholder": "Reminder detail + edit placeholder"
+    "editTitle": "Edit reminder",
+    "titleLabel": "Title",
+    "titlePlaceholder": "e.g. Pay electricity bill",
+    "dueAtLabel": "Due date",
+    "assignedToLabel": "Assigned to",
+    "unassigned": "Unassigned",
+    "createButton": "Create reminder",
+    "saveButton": "Save changes",
+    "deleteButton": "Delete reminder",
+    "deleteConfirm": "Delete this reminder?",
+    "markComplete": "Mark as complete",
+    "markIncomplete": "Mark as incomplete",
+    "overdue": "Overdue",
+    "dueToday": "Due today",
+    "completed": "Completed",
+    "completedSection": "Completed",
+    "filterUpcoming": "Upcoming",
+    "filterCompleted": "Completed",
+    "filterAll": "All",
+    "createdBy": "Created by",
+    "completedBy": "Completed by",
+    "noReminders": "No reminders in this filter"
   },
   "urgent": {
     "title": "Urgent Problems",
@@ -219,8 +245,25 @@
     "newTitle": "Report a problem",
     "newSubtitle": "Alert all household members about an urgent issue",
     "detailTitle": "Problem detail",
-    "formPlaceholder": "Urgent problem form placeholder",
-    "detailPlaceholder": "Problem detail + resolve section placeholder"
+    "editTitle": "Edit problem",
+    "titleLabel": "Title",
+    "titlePlaceholder": "e.g. Water heater not working",
+    "descriptionLabel": "Description",
+    "descriptionPlaceholder": "Describe the problem in detail...",
+    "createButton": "Report problem",
+    "saveButton": "Save changes",
+    "deleteButton": "Delete problem",
+    "deleteConfirm": "Delete this problem?",
+    "resolveButton": "Mark as resolved",
+    "resolveConfirm": "Mark this problem as resolved?",
+    "reportedBy": "Reported by",
+    "resolvedBy": "Resolved by",
+    "active": "Active",
+    "resolved": "Resolved",
+    "filterActive": "Active",
+    "filterResolved": "Resolved",
+    "activeSection": "Active problems",
+    "resolvedSection": "Resolved"
   },
   "members": {
     "title": "Members",
@@ -330,7 +373,15 @@
     "toggleTaskError": "Error toggling task.",
     "createItemError": "Error creating item.",
     "updateItemError": "Error updating item.",
-    "deleteItemError": "Error deleting item."
+    "deleteItemError": "Error deleting item.",
+    "createReminderError": "Error creating reminder.",
+    "updateReminderError": "Error updating reminder.",
+    "deleteReminderError": "Error deleting reminder.",
+    "toggleReminderError": "Error toggling reminder.",
+    "createUrgentError": "Error reporting problem.",
+    "updateUrgentError": "Error updating problem.",
+    "resolveUrgentError": "Error resolving problem.",
+    "deleteUrgentError": "Error deleting problem."
   },
   "enums": {
     "priority": {
