@@ -60,6 +60,29 @@ export async function middleware(request: NextRequest) {
     return NextResponse.redirect(new URL("/app/dashboard", request.url));
   }
 
+  // Auto-set activeHouseholdId cookie if missing on household routes
+  if (user && pathname.startsWith("/app/") && !pathname.startsWith("/app/onboarding")) {
+    const activeId = request.cookies.get("activeHouseholdId")?.value;
+    if (!activeId) {
+      const { data: memberships } = await supabase
+        .from("household_member")
+        .select("household_id")
+        .eq("user_id", user.id)
+        .limit(1);
+
+      const firstId = memberships?.[0]?.household_id;
+      if (firstId) {
+        response.cookies.set("activeHouseholdId", firstId, {
+          path: "/",
+          httpOnly: false,
+          secure: process.env.NODE_ENV === "production",
+          sameSite: "lax",
+          maxAge: 60 * 60 * 24 * 365,
+        });
+      }
+    }
+  }
+
   return response;
 }
 

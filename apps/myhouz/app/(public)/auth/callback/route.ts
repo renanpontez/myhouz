@@ -28,14 +28,30 @@ export async function GET(request: Request) {
       } = await supabase.auth.getUser();
 
       if (user) {
-        const { count } = await supabase
+        const { data: memberships } = await supabase
           .from("household_member")
-          .select("id", { count: "exact", head: true })
-          .eq("user_id", user.id);
+          .select("household_id")
+          .eq("user_id", user.id)
+          .limit(1);
 
-        if (!count || count === 0) {
+        if (!memberships || memberships.length === 0) {
           return NextResponse.redirect(`${origin}/app/onboarding`);
         }
+
+        const firstHouseholdId = memberships[0]?.household_id;
+        const response = NextResponse.redirect(
+          `${origin}/app/dashboard`,
+        );
+        if (firstHouseholdId) {
+          response.cookies.set("activeHouseholdId", firstHouseholdId, {
+          path: "/",
+          httpOnly: false,
+          secure: process.env.NODE_ENV === "production",
+          sameSite: "lax",
+          maxAge: 60 * 60 * 24 * 365,
+          });
+        }
+        return response;
       }
 
       return NextResponse.redirect(`${origin}/app/dashboard`);
