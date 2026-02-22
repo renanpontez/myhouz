@@ -53,9 +53,9 @@ export default async function HouseholdLayout({
       members={members ?? []}
     >
       <div className="flex min-h-screen">
-        <aside className="hidden w-64 shrink-0 border-r bg-card lg:flex lg:flex-col">
-          <div className="p-4">
-            <img src="/myhouz-logo.svg" alt="myhouz" className="h-8 w-auto" />
+        <aside className="hidden w-20 shrink-0 bg-primary lg:flex lg:flex-col items-center rounded-r-3xl">
+          <div className="py-6">
+            <img src="/myhouz-icon.svg" alt="myhouz" className="h-8 w-8" />
           </div>
           <Sidebar />
         </aside>

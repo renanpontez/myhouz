@@ -19,12 +19,12 @@ export function SidebarNavLink({ href, label, icon: Icon }: SidebarNavLinkProps)
     <Link
       href={href}
       className={cn(
-        "flex items-center gap-3 rounded-lg px-3 py-2 text-sm font-medium hover:bg-accent",
-        isActive && "bg-accent text-accent-foreground",
+        "flex h-12 w-12 items-center justify-center rounded-xl text-primary-foreground/70 transition-colors hover:bg-white/15",
+        isActive && "bg-white/20 text-primary-foreground",
       )}
+      title={label}
     >
-      <Icon className="h-4 w-4" />
-      {label}
+      <Icon className="h-5 w-5" />
     </Link>
   );
 }
