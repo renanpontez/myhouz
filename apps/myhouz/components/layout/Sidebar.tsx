@@ -26,7 +26,7 @@ export function Sidebar() {
   ];
 
   return (
-    <nav className="flex flex-1 flex-col items-center gap-2 py-4">
+    <nav className="flex flex-1 flex-col items-center gap-1.5 py-4">
       {navItems.map((item) => (
         <SidebarNavLink
           key={item.href}

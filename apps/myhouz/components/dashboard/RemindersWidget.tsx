@@ -1,7 +1,8 @@
 import Link from "next/link";
 import { getTranslations } from "next-intl/server";
 import { Card, CardContent, Badge } from "@home/ui";
-import { Bell, Check, Plus } from "lucide-react";
+import { cn } from "@home/ui";
+import { Bell, Check, Plus, ChevronRight } from "lucide-react";
 import { isToday, isPast, format } from "date-fns";
 
 interface Reminder {
@@ -39,6 +40,24 @@ export async function RemindersWidget({ reminders }: RemindersWidgetProps) {
           </Link>
         </div>
 
+        {/* Stat display */}
+        {pendingReminders.length > 0 && (() => {
+          const overdueCount = pendingReminders.filter(
+            (r) => isPast(new Date(r.due_at)) && !isToday(new Date(r.due_at)),
+          ).length;
+          return (
+            <div className="mb-3 flex items-baseline gap-1">
+              <span className="text-stat">{pendingReminders.length}</span>
+              <span className="text-stat-unit">{t("pendingLabel")}</span>
+              {overdueCount > 0 && (
+                <Badge variant="destructive" className="ml-2 text-xs">
+                  {overdueCount} {t("overdue")}
+                </Badge>
+              )}
+            </div>
+          );
+        })()}
+
         {pendingReminders.length === 0 ? (
           <div className="flex flex-col items-center gap-3 py-6">
             <Bell className="h-8 w-8 text-muted-foreground/50" />
@@ -62,44 +81,35 @@ export async function RemindersWidget({ reminders }: RemindersWidgetProps) {
                 <Link
                   key={reminder.id}
                   href={`/app/reminders/${reminder.id}`}
-                  className="flex items-center gap-3 rounded-lg border p-2.5 transition-colors hover:bg-accent"
+                  className="flex items-center gap-3 rounded-xl bg-accent/50 p-3 transition-colors hover:bg-accent"
                 >
-                  <div className="shrink-0">
+                  <div
+                    className={cn(
+                      "flex h-9 w-9 shrink-0 items-center justify-center rounded-full bg-background",
+                      overdue
+                        ? "text-destructive"
+                        : dueToday
+                          ? "text-amber-600 dark:text-amber-400"
+                          : "text-muted-foreground",
+                    )}
+                  >
                     {reminder.is_completed ? (
                       <Check className="h-4 w-4 text-green-600 dark:text-green-400" />
                     ) : (
-                      <Bell
-                        className={`h-4 w-4 ${
-                          overdue
-                            ? "text-destructive"
-                            : dueToday
-                              ? "text-amber-600 dark:text-amber-400"
-                              : "text-muted-foreground"
-                        }`}
-                      />
+                      <Bell className="h-4 w-4" />
                     )}
                   </div>
-                  <div className="flex-1 min-w-0">
-                    <span className="block truncate text-sm font-medium">
+                  <div className="min-w-0 flex-1">
+                    <p className="truncate text-sm font-medium">
                       {reminder.title}
-                    </span>
-                    <span className="text-[11px] text-muted-foreground">
+                    </p>
+                    <p className="truncate text-xs text-muted-foreground">
                       {format(dueDate, "MMM d, HH:mm")}
-                    </span>
+                      {overdue && ` · ${t("overdue")}`}
+                      {dueToday && !overdue && ` · ${t("dueToday")}`}
+                    </p>
                   </div>
-                  {overdue && (
-                    <Badge variant="destructive" className="shrink-0 text-[10px]">
-                      {t("overdue")}
-                    </Badge>
-                  )}
-                  {dueToday && !overdue && (
-                    <Badge
-                      variant="outline"
-                      className="shrink-0 border-amber-300 text-[10px] text-amber-600 dark:border-amber-700 dark:text-amber-400"
-                    >
-                      {t("dueToday")}
-                    </Badge>
-                  )}
+                  <ChevronRight className="h-4 w-4 shrink-0 text-muted-foreground/50" />
                 </Link>
               );
             })}

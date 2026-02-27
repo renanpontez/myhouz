@@ -88,6 +88,7 @@
   "dashboard": {
     "title": "Dashboard",
     "subtitle": "Sua casa em um so lugar",
+    "greeting": "Oi, {name}!",
     "itemsLabel": "Itens",
     "itemsDescription": "Comprar, consertar e reparar",
     "routinesLabel": "Rotinas",
@@ -104,6 +105,7 @@
       "tasksForDay": "Tarefas de {date}",
       "today": "Hoje",
       "tasksCompleted": "{done}/{total} feitas",
+      "todaysTasks": "Tarefas de Hoje",
       "noRoutines": "Nenhuma tarefa de rotina ainda",
       "noRoutinesAction": "Crie sua primeira tarefa",
       "addTask": "Nova tarefa",
@@ -114,7 +116,8 @@
       "viewAll": "Ver todos",
       "empty": "Nenhum item pendente",
       "emptyAction": "Adicionar item",
-      "pendingCount": "{count} pendentes"
+      "pendingCount": "{count} pendentes",
+      "pendingLabel": "itens pendentes"
     },
     "remindersWidget": {
       "title": "Lembretes",
@@ -123,7 +126,8 @@
       "emptyAction": "Adicionar lembrete",
       "overdue": "Atrasado",
       "dueToday": "Vence hoje",
-      "upcoming": "Proximo"
+      "upcoming": "Proximo",
+      "pendingLabel": "proximos"
     },
     "urgentBanner": {
       "title": "Problemas Urgentes",

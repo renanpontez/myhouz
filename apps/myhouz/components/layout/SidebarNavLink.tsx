@@ -19,8 +19,8 @@ export function SidebarNavLink({ href, label, icon: Icon }: SidebarNavLinkProps)
     <Link
       href={href}
       className={cn(
-        "flex h-12 w-12 items-center justify-center rounded-xl text-primary-foreground/70 transition-colors hover:bg-white/15",
-        isActive && "bg-white/20 text-primary-foreground",
+        "flex h-11 w-11 items-center justify-center rounded-full text-primary-foreground/60 transition-all hover:bg-white/15 hover:text-primary-foreground/90",
+        isActive && "bg-white/25 text-primary-foreground shadow-sm shadow-black/10",
       )}
       title={label}
     >

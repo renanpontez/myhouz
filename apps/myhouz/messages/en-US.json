@@ -88,6 +88,7 @@
   "dashboard": {
     "title": "Dashboard",
     "subtitle": "Your home in one place",
+    "greeting": "Hi, {name}!",
     "itemsLabel": "Items",
     "itemsDescription": "Buy, repair, and fix",
     "routinesLabel": "Routines",
@@ -104,6 +105,7 @@
       "tasksForDay": "Tasks for {date}",
       "today": "Today",
       "tasksCompleted": "{done}/{total} done",
+      "todaysTasks": "Today's Tasks",
       "noRoutines": "No routine tasks yet",
       "noRoutinesAction": "Create your first task",
       "addTask": "New task",
@@ -114,7 +116,8 @@
       "viewAll": "View all",
       "empty": "No pending items",
       "emptyAction": "Add item",
-      "pendingCount": "{count} pending"
+      "pendingCount": "{count} pending",
+      "pendingLabel": "pending items"
     },
     "remindersWidget": {
       "title": "Reminders",
@@ -123,7 +126,8 @@
       "emptyAction": "Add reminder",
       "overdue": "Overdue",
       "dueToday": "Due today",
-      "upcoming": "Upcoming"
+      "upcoming": "Upcoming",
+      "pendingLabel": "upcoming"
     },
     "urgentBanner": {
       "title": "Urgent Problems",

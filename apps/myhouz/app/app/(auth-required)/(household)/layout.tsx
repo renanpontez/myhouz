@@ -35,11 +35,18 @@ export default async function HouseholdLayout({
     .select()
     .in("id", memberIds);
 
-  const { data: household } = await supabase
-    .from("household")
-    .select()
-    .eq("id", householdId)
-    .single();
+  const [{ data: household }, { count: urgentCount }] = await Promise.all([
+    supabase
+      .from("household")
+      .select()
+      .eq("id", householdId)
+      .single(),
+    supabase
+      .from("urgent_problem")
+      .select("*", { count: "exact", head: true })
+      .eq("household_id", householdId)
+      .eq("is_active", true),
+  ]);
 
   if (!household) {
     redirect("/app/onboarding");
@@ -61,8 +68,8 @@ export default async function HouseholdLayout({
         </aside>
 
         <div className="flex flex-1 flex-col">
-          <TopBar />
-          <main className="flex-1 pb-16 lg:pb-0">{children}</main>
+          <TopBar urgentCount={urgentCount ?? 0} />
+          <main className="flex-1 pb-24 lg:pb-0">{children}</main>
           <BottomNav />
         </div>
       </div>

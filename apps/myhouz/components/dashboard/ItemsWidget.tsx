@@ -1,7 +1,7 @@
 import Link from "next/link";
 import { getTranslations } from "next-intl/server";
-import { Card, CardContent, Badge } from "@home/ui";
-import { ShoppingCart, Wrench, Settings2, Check, Plus } from "lucide-react";
+import { Card, CardContent } from "@home/ui";
+import { ShoppingCart, Wrench, Settings2, Check, Plus, ChevronRight } from "lucide-react";
 
 const TYPE_ICONS = {
   buy: ShoppingCart,
@@ -49,6 +49,14 @@ export async function ItemsWidget({ items }: ItemsWidgetProps) {
           </Link>
         </div>
 
+        {/* Stat display */}
+        {pendingItems.length > 0 && (
+          <div className="mb-3 flex items-baseline gap-1">
+            <span className="text-stat">{pendingItems.length}</span>
+            <span className="text-stat-unit">{t("pendingLabel")}</span>
+          </div>
+        )}
+
         {pendingItems.length === 0 ? (
           <div className="flex flex-col items-center gap-3 py-6">
             <ShoppingCart className="h-8 w-8 text-muted-foreground/50" />
@@ -71,29 +79,23 @@ export async function ItemsWidget({ items }: ItemsWidgetProps) {
                 <Link
                   key={item.id}
                   href={`/app/items/${item.id}`}
-                  className="flex items-center gap-3 rounded-lg border p-2.5 transition-colors hover:bg-accent"
+                  className="flex items-center gap-3 rounded-xl bg-accent/50 p-3 transition-colors hover:bg-accent"
                 >
-                  <div className={`shrink-0 ${PRIORITY_STYLES[item.priority]}`}>
+                  <div className={`flex h-9 w-9 shrink-0 items-center justify-center rounded-full bg-background ${PRIORITY_STYLES[item.priority]}`}>
                     {isDone ? (
                       <Check className="h-4 w-4 text-green-600 dark:text-green-400" />
                     ) : (
                       <Icon className="h-4 w-4" />
                     )}
                   </div>
-                  <span className="flex-1 truncate text-sm font-medium">
-                    {item.name}
-                  </span>
-                  {item.price != null && (
-                    <span className="shrink-0 text-xs font-medium text-muted-foreground">
-                      R$ {item.price.toFixed(2)}
-                    </span>
-                  )}
-                  <Badge
-                    variant="outline"
-                    className="shrink-0 border-none text-[10px]"
-                  >
-                    {tEnums(`itemType.${item.type}`)}
-                  </Badge>
+                  <div className="min-w-0 flex-1">
+                    <p className="truncate text-sm font-medium">{item.name}</p>
+                    <p className="truncate text-xs text-muted-foreground">
+                      {tEnums(`itemType.${item.type}`)}
+                      {item.price != null && ` · R$ ${item.price.toFixed(2)}`}
+                    </p>
+                  </div>
+                  <ChevronRight className="h-4 w-4 shrink-0 text-muted-foreground/50" />
                 </Link>
               );
             })}
