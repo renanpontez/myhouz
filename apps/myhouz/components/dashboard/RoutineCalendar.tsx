@@ -27,7 +27,6 @@ import { DynamicIcon, type IconName } from "lucide-react/dynamic";
 import { cn } from "@home/ui";
 import Link from "next/link";
 import {
-  isActiveToday,
   isActiveOnDate,
   isCompletedThisCycle,
   hasCompletionOnDate,
@@ -105,11 +104,13 @@ function TimelineTaskRow({
   isCompleted,
   recurrenceLabel,
   streak,
+  disabled,
 }: {
   task: Task;
   isCompleted: boolean;
   recurrenceLabel: string;
   streak: number;
+  disabled?: boolean;
 }) {
   const { members } = useHousehold();
   const [isPending, startTransition] = useTransition();
@@ -121,6 +122,7 @@ function TimelineTaskRow({
     : null;
 
   function handleToggle() {
+    if (disabled) return;
     startTransition(async () => {
       setOptimisticCompleted(!optimisticCompleted);
       const result = await toggleTask(task.id);
@@ -142,12 +144,16 @@ function TimelineTaskRow({
       {/* Checkbox — sits on the dotted line, outside the card */}
       <button
         type="button"
-        onClick={handleToggle}
+        onClick={disabled ? undefined : handleToggle}
+        disabled={disabled}
         className={cn(
           "relative z-10 flex h-8 w-8 shrink-0 items-center justify-center rounded-full border-2 transition-colors",
           optimisticCompleted
             ? "border-primary bg-primary text-white"
-            : "border-muted-foreground/30 bg-background hover:border-muted-foreground/50",
+            : "border-muted-foreground/30 bg-background",
+          disabled
+            ? "cursor-default opacity-70"
+            : "hover:border-muted-foreground/50",
         )}
       >
         {optimisticCompleted && (
@@ -224,6 +230,7 @@ export function RoutineCalendar({
   const [weekStart, setWeekStart] = useState(() =>
     startOfWeek(today, { weekStartsOn: 1 }),
   );
+  const [selectedDay, setSelectedDay] = useState(() => today);
 
   const weekDays = useMemo(
     () => Array.from({ length: 7 }, (_, i) => addDays(weekStart, i)),
@@ -241,18 +248,29 @@ export function RoutineCalendar({
       ? `${format(weekStart, "MMM d", { locale: dateFnsLocale })} - ${format(weekEnd, "d", { locale: dateFnsLocale })}`
       : `${format(weekStart, "MMM d", { locale: dateFnsLocale })} - ${format(weekEnd, "MMM d", { locale: dateFnsLocale })}`;
 
-  const todayTasks = useMemo(
+  const isSelectedToday = isDateToday(selectedDay);
+
+  // Tasks active on the selected day
+  const selectedDayTasks = useMemo(
     () =>
       tasks.filter((task) => {
         const meta = task.recurrence_meta as RecurrenceMeta | undefined;
-        return isActiveToday(task.recurrence, meta);
+        return isActiveOnDate(task.recurrence, meta, selectedDay);
       }),
-    [tasks],
+    [tasks, selectedDay],
   );
 
-  const todayDoneCount = todayTasks.filter((task) => {
-    const meta = task.recurrence_meta as RecurrenceMeta | undefined;
-    return isCompletedThisCycle(task.last_completed_at, task.recurrence, meta);
+  // Completion count for selected day
+  const selectedDayDoneCount = selectedDayTasks.filter((task) => {
+    if (isSelectedToday) {
+      const meta = task.recurrence_meta as RecurrenceMeta | undefined;
+      return isCompletedThisCycle(
+        task.last_completed_at,
+        task.recurrence,
+        meta,
+      );
+    }
+    return hasCompletionOnDate(completionsByTask[task.id] ?? [], selectedDay);
   }).length;
 
   // Per-day completion status for the strip
@@ -261,7 +279,6 @@ export function RoutineCalendar({
       weekDays.map((day) => {
         const isDayToday = isDateToday(day);
         const isFutureDay = isFuture(day) && !isDayToday;
-        if (isFutureDay) return { active: 0, done: 0 };
 
         let active = 0;
         let done = 0;
@@ -269,7 +286,9 @@ export function RoutineCalendar({
           const meta = task.recurrence_meta as RecurrenceMeta | undefined;
           if (!isActiveOnDate(task.recurrence, meta, day)) continue;
           active++;
-          if (isDayToday) {
+          if (isFutureDay) {
+            // Future days: no completions yet
+          } else if (isDayToday) {
             if (
               isCompletedThisCycle(
                 task.last_completed_at,
@@ -288,7 +307,41 @@ export function RoutineCalendar({
     [weekDays, tasks, completionsByTask],
   );
 
+  function handleWeekPrev() {
+    const newWeekStart = subWeeks(weekStart, 1);
+    setWeekStart(newWeekStart);
+    const currentWeekStart = startOfWeek(today, { weekStartsOn: 1 });
+    if (isSameDay(newWeekStart, currentWeekStart)) {
+      setSelectedDay(today);
+    } else {
+      setSelectedDay(newWeekStart);
+    }
+  }
+
+  function handleWeekNext() {
+    const newWeekStart = addWeeks(weekStart, 1);
+    setWeekStart(newWeekStart);
+    const currentWeekStart = startOfWeek(today, { weekStartsOn: 1 });
+    if (isSameDay(newWeekStart, currentWeekStart)) {
+      setSelectedDay(today);
+    } else {
+      setSelectedDay(newWeekStart);
+    }
+  }
+
+  function handleGoToToday() {
+    setWeekStart(startOfWeek(today, { weekStartsOn: 1 }));
+    setSelectedDay(today);
+  }
+
   const displayName = toTitleCase(userName);
+
+  // Heading for the task list
+  const taskListHeading = isSelectedToday
+    ? t("todaysTasks")
+    : t("tasksForDay", {
+        date: format(selectedDay, "MMM d", { locale: dateFnsLocale }),
+      });
 
   return (
     <div>
@@ -301,9 +354,7 @@ export function RoutineCalendar({
           {!isCurrentWeek && (
             <button
               type="button"
-              onClick={() => {
-                setWeekStart(startOfWeek(today, { weekStartsOn: 1 }));
-              }}
+              onClick={handleGoToToday}
               className="mr-1 rounded-full bg-accent px-2.5 py-1 text-xs font-medium text-muted-foreground transition-colors hover:bg-accent/80 hover:text-foreground"
             >
               {t("today")}
@@ -311,7 +362,7 @@ export function RoutineCalendar({
           )}
           <button
             type="button"
-            onClick={() => setWeekStart((w) => subWeeks(w, 1))}
+            onClick={handleWeekPrev}
             className="inline-flex h-8 w-8 items-center justify-center rounded-full text-muted-foreground transition-colors hover:bg-accent hover:text-foreground"
           >
             <ChevronLeft className="h-4 w-4" />
@@ -321,7 +372,7 @@ export function RoutineCalendar({
           </span>
           <button
             type="button"
-            onClick={() => setWeekStart((w) => addWeeks(w, 1))}
+            onClick={handleWeekNext}
             className="inline-flex h-8 w-8 items-center justify-center rounded-full text-muted-foreground transition-colors hover:bg-accent hover:text-foreground"
           >
             <ChevronRight className="h-4 w-4" />
@@ -333,7 +384,7 @@ export function RoutineCalendar({
       <div className="mb-8 grid grid-cols-7 gap-2">
         {weekDays.map((day, i) => {
           const isDayToday = isDateToday(day);
-          const isFutureDay = isFuture(day) && !isDayToday;
+          const isSelected = isSameDay(day, selectedDay);
           const status = dayStatuses[i];
           const done = status?.done ?? 0;
           const active = status?.active ?? 0;
@@ -342,13 +393,15 @@ export function RoutineCalendar({
           const progress = hasActive ? done / active : 0;
 
           return (
-            <div
+            <button
               key={day.toISOString()}
+              type="button"
+              onClick={() => setSelectedDay(day)}
               className="flex flex-col items-center gap-1"
             >
               {/* Progress arc (SVG) */}
               <div className="relative flex h-7 items-end justify-center">
-                {!isFutureDay && hasActive && (
+                {hasActive && (
                   <>
                     <svg viewBox="0 0 44 24" className="h-6 w-10">
                       <path
@@ -370,26 +423,39 @@ export function RoutineCalendar({
                     </svg>
                     {allDone && (
                       <div className="absolute -bottom-2 left-1/2 z-10 flex h-6 w-6 -translate-x-1/2 items-center justify-center rounded-full bg-green-500 shadow-sm dark:bg-green-400">
-                        <Check className="h-3.5 w-3.5 text-white" strokeWidth={3} />
+                        <Check
+                          className="h-3.5 w-3.5 text-white"
+                          strokeWidth={3}
+                        />
                       </div>
                     )}
                   </>
                 )}
               </div>
 
-              {/* Day pill — equal width via grid, white card bg */}
+              {/* Day pill */}
               <div
                 className={cn(
                   "flex w-full flex-col items-center rounded-2xl py-3 transition-colors",
-                  isDayToday
+                  isDayToday && isSelected
                     ? "bg-foreground text-background shadow-md"
-                    : "bg-white text-muted-foreground shadow-sm dark:bg-card",
+                    : isSelected
+                      ? "bg-primary/10 text-primary shadow-sm ring-2 ring-primary/30"
+                      : isDayToday
+                        ? "bg-foreground/80 text-background shadow-md"
+                        : "bg-white text-muted-foreground shadow-sm dark:bg-card",
                 )}
               >
                 <span
                   className={cn(
                     "text-2xl font-bold leading-tight",
-                    isDayToday ? "text-background" : "text-foreground",
+                    isDayToday && isSelected
+                      ? "text-background"
+                      : isSelected
+                        ? "text-primary"
+                        : isDayToday
+                          ? "text-background"
+                          : "text-foreground",
                   )}
                 >
                   {format(day, "d")}
@@ -397,23 +463,27 @@ export function RoutineCalendar({
                 <span
                   className={cn(
                     "text-xs capitalize leading-tight",
-                    isDayToday
+                    isDayToday && isSelected
                       ? "text-background/70"
-                      : "text-muted-foreground",
+                      : isSelected
+                        ? "text-primary/70"
+                        : isDayToday
+                          ? "text-background/70"
+                          : "text-muted-foreground",
                   )}
                 >
                   {format(day, "EEE", { locale: dateFnsLocale })}
                 </span>
               </div>
-            </div>
+            </button>
           );
         })}
       </div>
 
-      {/* Today's Tasks heading */}
+      {/* Task list heading */}
       <div className="mb-4 flex items-center justify-between">
         <div className="flex items-center gap-2">
-          <h2 className="text-xl font-bold">{t("todaysTasks")}</h2>
+          <h2 className="text-xl font-bold">{taskListHeading}</h2>
           <Link
             href="/app/routines/new"
             className="inline-flex h-7 w-7 items-center justify-center rounded-full text-muted-foreground transition-colors hover:bg-accent hover:text-foreground"
@@ -422,11 +492,11 @@ export function RoutineCalendar({
             <Plus className="h-4 w-4" />
           </Link>
         </div>
-        {todayTasks.length > 0 && (
+        {selectedDayTasks.length > 0 && (
           <span className="text-sm text-muted-foreground">
             {t("tasksCompleted", {
-              done: todayDoneCount,
-              total: todayTasks.length,
+              done: selectedDayDoneCount,
+              total: selectedDayTasks.length,
             })}
           </span>
         )}
@@ -444,25 +514,37 @@ export function RoutineCalendar({
             {t("noRoutinesAction")}
           </Link>
         </div>
-      ) : todayTasks.length === 0 ? (
+      ) : selectedDayTasks.length === 0 ? (
         <div className="flex flex-col items-center gap-2 py-6">
           <p className="text-sm text-muted-foreground">{t("noTasks")}</p>
         </div>
       ) : (
         <div className="relative space-y-2">
           {/* Vertical dotted line — through checkbox centers */}
-          {todayTasks.length > 1 && (
+          {selectedDayTasks.length > 1 && (
             <div className="absolute left-[15px] top-8 bottom-8 w-px border-l-2 border-dashed border-muted-foreground/20" />
           )}
-          {todayTasks.map((task) => {
+          {selectedDayTasks.map((task) => {
             const meta = task.recurrence_meta as
               | RecurrenceMeta
               | undefined;
-            const completed = isCompletedThisCycle(
-              task.last_completed_at,
-              task.recurrence,
-              meta,
-            );
+
+            let completed: boolean;
+            if (isSelectedToday) {
+              completed = isCompletedThisCycle(
+                task.last_completed_at,
+                task.recurrence,
+                meta,
+              );
+            } else if (isFuture(selectedDay) && !isDateToday(selectedDay)) {
+              completed = false;
+            } else {
+              completed = hasCompletionOnDate(
+                completionsByTask[task.id] ?? [],
+                selectedDay,
+              );
+            }
+
             const label = tEnums(`recurrence.${task.recurrence}`);
             const streak = getStreak(completionsByTask[task.id] ?? []);
             return (
@@ -472,6 +554,7 @@ export function RoutineCalendar({
                 isCompleted={completed}
                 recurrenceLabel={label}
                 streak={streak}
+                disabled={!isSelectedToday}
               />
             );
           })}

@@ -20,6 +20,8 @@ export default async function DashboardPage() {
     priority: "low" | "medium" | "high";
     status: "pending" | "in_progress" | "done";
     price: number | null;
+    notes: string | null;
+    link: string | null;
   }[] = [];
 
   let reminders: {
@@ -49,7 +51,7 @@ export default async function DashboardPage() {
       await Promise.all([
         supabase
           .from("household_item")
-          .select("id, name, type, priority, status, price")
+          .select("id, name, type, priority, status, price, notes, link")
           .eq("household_id", householdId)
           .neq("status", "done")
           .order("priority", { ascending: false })
@@ -100,13 +102,12 @@ export default async function DashboardPage() {
 
   return (
     <div className="p-6">
-      <RoutineCalendar
-        tasks={tasks}
-        completionsByTask={completionsByTask}
-        userName={user.name?.split(" ")[0] ?? ""}
-      />
-
-      <div className="mt-6 grid gap-4 lg:grid-cols-2">
+      <div className="grid gap-6 lg:grid-cols-3">
+        <RoutineCalendar
+          tasks={tasks}
+          completionsByTask={completionsByTask}
+          userName={user.name?.split(" ")[0] ?? ""}
+        />
         <ItemsWidget items={items} />
         <RemindersWidget reminders={reminders} />
       </div>

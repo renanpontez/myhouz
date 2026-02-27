@@ -3,9 +3,10 @@ import { redirect } from "next/navigation";
 import { getUserWithRole } from "@home/auth";
 import { HouseholdProvider } from "@home/auth";
 import { createServerClient } from "@home/db";
-import { Sidebar } from "@/components/layout/Sidebar";
+import { DesktopSidebar, MobileSidebar } from "@/components/layout/Sidebar";
 import { TopBar } from "@/components/layout/TopBar";
 import { BottomNav } from "@/components/layout/BottomNav";
+import { SidebarProvider } from "@/components/layout/SidebarContext";
 
 export default async function HouseholdLayout({
   children,
@@ -35,18 +36,26 @@ export default async function HouseholdLayout({
     .select()
     .in("id", memberIds);
 
-  const [{ data: household }, { count: urgentCount }] = await Promise.all([
-    supabase
-      .from("household")
-      .select()
-      .eq("id", householdId)
-      .single(),
-    supabase
-      .from("urgent_problem")
-      .select("*", { count: "exact", head: true })
-      .eq("household_id", householdId)
-      .eq("is_active", true),
-  ]);
+  const [{ data: household }, { count: urgentCount }, { data: urgentProblems }] =
+    await Promise.all([
+      supabase
+        .from("household")
+        .select()
+        .eq("id", householdId)
+        .single(),
+      supabase
+        .from("urgent_problem")
+        .select("*", { count: "exact", head: true })
+        .eq("household_id", householdId)
+        .eq("is_active", true),
+      supabase
+        .from("urgent_problem")
+        .select("id, title, created_at")
+        .eq("household_id", householdId)
+        .eq("is_active", true)
+        .order("created_at", { ascending: false })
+        .limit(3),
+    ]);
 
   if (!household) {
     redirect("/app/onboarding");
@@ -59,20 +68,21 @@ export default async function HouseholdLayout({
       role={role}
       members={members ?? []}
     >
-      <div className="flex min-h-screen">
-        <aside className="hidden w-20 shrink-0 bg-primary lg:flex lg:flex-col items-center rounded-r-3xl">
-          <div className="py-6">
-            <img src="/myhouz-icon.svg" alt="myhouz" className="h-8 w-8" />
-          </div>
-          <Sidebar />
-        </aside>
+      <SidebarProvider>
+        <div className="flex min-h-screen">
+          <DesktopSidebar />
+          <MobileSidebar />
 
-        <div className="flex flex-1 flex-col">
-          <TopBar urgentCount={urgentCount ?? 0} />
-          <main className="flex-1 pb-24 lg:pb-0">{children}</main>
-          <BottomNav />
+          <div className="flex flex-1 flex-col">
+            <TopBar
+              urgentCount={urgentCount ?? 0}
+              urgentProblems={urgentProblems ?? []}
+            />
+            <main className="flex-1 pb-24 lg:pb-0">{children}</main>
+            <BottomNav />
+          </div>
         </div>
-      </div>
+      </SidebarProvider>
     </HouseholdProvider>
   );
 }

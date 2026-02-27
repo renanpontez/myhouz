@@ -10,12 +10,13 @@ import {
   Settings,
 } from "lucide-react";
 import { useTranslations } from "next-intl";
+import { cn } from "@home/ui";
 import { SidebarNavLink } from "./SidebarNavLink";
+import { useSidebar } from "./SidebarContext";
 
-export function Sidebar() {
+function useNavItems() {
   const t = useTranslations("nav");
-
-  const navItems = [
+  return [
     { href: "/app/dashboard", label: t("dashboard"), icon: LayoutDashboard },
     { href: "/app/items", label: t("items"), icon: ShoppingCart },
     { href: "/app/routines", label: t("routines"), icon: ListChecks },
@@ -24,17 +25,78 @@ export function Sidebar() {
     { href: "/app/members", label: t("members"), icon: Users },
     { href: "/app/settings", label: t("settings"), icon: Settings },
   ];
+}
+
+export function DesktopSidebar() {
+  const { isExpanded } = useSidebar();
+  const navItems = useNavItems();
 
   return (
-    <nav className="flex flex-1 flex-col items-center gap-1.5 py-4">
-      {navItems.map((item) => (
-        <SidebarNavLink
-          key={item.href}
-          href={item.href}
-          label={item.label}
-          icon={item.icon}
+    <aside
+      className={cn(
+        "hidden shrink-0 rounded-r-3xl bg-primary lg:flex lg:flex-col transition-all duration-300",
+        isExpanded ? "w-60 items-stretch" : "w-20 items-center",
+      )}
+    >
+      <div className={cn("py-6", isExpanded ? "px-5" : "flex justify-center")}>
+        <img src="/myhouz-icon.svg" alt="myhouz" className="h-8 w-8" />
+      </div>
+      <nav
+        className={cn(
+          "flex flex-1 flex-col gap-1.5 py-4",
+          isExpanded ? "items-stretch px-3" : "items-center",
+        )}
+      >
+        {navItems.map((item) => (
+          <SidebarNavLink
+            key={item.href}
+            href={item.href}
+            label={item.label}
+            icon={item.icon}
+            expanded={isExpanded}
+          />
+        ))}
+      </nav>
+    </aside>
+  );
+}
+
+export function MobileSidebar() {
+  const { isOpen, close } = useSidebar();
+  const navItems = useNavItems();
+
+  return (
+    <>
+      {/* Overlay */}
+      {isOpen && (
+        <div
+          className="fixed inset-0 z-40 bg-black/50 lg:hidden"
+          onClick={close}
         />
-      ))}
-    </nav>
+      )}
+      {/* Drawer */}
+      <aside
+        className={cn(
+          "fixed inset-y-0 left-0 z-50 w-60 rounded-r-3xl bg-primary transition-transform duration-300 lg:hidden",
+          isOpen ? "translate-x-0" : "-translate-x-full",
+        )}
+      >
+        <div className="px-5 py-6">
+          <img src="/myhouz-icon.svg" alt="myhouz" className="h-8 w-8" />
+        </div>
+        <nav className="flex flex-col items-stretch gap-1.5 px-3 py-4">
+          {navItems.map((item) => (
+            <SidebarNavLink
+              key={item.href}
+              href={item.href}
+              label={item.label}
+              icon={item.icon}
+              expanded
+              onClick={close}
+            />
+          ))}
+        </nav>
+      </aside>
+    </>
   );
 }

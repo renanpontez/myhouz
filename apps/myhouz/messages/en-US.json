@@ -31,7 +31,9 @@
     "urgent": "Urgent",
     "members": "Members",
     "settings": "Settings",
-    "home": "Home"
+    "home": "Home",
+    "showAll": "Show all",
+    "urgentProblems": "Urgent Problems"
   },
   "auth": {
     "email": "Email",
@@ -117,7 +119,9 @@
       "empty": "No pending items",
       "emptyAction": "Add item",
       "pendingCount": "{count} pending",
-      "pendingLabel": "pending items"
+      "pendingLabel": "pending items",
+      "all": "All",
+      "viewDetails": "View details"
     },
     "remindersWidget": {
       "title": "Reminders",

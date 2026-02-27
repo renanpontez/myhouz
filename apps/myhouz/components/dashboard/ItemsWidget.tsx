@@ -1,7 +1,28 @@
+"use client";
+
+import { useState } from "react";
 import Link from "next/link";
-import { getTranslations } from "next-intl/server";
-import { Card, CardContent } from "@home/ui";
-import { ShoppingCart, Wrench, Settings2, Check, Plus, ChevronRight } from "lucide-react";
+import { useTranslations } from "next-intl";
+import {
+  Badge,
+  Dialog,
+  DialogContent,
+  DialogHeader,
+  DialogTitle,
+  DialogDescription,
+  Button,
+} from "@home/ui";
+import { cn } from "@home/ui";
+import {
+  ShoppingCart,
+  Wrench,
+  Settings2,
+  Check,
+  Plus,
+  ChevronRight,
+  ExternalLink,
+  ListFilter,
+} from "lucide-react";
 
 const TYPE_ICONS = {
   buy: ShoppingCart,
@@ -15,102 +36,263 @@ const PRIORITY_STYLES = {
   low: "text-muted-foreground",
 } as const;
 
+type ItemType = "buy" | "repair" | "fix";
+
 interface Item {
   id: string;
   name: string;
-  type: "buy" | "repair" | "fix";
+  type: ItemType;
   priority: "low" | "medium" | "high";
   status: "pending" | "in_progress" | "done";
   price: number | null;
+  notes: string | null;
+  link: string | null;
 }
 
 interface ItemsWidgetProps {
   items: Item[];
 }
 
-export async function ItemsWidget({ items }: ItemsWidgetProps) {
-  const t = await getTranslations("dashboard.itemsWidget");
-  const tEnums = await getTranslations("enums");
+const TYPE_FILTERS: (ItemType | "all")[] = ["all", "buy", "repair", "fix"];
+
+export function ItemsWidget({ items }: ItemsWidgetProps) {
+  const t = useTranslations("dashboard.itemsWidget");
+  const tEnums = useTranslations("enums");
+  const tItems = useTranslations("items");
+
+  const [activeFilter, setActiveFilter] = useState<ItemType | "all">("all");
+  const [filterOpen, setFilterOpen] = useState(false);
+  const [selectedItem, setSelectedItem] = useState<Item | null>(null);
 
   const pendingItems = items.filter((i) => i.status !== "done");
-  const displayItems = pendingItems.slice(0, 5);
+  const filteredItems =
+    activeFilter === "all"
+      ? pendingItems
+      : pendingItems.filter((i) => i.type === activeFilter);
+  const displayItems = filteredItems.slice(0, 5);
+
+  const activeFilterLabel =
+    activeFilter === "all"
+      ? `${t("all")} ${t("title").toLowerCase()}`
+      : tEnums(`itemType.${activeFilter}`);
 
   return (
-    <Card className="h-full">
-      <CardContent className="p-4 sm:p-5">
-        {/* Header */}
-        <div className="mb-4 flex items-center justify-between">
-          <h2 className="text-lg font-semibold">{t("title")}</h2>
+    <div>
+      {/* Title */}
+      <h2 className="text-2xl font-bold">{t("title")}</h2>
+
+      {/* Filter subtitle */}
+      {pendingItems.length > 0 && (
+        <div className="relative mt-1 mb-6">
+          <button
+            type="button"
+            onClick={() => setFilterOpen(!filterOpen)}
+            className="flex items-center gap-1.5 text-sm text-muted-foreground transition-colors hover:text-foreground"
+          >
+            <ListFilter className="h-3.5 w-3.5" />
+            <span>{activeFilterLabel}</span>
+          </button>
+
+          {filterOpen && (
+            <>
+              <div
+                className="fixed inset-0 z-10"
+                onClick={() => setFilterOpen(false)}
+              />
+              <div className="absolute left-0 z-20 mt-1.5 rounded-xl border bg-card p-1 shadow-md">
+                {TYPE_FILTERS.map((type) => (
+                  <button
+                    key={type}
+                    type="button"
+                    onClick={() => {
+                      setActiveFilter(type);
+                      setFilterOpen(false);
+                    }}
+                    className={cn(
+                      "flex w-full items-center justify-between gap-6 rounded-lg px-3 py-2 text-sm transition-colors hover:bg-accent",
+                      activeFilter === type && "font-medium",
+                    )}
+                  >
+                    <span>
+                      {type === "all"
+                        ? `${t("all")} ${t("title").toLowerCase()}`
+                        : tEnums(`itemType.${type}`)}
+                    </span>
+                    {activeFilter === type && (
+                      <Check className="h-3.5 w-3.5 text-primary" />
+                    )}
+                  </button>
+                ))}
+              </div>
+            </>
+          )}
+        </div>
+      )}
+
+      {pendingItems.length === 0 ? (
+        <div className="flex flex-col items-center gap-3 py-10">
+          <ShoppingCart className="h-10 w-10 text-muted-foreground/40" />
+          <p className="text-sm text-muted-foreground">{t("empty")}</p>
+          <Link
+            href="/app/items/new"
+            className="inline-flex items-center gap-1.5 rounded-full bg-primary px-4 py-2 text-sm font-medium text-primary-foreground"
+          >
+            <Plus className="h-4 w-4" />
+            {t("emptyAction")}
+          </Link>
+        </div>
+      ) : (
+        <div className="space-y-3">
+          {displayItems.map((item) => {
+            const Icon = TYPE_ICONS[item.type];
+            const isDone = item.status === "done";
+
+            return (
+              <button
+                key={item.id}
+                type="button"
+                onClick={() => setSelectedItem(item)}
+                className="flex w-full items-center gap-4 rounded-2xl bg-white px-5 py-4 shadow-sm transition-colors hover:bg-white/80 dark:bg-card dark:hover:bg-card/80"
+              >
+                <div
+                  className={cn(
+                    "flex h-11 w-11 shrink-0 items-center justify-center rounded-full bg-background",
+                    PRIORITY_STYLES[item.priority],
+                  )}
+                >
+                  {isDone ? (
+                    <Check className="h-5 w-5 text-green-600 dark:text-green-400" />
+                  ) : (
+                    <Icon className="h-5 w-5" />
+                  )}
+                </div>
+                <div className="min-w-0 flex-1 text-left">
+                  <p className="truncate text-base font-medium">{item.name}</p>
+                  <p className="truncate text-sm text-muted-foreground">
+                    {tEnums(`itemType.${item.type}`)}
+                    {item.price != null &&
+                      `  ·  R$ ${item.price.toFixed(2)}`}
+                  </p>
+                </div>
+                <ChevronRight className="h-6 w-6 shrink-0 text-muted-foreground/40" />
+              </button>
+            );
+          })}
+        </div>
+      )}
+
+      {/* View all — bottom */}
+      {pendingItems.length > 0 && (
+        <div className="mt-4 text-right">
           <Link
             href="/app/items"
-            className="text-xs font-medium text-muted-foreground transition-colors hover:text-foreground"
+            className="text-sm font-medium text-muted-foreground transition-colors hover:text-foreground"
           >
             {t("viewAll")}
           </Link>
         </div>
+      )}
 
-        {/* Stat display */}
-        {pendingItems.length > 0 && (
-          <div className="mb-3 flex items-baseline gap-1">
-            <span className="text-stat">{pendingItems.length}</span>
-            <span className="text-stat-unit">{t("pendingLabel")}</span>
-          </div>
-        )}
-
-        {pendingItems.length === 0 ? (
-          <div className="flex flex-col items-center gap-3 py-6">
-            <ShoppingCart className="h-8 w-8 text-muted-foreground/50" />
-            <p className="text-sm text-muted-foreground">{t("empty")}</p>
-            <Link
-              href="/app/items/new"
-              className="inline-flex items-center gap-1.5 rounded-lg bg-primary px-3 py-1.5 text-xs font-medium text-primary-foreground"
-            >
-              <Plus className="h-3.5 w-3.5" />
-              {t("emptyAction")}
-            </Link>
-          </div>
-        ) : (
-          <div className="space-y-2">
-            {displayItems.map((item) => {
-              const Icon = TYPE_ICONS[item.type];
-              const isDone = item.status === "done";
-
-              return (
-                <Link
-                  key={item.id}
-                  href={`/app/items/${item.id}`}
-                  className="flex items-center gap-3 rounded-xl bg-accent/50 p-3 transition-colors hover:bg-accent"
+      {/* Item detail modal */}
+      <Dialog
+        open={selectedItem !== null}
+        onOpenChange={(open) => {
+          if (!open) setSelectedItem(null);
+        }}
+      >
+        {selectedItem && (
+          <DialogContent>
+            <DialogHeader>
+              <div className="flex items-center gap-3">
+                <div
+                  className={cn(
+                    "flex h-12 w-12 shrink-0 items-center justify-center rounded-full bg-background",
+                    PRIORITY_STYLES[selectedItem.priority],
+                  )}
                 >
-                  <div className={`flex h-9 w-9 shrink-0 items-center justify-center rounded-full bg-background ${PRIORITY_STYLES[item.priority]}`}>
-                    {isDone ? (
-                      <Check className="h-4 w-4 text-green-600 dark:text-green-400" />
-                    ) : (
-                      <Icon className="h-4 w-4" />
-                    )}
-                  </div>
-                  <div className="min-w-0 flex-1">
-                    <p className="truncate text-sm font-medium">{item.name}</p>
-                    <p className="truncate text-xs text-muted-foreground">
-                      {tEnums(`itemType.${item.type}`)}
-                      {item.price != null && ` · R$ ${item.price.toFixed(2)}`}
-                    </p>
-                  </div>
-                  <ChevronRight className="h-4 w-4 shrink-0 text-muted-foreground/50" />
-                </Link>
-              );
-            })}
+                  {(() => {
+                    const Icon = TYPE_ICONS[selectedItem.type];
+                    return <Icon className="h-5 w-5" />;
+                  })()}
+                </div>
+                <div>
+                  <DialogTitle className="text-xl">
+                    {selectedItem.name}
+                  </DialogTitle>
+                  <DialogDescription>
+                    {tEnums(`itemType.${selectedItem.type}`)}
+                    {selectedItem.price != null &&
+                      `  ·  R$ ${selectedItem.price.toFixed(2)}`}
+                  </DialogDescription>
+                </div>
+              </div>
+            </DialogHeader>
 
-            {pendingItems.length > 5 && (
-              <Link
-                href="/app/items"
-                className="block pt-1 text-center text-xs font-medium text-muted-foreground hover:text-foreground"
-              >
-                {t("pendingCount", { count: pendingItems.length })}
-              </Link>
+            <div className="flex flex-wrap gap-2">
+              <Badge variant="outline">
+                {tEnums(`itemType.${selectedItem.type}`)}
+              </Badge>
+              <Badge variant="outline">
+                {tEnums(`priority.${selectedItem.priority}`)}
+              </Badge>
+              <Badge variant="outline">
+                {tEnums(`status.${selectedItem.status}`)}
+              </Badge>
+            </div>
+
+            {selectedItem.price != null && (
+              <div>
+                <p className="text-xs font-medium text-muted-foreground">
+                  {tItems("priceLabel")}
+                </p>
+                <p className="text-lg font-semibold">
+                  R$ {selectedItem.price.toFixed(2)}
+                </p>
+              </div>
             )}
-          </div>
+
+            {selectedItem.link && (
+              <a
+                href={selectedItem.link}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="inline-flex items-center gap-1.5 text-sm text-primary hover:underline"
+              >
+                <ExternalLink className="h-3.5 w-3.5" />
+                {tItems("openLink")}
+              </a>
+            )}
+
+            {selectedItem.notes && (
+              <div>
+                <p className="text-xs font-medium text-muted-foreground">
+                  {tItems("notesLabel")}
+                </p>
+                <p className="mt-1 whitespace-pre-wrap text-sm">
+                  {selectedItem.notes}
+                </p>
+              </div>
+            )}
+
+            <div className="flex gap-2 pt-2">
+              <Link
+                href={`/app/items/${selectedItem.id}`}
+                className="flex-1"
+              >
+                <Button variant="outline" className="w-full">
+                  {t("viewDetails")}
+                </Button>
+              </Link>
+              <Link
+                href={`/app/items/${selectedItem.id}/edit`}
+                className="flex-1"
+              >
+                <Button className="w-full">{tItems("editTitle")}</Button>
+              </Link>
+            </div>
+          </DialogContent>
         )}
-      </CardContent>
-    </Card>
+      </Dialog>
+    </div>
   );
 }

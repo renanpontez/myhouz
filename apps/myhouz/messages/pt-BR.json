@@ -31,7 +31,9 @@
     "urgent": "Urgente",
     "members": "Membros",
     "settings": "Config",
-    "home": "Inicio"
+    "home": "Inicio",
+    "showAll": "Ver todos",
+    "urgentProblems": "Problemas Urgentes"
   },
   "auth": {
     "email": "E-mail",
@@ -117,7 +119,9 @@
       "empty": "Nenhum item pendente",
       "emptyAction": "Adicionar item",
       "pendingCount": "{count} pendentes",
-      "pendingLabel": "itens pendentes"
+      "pendingLabel": "itens pendentes",
+      "all": "Todos",
+      "viewDetails": "Ver detalhes"
     },
     "remindersWidget": {
       "title": "Lembretes",
