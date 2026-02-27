@@ -16,11 +16,11 @@ export async function AppMockup() {
       role="presentation"
     >
       {/* Device frame */}
-      <div className="relative bg-card rounded-2xl border border-border shadow-xl overflow-hidden">
+      <div className="relative bg-card rounded-2xl shadow-xl overflow-hidden">
         {/* Top bar */}
-        <div className="flex items-center justify-between px-4 py-3 border-b border-border bg-card">
+        <div className="flex items-center justify-between px-4 py-3 bg-card">
           <div className="flex items-center gap-2">
-            <div className="w-7 h-7 rounded-lg bg-primary flex items-center justify-center">
+            <div className="w-7 h-7 rounded-full bg-primary flex items-center justify-center">
               <span className="text-primary-foreground text-xs font-bold">M</span>
             </div>
             <div>
@@ -42,7 +42,7 @@ export async function AppMockup() {
         </div>
 
         {/* Urgent banner */}
-        <div className="mx-3 mt-3 px-3 py-2 bg-destructive/10 border border-destructive/20 rounded-lg flex items-center gap-2">
+        <div className="mx-3 mt-3 px-3 py-2 bg-destructive/10 rounded-xl flex items-center gap-2">
           <div className="w-2 h-2 rounded-full bg-destructive animate-pulse-dot flex-shrink-0" />
           <p className="text-xs font-medium text-destructive flex-1">
             {t("urgentBanner")}
@@ -93,7 +93,7 @@ export async function AppMockup() {
 
         {/* Routine card */}
         <div className="px-3 pb-3 space-y-2">
-          <div className="bg-secondary rounded-lg px-3 py-2.5">
+          <div className="bg-secondary rounded-xl px-3 py-2.5">
             <div className="flex items-center justify-between mb-1.5">
               <p className="text-xs font-medium text-foreground">
                 {t("routine1")}
@@ -105,7 +105,7 @@ export async function AppMockup() {
             </div>
           </div>
 
-          <div className="bg-secondary rounded-lg px-3 py-2.5">
+          <div className="bg-secondary rounded-xl px-3 py-2.5">
             <div className="flex items-center justify-between mb-1.5">
               <p className="text-xs font-medium text-foreground">
                 {t("routine2")}
@@ -156,7 +156,7 @@ function MockItem({
   };
 
   return (
-    <div className="bg-card border border-border rounded-lg px-3 py-2.5 flex items-center gap-2.5">
+    <div className="bg-white dark:bg-card rounded-xl px-3 py-2.5 flex items-center gap-2.5 shadow-sm">
       <div
         className={`w-1.5 h-8 rounded-full flex-shrink-0 ${priorityColors[priority]}`}
       />

@@ -87,7 +87,7 @@ interface SectionProps {
 
 function Nav({ t }: SectionProps) {
   return (
-    <header className="sticky top-0 z-20 bg-card/90 backdrop-blur-sm border-b border-border">
+    <header className="sticky top-0 z-20 bg-card/90 backdrop-blur-sm">
       <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="relative flex items-center justify-between h-16">
           <Link
@@ -119,7 +119,7 @@ function Nav({ t }: SectionProps) {
           </nav>
 
           <div className="hidden md:block">
-            <Button asChild size="default">
+            <Button asChild size="default" className="rounded-full">
               <Link href="/signup">{t("nav.getStarted")}</Link>
             </Button>
           </div>
@@ -173,14 +173,14 @@ function Hero({ t }: SectionProps) {
             </p>
 
             <div className="mt-8 flex flex-col sm:flex-row gap-3 justify-center lg:justify-start">
-              <Button asChild size="lg" className="text-base px-7 h-12">
+              <Button asChild size="lg" className="text-base px-7 h-12 rounded-full">
                 <Link href="/signup">{t("hero.ctaPrimary")}</Link>
               </Button>
               <Button
                 asChild
                 variant="outline"
                 size="lg"
-                className="text-base px-7 h-12"
+                className="text-base px-7 h-12 rounded-full"
               >
                 <Link href="#how-it-works">{t("hero.ctaSecondary")}</Link>
               </Button>
@@ -270,8 +270,8 @@ function PainCard({
   body: string;
 }) {
   return (
-    <div className="bg-card border border-border rounded-xl p-6 shadow-sm">
-      <div className="w-10 h-10 rounded-lg bg-destructive/10 flex items-center justify-center mb-4">
+    <div className="bg-white dark:bg-card rounded-2xl p-6 shadow-sm">
+      <div className="h-11 w-11 rounded-full bg-background flex items-center justify-center mb-4">
         <Icon size={20} className="text-destructive" />
       </div>
       <h3 className="text-sm font-semibold text-foreground leading-snug mb-2">
@@ -378,17 +378,13 @@ function FeatureCard({
   accent?: boolean;
 }) {
   return (
-    <div
-      className={`bg-card border rounded-xl p-6 shadow-sm transition-shadow hover:shadow-md ${
-        accent ? "border-destructive/30" : "border-border"
-      }`}
-    >
+    <div className="bg-white dark:bg-card rounded-2xl p-6 shadow-sm transition-colors hover:bg-white/80 dark:hover:bg-card/80">
       <div
-        className={`w-11 h-11 rounded-lg flex items-center justify-center mb-4 ${color}`}
+        className={`h-11 w-11 rounded-full flex items-center justify-center mb-4 ${color}`}
       >
         <Icon size={22} />
       </div>
-      <h3 className="text-base font-semibold text-foreground mb-2">{name}</h3>
+      <h3 className="text-base font-medium text-foreground mb-2">{name}</h3>
       <p className="text-sm text-muted-foreground leading-relaxed">
         {description}
       </p>
@@ -443,7 +439,7 @@ function HowItWorks({ t }: SectionProps) {
         </div>
 
         <div className="mt-14 text-center">
-          <Button asChild size="lg" className="text-base px-8 h-12">
+          <Button asChild size="lg" className="text-base px-8 h-12 rounded-full">
             <Link href="/signup">{t("howItWorks.cta")}</Link>
           </Button>
         </div>
@@ -463,7 +459,7 @@ function StepCard({
 }) {
   return (
     <div className="flex flex-col items-center text-center md:items-center">
-      <div className="relative z-10 w-20 h-20 rounded-2xl bg-primary flex items-center justify-center shadow-md mb-6">
+      <div className="relative z-10 w-20 h-20 rounded-full bg-primary flex items-center justify-center shadow-md mb-6">
         <span className="text-3xl font-bold text-primary-foreground">
           {number}
         </span>
@@ -560,14 +556,14 @@ function TestimonialCard({
   avatarColor: string;
 }) {
   return (
-    <div className="bg-card border border-border rounded-xl p-6 shadow-sm flex flex-col gap-4">
+    <div className="bg-white dark:bg-card rounded-2xl p-6 shadow-sm flex flex-col gap-4">
       <div className="text-4xl font-serif leading-none text-primary/30 select-none">
         &ldquo;
       </div>
       <p className="text-base text-foreground leading-relaxed -mt-3">
         {quote}
       </p>
-      <div className="mt-auto flex items-center gap-3 pt-4 border-t border-border">
+      <div className="mt-auto flex items-center gap-3 pt-4">
         <div
           className={`w-10 h-10 rounded-full flex items-center justify-center text-sm font-bold flex-shrink-0 ${avatarColor}`}
         >
@@ -627,7 +623,7 @@ function Pricing({ t }: SectionProps) {
 
         <div className="grid md:grid-cols-2 gap-6 max-w-3xl mx-auto">
           {/* Free plan */}
-          <div className="bg-card border border-border rounded-xl p-8 shadow-sm flex flex-col">
+          <div className="bg-white dark:bg-card rounded-2xl p-8 shadow-sm flex flex-col">
             <div className="mb-6">
               <p className="text-sm font-medium text-muted-foreground uppercase tracking-wide mb-2">
                 {t("pricing.freeName")}
@@ -647,13 +643,13 @@ function Pricing({ t }: SectionProps) {
               ))}
             </ul>
 
-            <Button asChild variant="outline" size="lg" className="w-full h-11">
+            <Button asChild variant="outline" size="lg" className="w-full h-11 rounded-full">
               <Link href="/signup">{t("pricing.freeCta")}</Link>
             </Button>
           </div>
 
           {/* Plus plan */}
-          <div className="bg-primary rounded-xl p-8 shadow-lg flex flex-col relative overflow-hidden">
+          <div className="bg-primary rounded-2xl p-8 shadow-lg flex flex-col relative overflow-hidden">
             <div className="absolute top-4 right-4">
               <span className="text-xs font-semibold bg-primary-foreground/20 text-primary-foreground px-2.5 py-1 rounded-full">
                 {t("pricing.plusRecommended")}
@@ -687,7 +683,7 @@ function Pricing({ t }: SectionProps) {
               asChild
               variant="secondary"
               size="lg"
-              className="w-full h-11 bg-primary-foreground text-primary hover:bg-primary-foreground/90 font-semibold"
+              className="w-full h-11 rounded-full bg-primary-foreground text-primary hover:bg-primary-foreground/90 font-semibold"
             >
               <Link href="/signup">{t("pricing.plusCta")}</Link>
             </Button>
@@ -795,10 +791,10 @@ function TeamMemberCard({
   avatarColor: string;
 }) {
   return (
-    <div className="bg-card border border-border rounded-xl p-6 shadow-sm flex flex-col gap-4">
+    <div className="bg-white dark:bg-card rounded-2xl p-6 shadow-sm flex flex-col gap-4">
       <div className="flex items-center gap-4">
         <div
-          className={`w-14 h-14 rounded-2xl flex items-center justify-center text-base font-bold flex-shrink-0 ${avatarColor}`}
+          className={`w-14 h-14 rounded-full flex items-center justify-center text-base font-bold flex-shrink-0 ${avatarColor}`}
           aria-hidden="true"
         >
           {initials}
@@ -847,7 +843,7 @@ function FinalCta({ t }: SectionProps) {
           {t("finalCta.subtitle")}
         </p>
         <div className="mt-8">
-          <Button asChild size="lg" className="text-base px-10 h-12">
+          <Button asChild size="lg" className="text-base px-10 h-12 rounded-full">
             <Link href="/signup">{t("finalCta.cta")}</Link>
           </Button>
         </div>
@@ -882,7 +878,7 @@ function Footer({ t }: SectionProps) {
   };
 
   return (
-    <footer className="border-t border-border bg-card">
+    <footer className="bg-card">
       <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 py-14">
         <div className="grid grid-cols-2 md:grid-cols-4 gap-10 mb-12">
           <div className="col-span-2 md:col-span-1">
@@ -901,7 +897,7 @@ function Footer({ t }: SectionProps) {
                 target="_blank"
                 rel="noopener noreferrer"
                 aria-label="myhouz on X (Twitter)"
-                className="w-9 h-9 rounded-lg bg-secondary flex items-center justify-center text-muted-foreground hover:text-foreground hover:bg-muted transition-colors"
+                className="w-9 h-9 rounded-full bg-secondary flex items-center justify-center text-muted-foreground hover:text-foreground hover:bg-muted transition-colors"
               >
                 <Twitter size={16} />
               </a>
@@ -910,7 +906,7 @@ function Footer({ t }: SectionProps) {
                 target="_blank"
                 rel="noopener noreferrer"
                 aria-label="myhouz on Instagram"
-                className="w-9 h-9 rounded-lg bg-secondary flex items-center justify-center text-muted-foreground hover:text-foreground hover:bg-muted transition-colors"
+                className="w-9 h-9 rounded-full bg-secondary flex items-center justify-center text-muted-foreground hover:text-foreground hover:bg-muted transition-colors"
               >
                 <Instagram size={16} />
               </a>
