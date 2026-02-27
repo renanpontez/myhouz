@@ -49,7 +49,7 @@ export default async function RemindersPage({
         actions={
           <Link
             href="/app/reminders/new"
-            className="rounded-lg bg-primary px-4 py-2 text-sm text-primary-foreground"
+            className="rounded-full bg-primary px-4 py-2 text-sm font-medium text-primary-foreground"
           >
             {t("addButton")}
           </Link>
@@ -74,7 +74,7 @@ export default async function RemindersPage({
           {t("noReminders")}
         </div>
       ) : (
-        <div className="mt-4 space-y-2">
+        <div className="mt-4 space-y-3">
           {filtered.map((reminder) => (
             <ReminderRow key={reminder.id} reminder={reminder} />
           ))}

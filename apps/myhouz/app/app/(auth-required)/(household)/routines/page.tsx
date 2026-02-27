@@ -134,7 +134,7 @@ export default async function RoutinesPage() {
         actions={
           <Link
             href="/app/routines/new"
-            className="rounded-lg bg-primary px-4 py-2 text-sm text-primary-foreground"
+            className="rounded-full bg-primary px-4 py-2 text-sm font-medium text-primary-foreground"
           >
             {t("addButton")}
           </Link>
@@ -156,7 +156,7 @@ export default async function RoutinesPage() {
           {todayTasks.length > 0 && (
             <div className="space-y-3">
               <TodayProgress done={doneToday} total={todayTasks.length} />
-              <div className="space-y-2">
+              <div className="space-y-3">
                 {sortedTodayTasks.map(renderTaskRow)}
               </div>
             </div>
@@ -168,7 +168,7 @@ export default async function RoutinesPage() {
               <h3 className="text-sm font-medium text-muted-foreground">
                 {t("otherDays")}
               </h3>
-              <div className="space-y-2">
+              <div className="space-y-3">
                 {sortedOtherTasks.map(renderTaskRow)}
               </div>
             </div>

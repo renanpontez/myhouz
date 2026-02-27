@@ -60,7 +60,7 @@ export default async function UrgentPage({ searchParams }: UrgentPageProps) {
         actions={
           <Link
             href="/app/urgent/new"
-            className="rounded-md bg-destructive px-4 py-2 text-sm text-destructive-foreground"
+            className="rounded-full bg-destructive px-4 py-2 text-sm font-medium text-destructive-foreground"
           >
             {t("addButton")}
           </Link>
@@ -83,7 +83,7 @@ export default async function UrgentPage({ searchParams }: UrgentPageProps) {
           {t("empty")}
         </div>
       ) : (
-        <div className="mt-4 space-y-2">
+        <div className="mt-4 space-y-3">
           {filtered.map((problem) => (
             <UrgentProblemRow
               key={problem.id}

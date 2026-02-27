@@ -1,4 +1,6 @@
 import Link from "next/link";
+import { cn } from "@home/ui";
+import { AlertTriangle, ChevronRight } from "lucide-react";
 import { formatRelativeTime } from "@/lib/utils";
 
 interface UrgentProblemRowProps {
@@ -19,29 +21,33 @@ export function UrgentProblemRow({
   return (
     <Link
       href={`/app/urgent/${problem.id}`}
-      className={`block rounded-lg border p-3 transition-colors hover:bg-accent/50 ${
-        problem.is_active
-          ? "border-l-4 border-l-destructive"
-          : "border-l-4 border-l-muted opacity-70"
-      }`}
+      className="flex items-center gap-4 rounded-2xl bg-white px-5 py-4 shadow-sm transition-colors hover:bg-white/80 dark:bg-card dark:hover:bg-card/80"
     >
-      <div className="flex items-center gap-2">
-        {problem.is_active && (
-          <span className="h-2 w-2 shrink-0 rounded-full bg-destructive animate-pulse-dot" />
+      <div
+        className={cn(
+          "relative flex h-11 w-11 shrink-0 items-center justify-center rounded-full bg-background",
+          problem.is_active ? "text-destructive" : "text-muted-foreground",
         )}
-        <span
-          className={
-            problem.is_active ? "text-sm font-medium" : "text-sm text-muted-foreground"
-          }
+      >
+        <AlertTriangle className="h-5 w-5" />
+        {problem.is_active && (
+          <span className="absolute -right-0.5 -top-0.5 h-2.5 w-2.5 rounded-full bg-destructive animate-pulse-dot" />
+        )}
+      </div>
+      <div className="min-w-0 flex-1">
+        <p
+          className={cn(
+            "truncate text-base font-medium",
+            !problem.is_active && "text-muted-foreground",
+          )}
         >
           {problem.title}
-        </span>
+        </p>
+        <p className="truncate text-sm text-muted-foreground">
+          {reporterName}  &middot;  {formatRelativeTime(problem.created_at)}
+        </p>
       </div>
-      <div className="mt-1 flex items-center gap-2 text-xs text-muted-foreground">
-        <span>{reporterName}</span>
-        <span>&middot;</span>
-        <span>{formatRelativeTime(problem.created_at)}</span>
-      </div>
+      <ChevronRight className="h-6 w-6 shrink-0 text-muted-foreground/40" />
     </Link>
   );
 }

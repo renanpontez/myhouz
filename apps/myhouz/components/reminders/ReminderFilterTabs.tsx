@@ -24,13 +24,13 @@ export function ReminderFilterTabs() {
   }
 
   return (
-    <div className="flex gap-1 rounded-lg border p-1">
+    <div className="flex gap-1 rounded-full bg-muted p-1">
       {FILTERS.map((filter) => (
         <button
           key={filter}
           type="button"
           onClick={() => handleFilter(filter)}
-          className={`rounded-md px-3 py-1.5 text-sm transition-colors ${
+          className={`rounded-full px-3 py-1.5 text-sm transition-colors ${
             current === filter
               ? "bg-primary text-primary-foreground"
               : "hover:bg-accent"

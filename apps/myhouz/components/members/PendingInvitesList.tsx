@@ -3,7 +3,7 @@
 import { useTransition } from "react";
 import { useTranslations } from "next-intl";
 import { useHousehold } from "@home/auth/hooks";
-import { Button, Card } from "@home/ui";
+import { Button } from "@home/ui";
 import { Mail, Link2, X } from "lucide-react";
 import { revokeInvite } from "@/actions/invite";
 import { toast } from "sonner";
@@ -24,7 +24,7 @@ export function PendingInvitesList({ invites }: PendingInvitesListProps) {
   }
 
   return (
-    <div className="space-y-2">
+    <div className="space-y-3">
       {invites.map((invite) => (
         <PendingInviteRow key={invite.id} invite={invite} isOwner={isOwner} />
       ))}
@@ -56,20 +56,20 @@ function PendingInviteRow({
   }
 
   return (
-    <Card className="flex items-center justify-between p-3">
-      <div className="flex items-center gap-3">
-        <div className="flex h-8 w-8 items-center justify-center rounded-full bg-muted">
+    <div className="flex items-center justify-between rounded-2xl bg-white px-5 py-4 shadow-sm dark:bg-card">
+      <div className="flex items-center gap-4">
+        <div className="flex h-11 w-11 items-center justify-center rounded-full bg-background">
           {invite.email ? (
-            <Mail className="h-3.5 w-3.5 text-muted-foreground" />
+            <Mail className="h-5 w-5 text-muted-foreground" />
           ) : (
-            <Link2 className="h-3.5 w-3.5 text-muted-foreground" />
+            <Link2 className="h-5 w-5 text-muted-foreground" />
           )}
         </div>
         <div>
-          <p className="text-sm">
+          <p className="text-base font-medium">
             {invite.email ?? t("linkInvite")}
           </p>
-          <p className="text-xs text-muted-foreground">
+          <p className="text-sm text-muted-foreground">
             {t("inviteExpiry")}
           </p>
         </div>
@@ -86,6 +86,6 @@ function PendingInviteRow({
           {t("revoke")}
         </Button>
       )}
-    </Card>
+    </div>
   );
 }

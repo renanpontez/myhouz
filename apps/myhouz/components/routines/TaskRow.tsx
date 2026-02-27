@@ -4,10 +4,11 @@ import { useOptimistic, useTransition } from "react";
 import Link from "next/link";
 import { useTranslations } from "next-intl";
 import { useHousehold } from "@home/auth/hooks";
+import { cn } from "@home/ui";
 import { toggleTask } from "@/actions/routines";
 import { toast } from "sonner";
 import { formatDistanceToNow } from "date-fns";
-import { User, Flame } from "lucide-react";
+import { Check, ChevronRight, User, Flame } from "lucide-react";
 import { DynamicIcon, type IconName } from "lucide-react/dynamic";
 import { RecurrenceBadgeClient } from "./RecurrenceBadgeClient";
 import { getTaskIcon } from "@/lib/task-icons";
@@ -63,76 +64,94 @@ export function TaskRow({
         ? "text-orange-600 dark:text-orange-400"
         : "text-amber-600 dark:text-amber-400";
 
+  function renderTaskIcon() {
+    const StaticIcon = getTaskIcon(task.icon ?? null);
+    if (StaticIcon) return <StaticIcon className="h-5 w-5 text-primary" />;
+    if (task.icon)
+      return (
+        <DynamicIcon
+          name={task.icon as IconName}
+          className="h-5 w-5 text-primary"
+        />
+      );
+    return <User className="h-5 w-5 text-primary" />;
+  }
+
   return (
     <div
-      className={`flex items-center gap-3 rounded-lg border p-3 transition-opacity ${
-        isPending ? "opacity-70" : ""
-      } ${!isActiveToday ? "opacity-50" : ""}`}
+      className={cn(
+        "flex items-center gap-4 rounded-2xl bg-white px-5 py-4 shadow-sm transition-opacity dark:bg-card",
+        isPending && "opacity-70",
+        !isActiveToday && "opacity-60",
+      )}
     >
       <button
         type="button"
         onClick={handleToggle}
-        className="shrink-0"
+        className={cn(
+          "flex h-8 w-8 shrink-0 items-center justify-center rounded-full border-2 transition-colors",
+          optimisticCompleted
+            ? "border-primary bg-primary"
+            : "border-muted-foreground/30 bg-background",
+        )}
         aria-label={
           optimisticCompleted ? "Mark as incomplete" : "Mark as complete"
         }
       >
-        <input
-          type="checkbox"
-          checked={optimisticCompleted}
-          readOnly
-          className="h-4 w-4 rounded border-input accent-primary pointer-events-none"
-          tabIndex={-1}
-        />
+        {optimisticCompleted && (
+          <Check className="h-4 w-4 text-primary-foreground" />
+        )}
       </button>
+
       <Link
         href={`/app/routines/${task.id}`}
-        className="flex-1 min-w-0"
+        className="flex flex-1 items-center gap-4 min-w-0"
       >
-        <span
-          className={
-            optimisticCompleted
-              ? "text-sm text-muted-foreground line-through"
-              : "text-sm font-medium"
-          }
-        >
-          {task.title}
-        </span>
-        <div className="flex flex-wrap items-center gap-2 mt-0.5">
-          <RecurrenceBadgeClient
-            recurrence={task.recurrence}
-            recurrenceMeta={task.recurrence_meta as RecurrenceMeta}
-          />
-          {assignee && (
-            <span className="flex items-center gap-1 text-xs text-muted-foreground">
-              {(() => {
-                const StaticIcon = getTaskIcon(task.icon ?? null);
-                if (StaticIcon) return <StaticIcon className="h-3 w-3 text-primary" />;
-                if (task.icon) return <DynamicIcon name={task.icon as IconName} className="h-3 w-3 text-primary" />;
-                return <User className="h-3 w-3" />;
-              })()}
-              {assignee.name ?? assignee.email}
-            </span>
-          )}
-          {streak > 0 && (
-            <span
-              className={`flex items-center gap-0.5 text-xs font-medium ${streakStyle}`}
-            >
-              <Flame className="h-3 w-3" />
-              {streak}
-            </span>
-          )}
-          {task.last_completed_at && optimisticCompleted && (
-            <span className="text-xs text-muted-foreground">
-              {t("completedAt", {
-                time: formatDistanceToNow(
-                  new Date(task.last_completed_at),
-                  { addSuffix: true },
-                ),
-              })}
-            </span>
+        <div className="flex h-11 w-11 shrink-0 items-center justify-center rounded-full bg-background">
+          {optimisticCompleted ? (
+            <Check className="h-5 w-5 text-green-600 dark:text-green-400" />
+          ) : (
+            renderTaskIcon()
           )}
         </div>
+        <div className="min-w-0 flex-1">
+          <p
+            className={cn(
+              "truncate text-base font-medium",
+              optimisticCompleted && "text-muted-foreground line-through",
+            )}
+          >
+            {task.title}
+          </p>
+          <div className="flex flex-wrap items-center gap-2 text-sm text-muted-foreground">
+            <RecurrenceBadgeClient
+              recurrence={task.recurrence}
+              recurrenceMeta={task.recurrence_meta as RecurrenceMeta}
+            />
+            {assignee && (
+              <span>{assignee.name ?? assignee.email}</span>
+            )}
+            {streak > 0 && (
+              <span
+                className={`flex items-center gap-0.5 font-medium ${streakStyle}`}
+              >
+                <Flame className="h-3.5 w-3.5" />
+                {streak}
+              </span>
+            )}
+            {task.last_completed_at && optimisticCompleted && (
+              <span>
+                {t("completedAt", {
+                  time: formatDistanceToNow(
+                    new Date(task.last_completed_at),
+                    { addSuffix: true },
+                  ),
+                })}
+              </span>
+            )}
+          </div>
+        </div>
+        <ChevronRight className="h-6 w-6 shrink-0 text-muted-foreground/40" />
       </Link>
     </div>
   );

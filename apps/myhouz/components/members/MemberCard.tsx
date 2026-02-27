@@ -2,7 +2,6 @@
 
 import { useTranslations } from "next-intl";
 import { useHousehold, useUser } from "@home/auth/hooks";
-import { Card } from "@home/ui";
 import { RoleBadge } from "@/components/shared/RoleBadge";
 import { MemberActions } from "./MemberActions";
 import type { Profile, HouseholdMember } from "@home/types";
@@ -21,24 +20,24 @@ export function MemberCard({ member, membership }: MemberCardProps) {
   const initial = (member.name ?? member.email)?.[0]?.toUpperCase() ?? "?";
 
   return (
-    <Card className="flex items-center justify-between p-4">
-      <div className="flex items-center gap-3">
-        <div className="flex h-10 w-10 items-center justify-center rounded-full bg-muted text-sm font-semibold">
+    <div className="flex items-center justify-between rounded-2xl bg-white px-5 py-4 shadow-sm dark:bg-card">
+      <div className="flex items-center gap-4">
+        <div className="flex h-11 w-11 items-center justify-center rounded-full bg-muted text-sm font-semibold">
           {initial}
         </div>
         <div>
           <div className="flex items-center gap-2">
-            <span className="text-sm font-medium">
+            <span className="text-base font-medium">
               {member.name ?? member.email}
             </span>
             {isCurrentUser && (
-              <span className="text-xs text-muted-foreground">
+              <span className="text-sm text-muted-foreground">
                 {t("you")}
               </span>
             )}
           </div>
           {member.name && (
-            <p className="text-xs text-muted-foreground">{member.email}</p>
+            <p className="text-sm text-muted-foreground">{member.email}</p>
           )}
         </div>
       </div>
@@ -48,6 +47,6 @@ export function MemberCard({ member, membership }: MemberCardProps) {
           <MemberActions membership={membership} memberName={member.name ?? member.email} />
         )}
       </div>
-    </Card>
+    </div>
   );
 }

@@ -231,6 +231,7 @@ export function RoutineCalendar({
     startOfWeek(today, { weekStartsOn: 1 }),
   );
   const [selectedDay, setSelectedDay] = useState(() => today);
+  const [showAllTasks, setShowAllTasks] = useState(false);
 
   const weekDays = useMemo(
     () => Array.from({ length: 7 }, (_, i) => addDays(weekStart, i)),
@@ -307,31 +308,32 @@ export function RoutineCalendar({
     [weekDays, tasks, completionsByTask],
   );
 
+  function selectDay(day: Date) {
+    setSelectedDay(day);
+    setShowAllTasks(false);
+  }
+
   function handleWeekPrev() {
     const newWeekStart = subWeeks(weekStart, 1);
     setWeekStart(newWeekStart);
     const currentWeekStart = startOfWeek(today, { weekStartsOn: 1 });
-    if (isSameDay(newWeekStart, currentWeekStart)) {
-      setSelectedDay(today);
-    } else {
-      setSelectedDay(newWeekStart);
-    }
+    selectDay(
+      isSameDay(newWeekStart, currentWeekStart) ? today : newWeekStart,
+    );
   }
 
   function handleWeekNext() {
     const newWeekStart = addWeeks(weekStart, 1);
     setWeekStart(newWeekStart);
     const currentWeekStart = startOfWeek(today, { weekStartsOn: 1 });
-    if (isSameDay(newWeekStart, currentWeekStart)) {
-      setSelectedDay(today);
-    } else {
-      setSelectedDay(newWeekStart);
-    }
+    selectDay(
+      isSameDay(newWeekStart, currentWeekStart) ? today : newWeekStart,
+    );
   }
 
   function handleGoToToday() {
     setWeekStart(startOfWeek(today, { weekStartsOn: 1 }));
-    setSelectedDay(today);
+    selectDay(today);
   }
 
   const displayName = toTitleCase(userName);
@@ -396,7 +398,7 @@ export function RoutineCalendar({
             <button
               key={day.toISOString()}
               type="button"
-              onClick={() => setSelectedDay(day)}
+              onClick={() => selectDay(day)}
               className="flex flex-col items-center gap-1"
             >
               {/* Progress arc (SVG) */}
@@ -518,60 +520,72 @@ export function RoutineCalendar({
         <div className="flex flex-col items-center gap-2 py-6">
           <p className="text-sm text-muted-foreground">{t("noTasks")}</p>
         </div>
-      ) : (
-        <div className="relative space-y-2">
-          {/* Vertical dotted line — through checkbox centers */}
-          {selectedDayTasks.length > 1 && (
-            <div className="absolute left-[15px] top-8 bottom-8 w-px border-l-2 border-dashed border-muted-foreground/20" />
-          )}
-          {selectedDayTasks.map((task) => {
-            const meta = task.recurrence_meta as
-              | RecurrenceMeta
-              | undefined;
+      ) : (() => {
+        const visibleTasks = showAllTasks
+          ? selectedDayTasks
+          : selectedDayTasks.slice(0, 5);
+        const hasMore = selectedDayTasks.length > 5;
 
-            let completed: boolean;
-            if (isSelectedToday) {
-              completed = isCompletedThisCycle(
-                task.last_completed_at,
-                task.recurrence,
-                meta,
-              );
-            } else if (isFuture(selectedDay) && !isDateToday(selectedDay)) {
-              completed = false;
-            } else {
-              completed = hasCompletionOnDate(
-                completionsByTask[task.id] ?? [],
-                selectedDay,
-              );
-            }
+        return (
+          <>
+            <div className="relative space-y-2">
+              {/* Vertical dotted line — through checkbox centers */}
+              {visibleTasks.length > 1 && (
+                <div className="absolute left-[15px] top-8 bottom-8 w-px border-l-2 border-dashed border-muted-foreground/20" />
+              )}
+              {visibleTasks.map((task) => {
+                const meta = task.recurrence_meta as
+                  | RecurrenceMeta
+                  | undefined;
 
-            const label = tEnums(`recurrence.${task.recurrence}`);
-            const streak = getStreak(completionsByTask[task.id] ?? []);
-            return (
-              <TimelineTaskRow
-                key={task.id}
-                task={task}
-                isCompleted={completed}
-                recurrenceLabel={label}
-                streak={streak}
-                disabled={!isSelectedToday}
-              />
-            );
-          })}
-        </div>
-      )}
+                let completed: boolean;
+                if (isSelectedToday) {
+                  completed = isCompletedThisCycle(
+                    task.last_completed_at,
+                    task.recurrence,
+                    meta,
+                  );
+                } else if (
+                  isFuture(selectedDay) &&
+                  !isDateToday(selectedDay)
+                ) {
+                  completed = false;
+                } else {
+                  completed = hasCompletionOnDate(
+                    completionsByTask[task.id] ?? [],
+                    selectedDay,
+                  );
+                }
 
-      {/* View all */}
-      {tasks.length > 0 && (
-        <div className="mt-4 text-center">
-          <Link
-            href="/app/routines"
-            className="text-sm font-medium text-muted-foreground transition-colors hover:text-foreground"
-          >
-            {t("viewAll")}
-          </Link>
-        </div>
-      )}
+                const label = tEnums(`recurrence.${task.recurrence}`);
+                const streak = getStreak(completionsByTask[task.id] ?? []);
+                return (
+                  <TimelineTaskRow
+                    key={task.id}
+                    task={task}
+                    isCompleted={completed}
+                    recurrenceLabel={label}
+                    streak={streak}
+                    disabled={!isSelectedToday}
+                  />
+                );
+              })}
+            </div>
+
+            {hasMore && !showAllTasks && (
+              <div className="mt-4 text-center">
+                <button
+                  type="button"
+                  onClick={() => setShowAllTasks(true)}
+                  className="text-sm font-medium text-muted-foreground transition-colors hover:text-foreground"
+                >
+                  {t("viewAll")} ({selectedDayTasks.length})
+                </button>
+              </div>
+            )}
+          </>
+        );
+      })()}
     </div>
   );
 }
