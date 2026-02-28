@@ -28,16 +28,17 @@ export function SidebarNavLink({
       href={href}
       onClick={onClick}
       className={cn(
-        "flex items-center gap-3 rounded-full text-primary-foreground/60 transition-all hover:bg-white/15 hover:text-primary-foreground/90",
-        expanded ? "h-11 px-4" : "h-11 w-11 justify-center",
-        isActive &&
-          "bg-white/25 text-primary-foreground shadow-sm shadow-black/10",
+        "flex items-center gap-3 rounded-lg transition-colors",
+        expanded ? "h-10 px-3" : "h-10 w-10 justify-center",
+        isActive
+          ? "bg-primary/10 text-primary font-medium dark:bg-primary/15 dark:text-primary"
+          : "text-muted-foreground hover:bg-muted hover:text-foreground",
       )}
       title={expanded ? undefined : label}
     >
       <Icon className="h-5 w-5 shrink-0" />
       {expanded && (
-        <span className="truncate text-sm font-medium">{label}</span>
+        <span className="truncate text-sm">{label}</span>
       )}
     </Link>
   );

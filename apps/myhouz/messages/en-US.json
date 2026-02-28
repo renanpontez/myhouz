@@ -32,6 +32,10 @@
     "members": "Members",
     "settings": "Settings",
     "home": "Home",
+    "sectionHousehold": "Household",
+    "sectionSystem": "System",
+    "collapseSidebar": "Collapse sidebar",
+    "expandSidebar": "Expand sidebar",
     "showAll": "Show all",
     "urgentProblems": "Urgent Problems"
   },

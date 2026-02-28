@@ -8,62 +8,176 @@ import {
   AlertTriangle,
   Users,
   Settings,
+  ChevronsLeft,
+  ChevronsRight,
 } from "lucide-react";
 import { useTranslations } from "next-intl";
 import { cn } from "@home/ui";
 import { SidebarNavLink } from "./SidebarNavLink";
 import { useSidebar } from "./SidebarContext";
+import type { LucideIcon } from "lucide-react";
 
-function useNavItems() {
+interface NavItem {
+  href: string;
+  label: string;
+  icon: LucideIcon;
+}
+
+interface NavGroup {
+  label?: string;
+  items: NavItem[];
+}
+
+function useNavGroups(): NavGroup[] {
   const t = useTranslations("nav");
   return [
-    { href: "/app/dashboard", label: t("dashboard"), icon: LayoutDashboard },
-    { href: "/app/items", label: t("items"), icon: ShoppingCart },
-    { href: "/app/routines", label: t("routines"), icon: ListChecks },
-    { href: "/app/reminders", label: t("reminders"), icon: Bell },
-    { href: "/app/urgent", label: t("urgent"), icon: AlertTriangle },
-    { href: "/app/members", label: t("members"), icon: Users },
-    { href: "/app/settings", label: t("settings"), icon: Settings },
+    {
+      // Main group — no section header
+      items: [
+        { href: "/app/dashboard", label: t("dashboard"), icon: LayoutDashboard },
+        { href: "/app/items", label: t("items"), icon: ShoppingCart },
+        { href: "/app/routines", label: t("routines"), icon: ListChecks },
+        { href: "/app/reminders", label: t("reminders"), icon: Bell },
+        { href: "/app/urgent", label: t("urgent"), icon: AlertTriangle },
+      ],
+    },
+    {
+      label: t("sectionHousehold"),
+      items: [
+        { href: "/app/members", label: t("members"), icon: Users },
+      ],
+    },
+    {
+      label: t("sectionSystem"),
+      items: [
+        { href: "/app/settings", label: t("settings"), icon: Settings },
+      ],
+    },
   ];
 }
 
+function SidebarGroupHeader({
+  label,
+  expanded,
+}: {
+  label: string;
+  expanded: boolean;
+}) {
+  if (!expanded) {
+    return <div className="mx-auto my-1 h-px w-5 bg-border" />;
+  }
+
+  return (
+    <p className="px-3 pb-1 pt-4 text-[11px] font-semibold uppercase tracking-wider text-muted-foreground/70">
+      {label}
+    </p>
+  );
+}
+
+function SidebarContent({
+  expanded,
+  onLinkClick,
+}: {
+  expanded: boolean;
+  onLinkClick?: () => void;
+}) {
+  const navGroups = useNavGroups();
+
+  return (
+    <nav
+      className={cn(
+        "flex flex-1 flex-col gap-0.5 py-2",
+        expanded ? "items-stretch px-3" : "items-center px-2",
+      )}
+    >
+      {navGroups.map((group, groupIndex) => (
+        <div key={groupIndex}>
+          {group.label && (
+            <SidebarGroupHeader label={group.label} expanded={expanded} />
+          )}
+          <div className="flex flex-col gap-0.5">
+            {group.items.map((item) => (
+              <SidebarNavLink
+                key={item.href}
+                href={item.href}
+                label={item.label}
+                icon={item.icon}
+                expanded={expanded}
+                onClick={onLinkClick}
+              />
+            ))}
+          </div>
+        </div>
+      ))}
+    </nav>
+  );
+}
+
 export function DesktopSidebar() {
-  const { isExpanded } = useSidebar();
-  const navItems = useNavItems();
+  const { isExpanded, toggleExpanded } = useSidebar();
+  const t = useTranslations("nav");
 
   return (
     <aside
       className={cn(
-        "hidden shrink-0 rounded-r-3xl bg-primary lg:flex lg:flex-col transition-all duration-300",
-        isExpanded ? "w-60 items-stretch" : "w-20 items-center",
+        "hidden shrink-0 border-r border-border bg-card lg:flex lg:flex-col transition-all duration-300",
+        isExpanded ? "w-60" : "w-[68px]",
       )}
     >
-      <div className={cn("py-6", isExpanded ? "px-5" : "flex justify-center")}>
-        <img src="/myhouz-white.svg" alt="myhouz" className="h-8 w-8" />
-      </div>
-      <nav
+      {/* Logo + collapse toggle */}
+      <div
         className={cn(
-          "flex flex-1 flex-col gap-1.5 py-4",
-          isExpanded ? "items-stretch px-3" : "items-center",
+          "flex h-14 items-center border-b border-border",
+          isExpanded ? "justify-between px-4" : "justify-center px-2",
         )}
       >
-        {navItems.map((item) => (
-          <SidebarNavLink
-            key={item.href}
-            href={item.href}
-            label={item.label}
-            icon={item.icon}
-            expanded={isExpanded}
+        {isExpanded ? (
+          <img
+            src="/myhouz-logo.svg"
+            alt="myhouz"
+            className="h-6 w-auto dark:brightness-0 dark:invert"
           />
-        ))}
-      </nav>
+        ) : (
+          <img
+            src="/myhouz-symbol.svg"
+            alt="myhouz"
+            className="h-7 w-7"
+          />
+        )}
+        {isExpanded && (
+          <button
+            type="button"
+            onClick={toggleExpanded}
+            className="flex h-7 w-7 items-center justify-center rounded-md text-muted-foreground transition-colors hover:bg-muted hover:text-foreground"
+            aria-label={t("collapseSidebar")}
+          >
+            <ChevronsLeft className="h-4 w-4" />
+          </button>
+        )}
+      </div>
+
+      {/* Navigation */}
+      <SidebarContent expanded={isExpanded} />
+
+      {/* Collapse toggle at the bottom when collapsed */}
+      {!isExpanded && (
+        <div className="flex justify-center border-t border-border py-3">
+          <button
+            type="button"
+            onClick={toggleExpanded}
+            className="flex h-8 w-8 items-center justify-center rounded-md text-muted-foreground transition-colors hover:bg-muted hover:text-foreground"
+            aria-label={t("expandSidebar")}
+          >
+            <ChevronsRight className="h-4 w-4" />
+          </button>
+        </div>
+      )}
     </aside>
   );
 }
 
 export function MobileSidebar() {
   const { isOpen, close } = useSidebar();
-  const navItems = useNavItems();
 
   return (
     <>
@@ -77,25 +191,21 @@ export function MobileSidebar() {
       {/* Drawer */}
       <aside
         className={cn(
-          "fixed inset-y-0 left-0 z-50 w-60 rounded-r-3xl bg-primary transition-transform duration-300 lg:hidden",
+          "fixed inset-y-0 left-0 z-50 w-64 border-r border-border bg-card transition-transform duration-300 lg:hidden",
           isOpen ? "translate-x-0" : "-translate-x-full",
         )}
       >
-        <div className="px-5 py-6">
-          <img src="/myhouz-white.svg" alt="myhouz" className="h-8 w-8" />
+        {/* Logo */}
+        <div className="flex h-14 items-center border-b border-border px-4">
+          <img
+            src="/myhouz-logo.svg"
+            alt="myhouz"
+            className="h-6 w-auto dark:brightness-0 dark:invert"
+          />
         </div>
-        <nav className="flex flex-col items-stretch gap-1.5 px-3 py-4">
-          {navItems.map((item) => (
-            <SidebarNavLink
-              key={item.href}
-              href={item.href}
-              label={item.label}
-              icon={item.icon}
-              expanded
-              onClick={close}
-            />
-          ))}
-        </nav>
+
+        {/* Navigation */}
+        <SidebarContent expanded onLinkClick={close} />
       </aside>
     </>
   );

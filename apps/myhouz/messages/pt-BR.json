@@ -32,6 +32,10 @@
     "members": "Membros",
     "settings": "Config",
     "home": "Inicio",
+    "sectionHousehold": "Casa",
+    "sectionSystem": "Sistema",
+    "collapseSidebar": "Recolher menu",
+    "expandSidebar": "Expandir menu",
     "showAll": "Ver todos",
     "urgentProblems": "Problemas Urgentes"
   },
