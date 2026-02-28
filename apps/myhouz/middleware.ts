@@ -1,6 +1,7 @@
 import { type NextRequest, NextResponse } from "next/server";
 import { createServerClient } from "@supabase/ssr";
 import type { CookieOptions } from "@supabase/ssr";
+import { handlePreflight, setCorsHeaders } from "@/lib/cors";
 
 const PUBLIC_ROUTE_PREFIXES = ["/login", "/signup", "/invite", "/auth/callback"];
 
@@ -11,6 +12,12 @@ function isPublicRoute(pathname: string): boolean {
 
 export async function middleware(request: NextRequest) {
   const { pathname } = request.nextUrl;
+
+  // Handle CORS preflight for API routes
+  if (pathname.startsWith("/api/") && request.method === "OPTIONS") {
+    return handlePreflight(request);
+  }
+
   let response = NextResponse.next({ request });
 
   const supabase = createServerClient(
@@ -81,6 +88,11 @@ export async function middleware(request: NextRequest) {
         });
       }
     }
+  }
+
+  // Add CORS headers to API responses
+  if (pathname.startsWith("/api/")) {
+    setCorsHeaders(response, request);
   }
 
   return response;
