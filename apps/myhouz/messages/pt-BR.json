@@ -111,7 +111,10 @@
       "noRoutines": "Nenhuma tarefa de rotina ainda",
       "noRoutinesAction": "Crie sua primeira tarefa",
       "addTask": "Nova tarefa",
-      "viewAll": "Ver todas"
+      "viewAll": "Ver todas",
+      "viewTimeline": "Linha do tempo",
+      "viewMatrix": "Visão semanal",
+      "noActiveThisWeek": "Nenhuma rotina ativa esta semana"
     },
     "itemsWidget": {
       "title": "Itens",

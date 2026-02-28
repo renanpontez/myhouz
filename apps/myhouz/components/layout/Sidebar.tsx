@@ -39,7 +39,7 @@ export function DesktopSidebar() {
       )}
     >
       <div className={cn("py-6", isExpanded ? "px-5" : "flex justify-center")}>
-        <img src="/myhouz-icon.svg" alt="myhouz" className="h-8 w-8" />
+        <img src="/myhouz-white.svg" alt="myhouz" className="h-8 w-8" />
       </div>
       <nav
         className={cn(
@@ -82,7 +82,7 @@ export function MobileSidebar() {
         )}
       >
         <div className="px-5 py-6">
-          <img src="/myhouz-icon.svg" alt="myhouz" className="h-8 w-8" />
+          <img src="/myhouz-white.svg" alt="myhouz" className="h-8 w-8" />
         </div>
         <nav className="flex flex-col items-stretch gap-1.5 px-3 py-4">
           {navItems.map((item) => (

@@ -1,4 +1,5 @@
 import type { Metadata } from "next";
+import Image from "next/image";
 import Link from "next/link";
 import {
   Brain,
@@ -90,11 +91,18 @@ function Nav({ t }: SectionProps) {
     <header className="sticky top-0 z-20 bg-card/90 backdrop-blur-sm">
       <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="relative flex items-center justify-between h-16">
-          <Link
-            href="/"
-            className="text-xl font-bold text-primary tracking-tight"
-          >
-            myhouz
+          <Link href="/" className="flex items-center gap-2" aria-label="myhouz home">
+            <Image
+              src="/myhouz-symbol.svg"
+              alt=""
+              width={267}
+              height={287}
+              className="h-8 w-auto"
+              priority
+            />
+            <span className="text-xl font-bold tracking-tight text-foreground">
+              myhouz
+            </span>
           </Link>
 
           <nav className="hidden md:flex items-center gap-6" aria-label="Main navigation">
@@ -882,11 +890,17 @@ function Footer({ t }: SectionProps) {
       <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 py-14">
         <div className="grid grid-cols-2 md:grid-cols-4 gap-10 mb-12">
           <div className="col-span-2 md:col-span-1">
-            <Link
-              href="/"
-              className="text-xl font-bold text-primary tracking-tight"
-            >
-              myhouz
+            <Link href="/" className="flex items-center gap-2" aria-label="myhouz home">
+              <Image
+                src="/myhouz-symbol.svg"
+                alt=""
+                width={267}
+                height={287}
+                className="h-8 w-auto"
+              />
+              <span className="text-xl font-bold tracking-tight text-foreground">
+                myhouz
+              </span>
             </Link>
             <p className="mt-3 text-sm text-muted-foreground leading-relaxed">
               {t("footer.tagline")}

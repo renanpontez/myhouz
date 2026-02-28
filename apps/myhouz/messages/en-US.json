@@ -111,7 +111,10 @@
       "noRoutines": "No routine tasks yet",
       "noRoutinesAction": "Create your first task",
       "addTask": "New task",
-      "viewAll": "View all"
+      "viewAll": "View all",
+      "viewTimeline": "Timeline view",
+      "viewMatrix": "Weekly overview",
+      "noActiveThisWeek": "No routines active this week"
     },
     "itemsWidget": {
       "title": "Items",
