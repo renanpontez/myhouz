@@ -449,13 +449,14 @@
       "features": "Features",
       "howItWorks": "How It Works",
       "pricing": "Pricing",
+      "login": "Log in",
       "getStarted": "Get Started"
     },
     "hero": {
       "eyebrow": "Shared household management",
-      "titleStart": "Your home,",
-      "titleHighlight": "finally organized.",
-      "subtitle": "myhouz gives everyone under your roof a single place to track tasks, manage household needs, and handle what matters — without the chaos of group chats.",
+      "titleStart": "The home app",
+      "titleHighlight": "everyone actually uses.",
+      "subtitle": "myhouz gives your whole household one place to track what needs doing, what needs buying, and what needs fixing — so nothing gets lost and no one gets nagged.",
       "ctaPrimary": "Get Started — Free",
       "ctaSecondary": "See How It Works",
       "trustNoCreditCard": "No credit card required",
@@ -464,55 +465,55 @@
     },
     "problems": {
       "title": "Sound familiar?",
-      "subtitle": "Every household runs into the same friction. It does not have to be this way.",
-      "pain1Title": "The grocery list lives in someone's head",
-      "pain1Body": "And when that person is busy, everyone waits or makes a duplicate trip.",
-      "pain2Title": "Important messages get buried in the group chat",
-      "pain2Body": "Between memes and weekend plans, the broken fridge reminder disappears.",
-      "pain3Title": "Nobody knows who was supposed to fix the leaky faucet",
-      "pain3Body": "It was mentioned three weeks ago. Someone said they'd handle it. Nothing happened.",
-      "pain4Title": "A pipe bursts and no one knows who to call",
-      "pain4Body": "The plumber's number is in someone's old texts. The building manager's contact is unknown.",
+      "subtitle": "Every shared home deals with the same headaches. You do not have to.",
+      "pain1Title": "The grocery list only exists in one person's head",
+      "pain1Body": "And when that person is unavailable, everyone else either waits, guesses, or comes home with the wrong thing.",
+      "pain2Title": "The group chat is useless for anything important",
+      "pain2Body": "The fridge repair reminder got buried under 47 memes and a debate about dinner. Good luck finding it.",
+      "pain3Title": "No one can remember who agreed to fix the faucet",
+      "pain3Body": "It came up three weeks ago. Someone said they'd handle it. The faucet still drips. The conversation is gone.",
+      "pain4Title": "Something breaks and no one knows who to call",
+      "pain4Body": "The plumber's number is in someone's old texts. The building manager's name is a mystery. Time's ticking.",
       "fixesAll": "myhouz fixes all of this."
     },
     "features": {
       "title": "Everything your household needs.",
       "titleHighlight": "One place.",
-      "subtitle": "Built around how households actually work — not how productivity tools think they should work.",
+      "subtitle": "Built around how real households actually work — not how a productivity consultant thinks they should.",
       "itemsName": "Items to Buy",
-      "itemsDescription": "Track what your home needs — things to buy, repair, or fix. Assign to members, set priorities, and mark done when handled.",
+      "itemsDescription": "Stop holding the shopping list in your head. Track everything the house needs — to buy, repair, or fix — assign it to someone, and mark it done when it's handled.",
       "routinesName": "Routine Checklists",
-      "routinesDescription": "Create daily, weekly, or monthly task lists. Everyone sees what has been done and what is still waiting.",
+      "routinesDescription": "The weekly clean, the plant watering, the trash day reminder. Set it once and everyone always knows what's done and what's still waiting.",
       "remindersName": "Reminders",
-      "remindersDescription": "Never forget what matters. Set reminders and assign them to the right person in your household.",
+      "remindersDescription": "Renew the lease. Pay the bill. Replace the filter. Assign reminders to the right person and stop relying on memory.",
       "urgentName": "Urgent Problems",
-      "urgentDescription": "Something broke? Flag it as urgent. Everyone in your household gets notified instantly.",
+      "urgentDescription": "Something broke. Flag it as urgent and every household member knows instantly — no need to spam the chat or hope someone reads it.",
       "membersName": "Household Members",
-      "membersDescription": "Invite everyone via a shareable link. No complicated setup or lengthy onboarding flow.",
+      "membersDescription": "Share a link. That is it. Your roommates, partner, or family are in your household in seconds — no account setup required on their end.",
       "dashboardName": "Smart Dashboard",
-      "dashboardDescription": "See everything at a glance — what is pending, what is urgent, and what has already been handled."
+      "dashboardDescription": "Open the app and see exactly where things stand — what is overdue, what is urgent, and what someone already took care of."
     },
     "howItWorks": {
       "title": "Up and running in 3 steps",
       "subtitle": "No setup guide. No onboarding call. Just your household, organized.",
       "step1Title": "Create your household",
-      "step1Description": "Sign up and give your home a name. Takes 30 seconds. No credit card needed.",
+      "step1Description": "Sign up and give your home a name. Thirty seconds. No credit card. You are in.",
       "step2Title": "Invite your people",
-      "step2Description": "Share a link. Roommates, partner, family — anyone under your roof joins instantly.",
-      "step3Title": "Start organizing",
-      "step3Description": "Add items, set routines, assign reminders. The whole house stays in sync from day one.",
+      "step2Description": "Send a link. Roommates, partner, family — whoever lives with you joins instantly from their phone.",
+      "step3Title": "Start organizing together",
+      "step3Description": "Add what needs doing, assign it to the right person, and watch the house actually stay on top of things.",
       "cta": "Create Your Household"
     },
     "socialProof": {
       "title": "Built for real households",
-      "subtitle": "Not ideal households. Not aspiring households. Actual ones.",
-      "quote1": "I stopped being the only one who knew what the house needed. Now we both see it.",
+      "subtitle": "Not ideal households. Not aspirational households. Actual, messy, lived-in ones.",
+      "quote1": "I stopped being the only one who knew what the house needed. Now we both just see it.",
       "name1": "Lucas",
-      "location1": "Sao Paulo",
-      "quote2": "The WhatsApp group was chaos. myhouz actually keeps things organized — even my roommate uses it.",
+      "location1": "São Paulo",
+      "quote2": "Our WhatsApp group is still chaos. But the house stuff actually gets done now.",
       "name2": "Mariana",
       "location2": "Rio de Janeiro",
-      "quote3": "Simple enough that my spouse actually uses it. That is the real test.",
+      "quote3": "My spouse uses it without being asked. That alone was worth it.",
       "name3": "Jordan",
       "location3": "Austin"
     },
@@ -523,7 +524,7 @@
       "freeName": "Free",
       "freePrice": "$0",
       "freeInterval": "/month",
-      "freeDescription": "Everything you need to get started.",
+      "freeDescription": "Everything you need to get started today.",
       "freeFeature1": "Up to 3 household members",
       "freeFeature2": "50 items across all categories",
       "freeFeature3": "5 routine checklists",
@@ -547,7 +548,7 @@
     },
     "finalCta": {
       "title": "Your household deserves better than a group chat.",
-      "subtitle": "Join thousands of households that stopped arguing about who was supposed to buy toilet paper.",
+      "subtitle": "Thousands of households already stopped arguing about who was supposed to buy toilet paper.",
       "cta": "Get Started — It's Free",
       "disclaimer": "No credit card. No commitment. Just a more organized home."
     },
@@ -565,20 +566,20 @@
       "privacy": "Privacy",
       "terms": "Terms",
       "copyright": "2026 myhouz. All rights reserved.",
-      "madeWith": "Made with care for households everywhere."
+      "madeWith": "Made with care, for every kind of home."
     },
     "team": {
       "title": "The people behind myhouz",
-      "subtitle": "A small project, built with care. Two people who believe organizing your home should not be complicated.",
+      "subtitle": "A small team, building something they actually needed. Two people who think home organization should feel effortless.",
       "renan": {
         "name": "Renan Martins",
         "role": "Tech & Product",
-        "bio": "Builds the product and shapes the experience. Believes the best software is the kind no one notices is there."
+        "bio": "Builds the product and shapes every detail of the experience. Believes the best software is the kind you stop noticing."
       },
       "andressa": {
         "name": "Andressa Hora",
         "role": "Marketing & Business",
-        "bio": "Makes sure myhouz reaches the right people and makes sense to them from the very first moment."
+        "bio": "Makes sure myhouz reaches the right people and clicks for them the moment they land on the page."
       }
     },
     "mockup": {

@@ -20,6 +20,8 @@ import { Button } from "@home/ui";
 import { getTranslations } from "next-intl/server";
 import { MobileNav } from "@/components/landing/MobileNav";
 import { AppMockup } from "@/components/landing/AppMockup";
+import { DesktopMockup } from "@/components/landing/DesktopMockup";
+import { ParallaxBackground } from "@/components/landing/ParallaxBackground";
 
 // ---------------------------------------------------------------------------
 // Metadata
@@ -55,9 +57,10 @@ export default async function LandingPage() {
   const t = await getTranslations("landing");
 
   return (
-    <div className="min-h-screen bg-background text-foreground">
+    <div className="relative min-h-screen text-foreground overflow-x-hidden">
+      <ParallaxBackground />
       <Nav t={t} />
-      <main>
+      <main className="relative z-[1]">
         <Hero t={t} />
         <Problems t={t} />
         <Features t={t} />
@@ -88,24 +91,24 @@ interface SectionProps {
 
 function Nav({ t }: SectionProps) {
   return (
-    <header className="sticky top-0 z-20 bg-card/90 backdrop-blur-sm">
-      <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
-        <div className="relative flex items-center justify-between h-16">
-          <Link href="/" className="flex items-center gap-2" aria-label="myhouz home">
+    <header className="sticky top-0 z-20 py-3 px-4 sm:px-6 lg:px-8">
+      <div className="max-w-6xl mx-auto rounded-full bg-white/90 dark:bg-card/90 backdrop-blur-lg shadow-sm shadow-black/5 border border-black/[0.04] dark:border-white/10 px-4 sm:px-6">
+        <div className="relative flex items-center justify-between h-14">
+          <Link href="/" className="flex items-center" aria-label="myhouz home">
             <Image
-              src="/myhouz-symbol.svg"
-              alt=""
-              width={267}
-              height={287}
-              className="h-8 w-auto"
+              src="/myhouz-fulllogo.svg"
+              alt="myhouz"
+              width={759}
+              height={289}
+              className="h-6 w-auto"
               priority
             />
-            <span className="text-xl font-bold tracking-tight text-foreground">
-              myhouz
-            </span>
           </Link>
 
-          <nav className="hidden md:flex items-center gap-6" aria-label="Main navigation">
+          <nav
+            className="hidden md:flex items-center gap-8 absolute left-1/2 -translate-x-1/2"
+            aria-label="Main navigation"
+          >
             <Link
               href="#features"
               className="text-sm font-medium text-muted-foreground hover:text-foreground transition-colors"
@@ -126,8 +129,18 @@ function Nav({ t }: SectionProps) {
             </Link>
           </nav>
 
-          <div className="hidden md:block">
-            <Button asChild size="default" className="rounded-full">
+          <div className="hidden md:flex items-center gap-3">
+            <Link
+              href="/login"
+              className="text-sm font-medium text-muted-foreground hover:text-foreground transition-colors px-3"
+            >
+              {t("nav.login")}
+            </Link>
+            <Button
+              asChild
+              size="sm"
+              className="rounded-full px-5 font-medium"
+            >
               <Link href="/signup">{t("nav.getStarted")}</Link>
             </Button>
           </div>
@@ -147,21 +160,12 @@ function Hero({ t }: SectionProps) {
   return (
     <section
       aria-labelledby="hero-heading"
-      className="relative overflow-hidden pt-20 pb-24 md:pt-28 md:pb-32"
+      className="relative overflow-hidden pt-16 pb-16 md:pt-20 md:pb-20"
     >
-      <div
-        className="absolute inset-0 -z-10"
-        style={{
-          background:
-            "radial-gradient(ellipse 80% 60% at 50% -10%, hsl(293 76% 54% / 0.08) 0%, transparent 70%)",
-        }}
-        aria-hidden="true"
-      />
-
       <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
-        <div className="grid lg:grid-cols-2 gap-12 lg:gap-16 items-center">
+        <div className="grid lg:grid-cols-2 gap-12 lg:gap-20 items-center">
           <div className="text-center lg:text-left">
-            <div className="inline-flex items-center gap-2 px-3 py-1.5 bg-primary/8 border border-primary/15 rounded-full mb-6">
+            <div className="inline-flex items-center gap-2 px-3 py-1.5 bg-primary/8 border border-primary/15 rounded-full mb-8">
               <div className="w-1.5 h-1.5 rounded-full bg-primary" />
               <span className="text-xs font-medium text-primary">
                 {t("hero.eyebrow")}
@@ -170,31 +174,37 @@ function Hero({ t }: SectionProps) {
 
             <h1
               id="hero-heading"
-              className="text-5xl md:text-6xl font-bold tracking-tight leading-[1.1] text-foreground"
+              className="text-5xl sm:text-6xl lg:text-7xl font-bold tracking-tight leading-[1.05] text-foreground"
             >
               {t("hero.titleStart")}{" "}
-              <span className="text-primary">{t("hero.titleHighlight")}</span>
+              <span className="bg-gradient-to-r from-primary via-purple-500 to-pink-500 bg-clip-text text-transparent">
+                {t("hero.titleHighlight")}
+              </span>
             </h1>
 
-            <p className="mt-6 text-lg md:text-xl text-muted-foreground leading-relaxed max-w-lg mx-auto lg:mx-0">
+            <p className="mt-6 text-lg text-muted-foreground leading-relaxed max-w-md mx-auto lg:mx-0">
               {t("hero.subtitle")}
             </p>
 
-            <div className="mt-8 flex flex-col sm:flex-row gap-3 justify-center lg:justify-start">
-              <Button asChild size="lg" className="text-base px-7 h-12 rounded-full">
+            <div className="mt-10 flex flex-col sm:flex-row gap-3 justify-center lg:justify-start">
+              <Button
+                asChild
+                size="lg"
+                className="bg-foreground text-background hover:bg-foreground/90 text-base px-8 h-12 rounded-full font-medium"
+              >
                 <Link href="/signup">{t("hero.ctaPrimary")}</Link>
               </Button>
               <Button
                 asChild
-                variant="outline"
+                variant="ghost"
                 size="lg"
-                className="text-base px-7 h-12 rounded-full"
+                className="text-base px-8 h-12 rounded-full font-medium text-muted-foreground hover:text-foreground"
               >
                 <Link href="#how-it-works">{t("hero.ctaSecondary")}</Link>
               </Button>
             </div>
 
-            <div className="mt-8 flex flex-wrap items-center gap-5 justify-center lg:justify-start">
+            <div className="mt-10 flex flex-wrap items-center gap-4 justify-center lg:justify-start">
               <TrustPill text={t("hero.trustNoCreditCard")} />
               <TrustPill text={t("hero.trustFreePlan")} />
               <TrustPill text={t("hero.trustQuickSetup")} />
@@ -212,8 +222,8 @@ function Hero({ t }: SectionProps) {
 
 function TrustPill({ text }: { text: string }) {
   return (
-    <span className="flex items-center gap-1.5 text-sm text-muted-foreground">
-      <Check size={14} className="text-success flex-shrink-0" />
+    <span className="inline-flex items-center gap-1.5 text-xs font-medium text-muted-foreground bg-secondary/60 px-3 py-1.5 rounded-full">
+      <Check size={12} className="text-success flex-shrink-0" />
       {text}
     </span>
   );
@@ -234,7 +244,7 @@ function Problems({ t }: SectionProps) {
   return (
     <section
       aria-labelledby="problems-heading"
-      className="py-20 md:py-28 bg-secondary/40"
+      className="py-16 md:py-24"
     >
       <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="text-center mb-12">
@@ -295,7 +305,14 @@ function PainCard({
 // ---------------------------------------------------------------------------
 
 function Features({ t }: SectionProps) {
-  const features = [
+  const featureBullets = [
+    { labelKey: "itemsName" as const },
+    { labelKey: "routinesName" as const },
+    { labelKey: "remindersName" as const },
+    { labelKey: "urgentName" as const },
+  ];
+
+  const featureCards = [
     {
       icon: ShoppingCart,
       nameKey: "itemsName" as const,
@@ -339,24 +356,61 @@ function Features({ t }: SectionProps) {
     <section
       id="features"
       aria-labelledby="features-heading"
-      className="py-20 md:py-28"
+      className="py-16 md:py-24"
     >
       <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
-        <div className="text-center mb-14">
-          <h2
-            id="features-heading"
-            className="text-3xl md:text-4xl font-bold tracking-tight text-foreground"
-          >
-            {t("features.title")}{" "}
-            <span className="text-primary">{t("features.titleHighlight")}</span>
-          </h2>
-          <p className="mt-3 text-muted-foreground text-lg max-w-2xl mx-auto">
-            {t("features.subtitle")}
-          </p>
+        {/* Features overview — split layout */}
+        <div className="grid lg:grid-cols-2 gap-10 lg:gap-16 items-center mb-16">
+          {/* Left column — description */}
+          <div>
+            <p className="text-[11px] font-semibold uppercase tracking-widest text-muted-foreground/70 mb-3">
+              myhouz
+            </p>
+
+            <h2
+              id="features-heading"
+              className="text-3xl md:text-4xl font-bold tracking-tight leading-snug text-foreground"
+            >
+              {t("features.title")}{" "}
+              <span className="text-primary">{t("features.titleHighlight")}</span>
+            </h2>
+
+            <p className="mt-3 text-muted-foreground text-base leading-relaxed max-w-md">
+              {t("features.subtitle")}
+            </p>
+
+            <div className="mt-6 grid grid-cols-2 gap-3">
+              {featureBullets.map((bullet) => (
+                <div key={bullet.labelKey} className="flex items-center gap-2">
+                  <div className="w-1.5 h-1.5 rounded-full bg-primary flex-shrink-0" aria-hidden="true" />
+                  <span className="text-sm text-muted-foreground">
+                    {t(`features.${bullet.labelKey}`)}
+                  </span>
+                </div>
+              ))}
+            </div>
+
+            <div className="mt-8">
+              <Button
+                asChild
+                variant="outline"
+                size="default"
+                className="rounded-full px-6 font-medium"
+              >
+                <Link href="/signup">{t("nav.getStarted")}</Link>
+              </Button>
+            </div>
+          </div>
+
+          {/* Right column — desktop preview */}
+          <div className="flex justify-center lg:justify-end">
+            <DesktopMockup />
+          </div>
         </div>
 
+        {/* Feature detail cards grid */}
         <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-6">
-          {features.map((feature) => (
+          {featureCards.map((feature) => (
             <FeatureCard
               key={feature.nameKey}
               icon={feature.icon}
@@ -415,7 +469,7 @@ function HowItWorks({ t }: SectionProps) {
     <section
       id="how-it-works"
       aria-labelledby="how-it-works-heading"
-      className="py-20 md:py-28 bg-secondary/40"
+      className="py-16 md:py-24"
     >
       <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="text-center mb-14">
@@ -515,7 +569,7 @@ function SocialProof({ t }: SectionProps) {
   return (
     <section
       aria-labelledby="social-proof-heading"
-      className="py-20 md:py-28"
+      className="py-16 md:py-24"
     >
       <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="text-center mb-14">
@@ -613,7 +667,7 @@ function Pricing({ t }: SectionProps) {
     <section
       id="pricing"
       aria-labelledby="pricing-heading"
-      className="py-20 md:py-28 bg-secondary/40"
+      className="py-16 md:py-24"
     >
       <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="text-center mb-14">
@@ -753,7 +807,7 @@ function Team({ t }: SectionProps) {
   return (
     <section
       aria-labelledby="team-heading"
-      className="py-20 md:py-28 bg-secondary/40"
+      className="py-16 md:py-24"
     >
       <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="text-center mb-14">
@@ -829,17 +883,8 @@ function FinalCta({ t }: SectionProps) {
   return (
     <section
       aria-labelledby="final-cta-heading"
-      className="py-20 md:py-28 relative overflow-hidden"
+      className="py-16 md:py-24"
     >
-      <div
-        className="absolute inset-0 -z-10"
-        style={{
-          background:
-            "radial-gradient(ellipse 80% 80% at 50% 50%, hsl(293 76% 54% / 0.06) 0%, transparent 70%)",
-        }}
-        aria-hidden="true"
-      />
-
       <div className="max-w-3xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
         <h2
           id="final-cta-heading"
@@ -851,7 +896,11 @@ function FinalCta({ t }: SectionProps) {
           {t("finalCta.subtitle")}
         </p>
         <div className="mt-8">
-          <Button asChild size="lg" className="text-base px-10 h-12 rounded-full">
+          <Button
+            asChild
+            size="lg"
+            className="bg-foreground text-background hover:bg-foreground/90 text-base px-10 h-12 rounded-full font-medium"
+          >
             <Link href="/signup">{t("finalCta.cta")}</Link>
           </Button>
         </div>
@@ -890,17 +939,14 @@ function Footer({ t }: SectionProps) {
       <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 py-14">
         <div className="grid grid-cols-2 md:grid-cols-4 gap-10 mb-12">
           <div className="col-span-2 md:col-span-1">
-            <Link href="/" className="flex items-center gap-2" aria-label="myhouz home">
+            <Link href="/" className="flex items-center" aria-label="myhouz home">
               <Image
-                src="/myhouz-symbol.svg"
-                alt=""
-                width={267}
-                height={287}
-                className="h-8 w-auto"
+                src="/myhouz-fulllogo.svg"
+                alt="myhouz"
+                width={759}
+                height={289}
+                className="h-7 w-auto"
               />
-              <span className="text-xl font-bold tracking-tight text-foreground">
-                myhouz
-              </span>
             </Link>
             <p className="mt-3 text-sm text-muted-foreground leading-relaxed">
               {t("footer.tagline")}

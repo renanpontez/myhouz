@@ -23,7 +23,7 @@ export function MobileNav() {
       </button>
 
       {open && (
-        <div className="absolute top-full left-0 right-0 bg-card shadow-md z-40">
+        <div className="absolute top-full left-0 right-0 bg-white/95 dark:bg-card/95 backdrop-blur-lg shadow-lg border-b border-border/40 z-40">
           <nav className="container mx-auto px-4 py-4 flex flex-col gap-1">
             <Link
               href="#features"
@@ -46,8 +46,12 @@ export function MobileNav() {
             >
               {t("pricing")}
             </Link>
-            <div className="pt-2 border-t border-border mt-1">
-              <Button asChild className="w-full rounded-full" size="default">
+            <div className="pt-2 border-t border-border/40 mt-1">
+              <Button
+                asChild
+                className="w-full rounded-full bg-foreground text-background hover:bg-foreground/90 font-medium"
+                size="default"
+              >
                 <Link href="/signup" onClick={() => setOpen(false)}>
                   {t("getStarted")}
                 </Link>
