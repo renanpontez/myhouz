@@ -21,6 +21,7 @@ export const viewport: Viewport = {
 export const metadata: Metadata = {
   title: "myhouz | home management",
   description: "Shared household management app",
+  manifest: "/manifest.json",
 };
 
 export default async function RootLayout({
