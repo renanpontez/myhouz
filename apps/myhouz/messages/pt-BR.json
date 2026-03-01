@@ -183,7 +183,19 @@
     "photoCount": "{count, plural, one {# foto} other {# fotos}}",
     "statusLabel": "Status",
     "openLink": "Abrir link",
-    "noNotes": "Sem observacoes"
+    "noNotes": "Sem observacoes",
+    "markDone": "Marcar como concluido",
+    "markPending": "Marcar como pendente",
+    "commentsTitle": "Comentarios",
+    "commentsEmpty": "Nenhum comentario ainda",
+    "commentPlaceholder": "Escreva um comentario...",
+    "commentSubmit": "Comentar",
+    "commentDeleteConfirm": "Excluir este comentario?",
+    "historyTitle": "Atividade",
+    "createdBy": "criou este item",
+    "lastUpdated": "Atualizado {date}",
+    "commentedAt": "{date}",
+    "resolvedItem": "marcou como concluido"
   },
   "routines": {
     "title": "Rotinas",
@@ -332,7 +344,19 @@
     "deleteHouseholdConfirm": "Digite \"{name}\" para confirmar a exclusao",
     "deleteHouseholdWarning": "Isso excluira permanentemente a casa e todos os seus dados.",
     "dangerZone": "Zona de perigo",
-    "dangerZonePlaceholder": "Transferir propriedade / excluir casa em breve"
+    "transferOwnership": "Transferir propriedade",
+    "transferOwnershipDescription": "Transfira o papel de dono para outro membro da casa.",
+    "transferOwnershipConfirm": "Digite \"{name}\" para confirmar a transferencia",
+    "transferOwnershipWarning": "Voce se tornara um membro comum apos a transferencia.",
+    "transferOwnershipSuccess": "Propriedade transferida com sucesso",
+    "transferTo": "Transferir para",
+    "noOtherMembers": "Nenhum outro membro para transferir",
+    "leaveHousehold": "Sair da casa",
+    "leaveHouseholdWarning": "Voce perdera acesso a todos os dados da casa. Isso nao pode ser desfeito.",
+    "leaveHouseholdConfirm": "Tem certeza que deseja sair desta casa?",
+    "householdReadOnly": "Apenas o dono pode editar as configuracoes da casa.",
+    "householdSettingsLink": "Casa",
+    "householdSettingsLinkDescription": "Gerenciar configuracoes da casa"
   },
   "validation": {
     "emailInvalid": "E-mail invalido",
@@ -359,7 +383,9 @@
     "linkInvalid": "URL invalida",
     "linkMax": "Link muito longo",
     "tagMax": "Tag muito longa (max 50 caracteres)",
-    "tagsMax": "Maximo de 10 tags"
+    "tagsMax": "Maximo de 10 tags",
+    "commentRequired": "Comentario nao pode estar vazio",
+    "commentMax": "Comentario muito longo (max 2000 caracteres)"
   },
   "error": {
     "somethingWentWrong": "Algo deu errado",
@@ -396,7 +422,9 @@
     "createUrgentError": "Erro ao reportar problema.",
     "updateUrgentError": "Erro ao atualizar problema.",
     "resolveUrgentError": "Erro ao resolver problema.",
-    "deleteUrgentError": "Erro ao excluir problema."
+    "deleteUrgentError": "Erro ao excluir problema.",
+    "createCommentError": "Erro ao adicionar comentario.",
+    "deleteCommentError": "Erro ao excluir comentario."
   },
   "enums": {
     "priority": {

@@ -399,6 +399,58 @@ export type Database = {
           },
         ]
       }
+      item_comment: {
+        Row: {
+          author_id: string
+          content: string
+          created_at: string
+          household_id: string
+          id: string
+          item_id: string
+          updated_at: string
+        }
+        Insert: {
+          author_id: string
+          content: string
+          created_at?: string
+          household_id: string
+          id?: string
+          item_id: string
+          updated_at?: string
+        }
+        Update: {
+          author_id?: string
+          content?: string
+          created_at?: string
+          household_id?: string
+          id?: string
+          item_id?: string
+          updated_at?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "item_comment_author_id_fkey"
+            columns: ["author_id"]
+            isOneToOne: false
+            referencedRelation: "profile"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "item_comment_household_id_fkey"
+            columns: ["household_id"]
+            isOneToOne: false
+            referencedRelation: "household"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "item_comment_item_id_fkey"
+            columns: ["item_id"]
+            isOneToOne: false
+            referencedRelation: "household_item"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       notification: {
         Row: {
           body: string | null

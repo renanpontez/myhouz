@@ -5,7 +5,7 @@ import { createServerClient } from "@home/db";
 import { getUserWithRole } from "@home/auth";
 import { PageHeader } from "@/components/layout/PageHeader";
 import { EmptyState } from "@/components/shared/EmptyState";
-import { ItemRow } from "@/components/items/ItemRow";
+import { ItemsList } from "@/components/items/ItemsList";
 
 export default async function ItemsPage() {
   const t = await getTranslations("items");
@@ -21,14 +21,12 @@ export default async function ItemsPage() {
   const { data: items } = await supabase
     .from("household_item")
     .select(
-      "id, name, type, priority, status, assigned_to, price, photos, link, tags, created_at",
+      "id, name, type, priority, status, assigned_to, price, photos, link, tags, notes, created_at",
     )
     .eq("household_id", householdId)
     .order("created_at", { ascending: false });
 
   const allItems = items ?? [];
-  const pendingItems = allItems.filter((i) => i.status !== "done");
-  const doneItems = allItems.filter((i) => i.status === "done");
 
   return (
     <div className="p-6">
@@ -55,28 +53,7 @@ export default async function ItemsPage() {
           />
         </div>
       ) : (
-        <div className="mt-6 space-y-6">
-          {pendingItems.length > 0 && (
-            <div className="space-y-3">
-              {pendingItems.map((item) => (
-                <ItemRow key={item.id} item={item} />
-              ))}
-            </div>
-          )}
-
-          {doneItems.length > 0 && (
-            <div className="space-y-3">
-              <h3 className="text-sm font-medium text-muted-foreground">
-                {t("doneSection")}
-              </h3>
-              <div className="space-y-3">
-                {doneItems.map((item) => (
-                  <ItemRow key={item.id} item={item} />
-                ))}
-              </div>
-            </div>
-          )}
-        </div>
+        <ItemsList items={allItems} />
       )}
     </div>
   );

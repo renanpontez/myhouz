@@ -57,3 +57,8 @@ export {
   type LoginInput,
   type SignupInput,
 } from "./auth";
+
+export {
+  createItemCommentSchema,
+  type CreateItemCommentInput,
+} from "./item-comment";

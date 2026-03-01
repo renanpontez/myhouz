@@ -183,7 +183,19 @@
     "photoCount": "{count, plural, one {# photo} other {# photos}}",
     "statusLabel": "Status",
     "openLink": "Open link",
-    "noNotes": "No notes"
+    "noNotes": "No notes",
+    "markDone": "Mark as done",
+    "markPending": "Mark as pending",
+    "commentsTitle": "Comments",
+    "commentsEmpty": "No comments yet",
+    "commentPlaceholder": "Write a comment...",
+    "commentSubmit": "Comment",
+    "commentDeleteConfirm": "Delete this comment?",
+    "historyTitle": "Activity",
+    "createdBy": "created this item",
+    "lastUpdated": "Last updated {date}",
+    "commentedAt": "{date}",
+    "resolvedItem": "marked as done"
   },
   "routines": {
     "title": "Routines",
@@ -332,7 +344,19 @@
     "deleteHouseholdConfirm": "Type \"{name}\" to confirm deletion",
     "deleteHouseholdWarning": "This will permanently delete the household and all its data.",
     "dangerZone": "Danger zone",
-    "dangerZonePlaceholder": "Transfer ownership / delete household placeholder"
+    "transferOwnership": "Transfer ownership",
+    "transferOwnershipDescription": "Transfer the owner role to another household member.",
+    "transferOwnershipConfirm": "Type \"{name}\" to confirm the transfer",
+    "transferOwnershipWarning": "You will become a regular member after transferring ownership.",
+    "transferOwnershipSuccess": "Ownership transferred successfully",
+    "transferTo": "Transfer to",
+    "noOtherMembers": "No other members to transfer to",
+    "leaveHousehold": "Leave household",
+    "leaveHouseholdWarning": "You will lose access to all household data. This cannot be undone.",
+    "leaveHouseholdConfirm": "Are you sure you want to leave this household?",
+    "householdReadOnly": "Only the owner can edit household settings.",
+    "householdSettingsLink": "Household",
+    "householdSettingsLinkDescription": "Manage household settings"
   },
   "validation": {
     "emailInvalid": "Invalid email",
@@ -359,7 +383,9 @@
     "linkInvalid": "Invalid URL",
     "linkMax": "Link is too long",
     "tagMax": "Tag is too long (max 50 characters)",
-    "tagsMax": "Maximum 10 tags"
+    "tagsMax": "Maximum 10 tags",
+    "commentRequired": "Comment cannot be empty",
+    "commentMax": "Comment is too long (max 2000 characters)"
   },
   "error": {
     "somethingWentWrong": "Something went wrong",
@@ -396,7 +422,9 @@
     "createUrgentError": "Error reporting problem.",
     "updateUrgentError": "Error updating problem.",
     "resolveUrgentError": "Error resolving problem.",
-    "deleteUrgentError": "Error deleting problem."
+    "deleteUrgentError": "Error deleting problem.",
+    "createCommentError": "Error adding comment.",
+    "deleteCommentError": "Error deleting comment."
   },
   "enums": {
     "priority": {

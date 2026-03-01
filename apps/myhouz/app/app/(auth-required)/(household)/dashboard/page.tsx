@@ -22,6 +22,7 @@ export default async function DashboardPage() {
     price: number | null;
     notes: string | null;
     link: string | null;
+    assigned_to: string | null;
   }[] = [];
 
   let reminders: {
@@ -51,7 +52,7 @@ export default async function DashboardPage() {
       await Promise.all([
         supabase
           .from("household_item")
-          .select("id, name, type, priority, status, price, notes, link")
+          .select("id, name, type, priority, status, price, notes, link, assigned_to")
           .eq("household_id", householdId)
           .neq("status", "done")
           .order("priority", { ascending: false })

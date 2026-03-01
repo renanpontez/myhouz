@@ -7,6 +7,7 @@ import { getUserWithRole } from "@home/auth";
 import { BackLink } from "@/components/shared/BackLink";
 import { DeleteItemButton } from "@/components/items/DeleteItemButton";
 import { ItemStatusActions } from "@/components/items/ItemStatusActions";
+import { ItemActivity } from "@/components/items/ItemActivity";
 import { Badge, Button } from "@home/ui";
 import {
   Pencil,
@@ -39,14 +40,14 @@ export default async function ItemDetailPage({
 
   if (!householdId) return null;
 
-  await getUserWithRole(householdId);
+  const { profile } = await getUserWithRole(householdId);
 
   const supabase = createServerClient();
 
   const { data: item } = await supabase
     .from("household_item")
     .select(
-      "id, name, type, priority, status, assigned_to, notes, price, photos, link, tags, added_by, created_at, resolved_at",
+      "id, name, type, priority, status, assigned_to, notes, price, photos, link, tags, added_by, created_at, updated_at, resolved_at",
     )
     .eq("id", itemId)
     .eq("household_id", householdId)
@@ -59,6 +60,27 @@ export default async function ItemDetailPage({
     .from("household_member")
     .select("user_id, profile:profile(id, name, email)")
     .eq("household_id", householdId);
+
+  // Fetch comments for this item
+  const { data: comments } = await supabase
+    .from("item_comment")
+    .select("id, content, author_id, created_at")
+    .eq("item_id", itemId)
+    .eq("household_id", householdId)
+    .order("created_at", { ascending: true });
+
+  // Build memberNames map for the activity timeline
+  const memberNames: Record<string, string> = {};
+  for (const m of members ?? []) {
+    const p = m.profile as {
+      id: string;
+      name: string | null;
+      email: string;
+    } | null;
+    if (p) {
+      memberNames[p.id] = p.name ?? p.email;
+    }
+  }
 
   const assigneeProfile = item.assigned_to
     ? (() => {
@@ -213,6 +235,24 @@ export default async function ItemDetailPage({
         <p className="mt-1 whitespace-pre-wrap text-sm">
           {item.notes || t("noNotes")}
         </p>
+      </div>
+
+      {/* Activity timeline + comments */}
+      <div className="mt-8">
+        <ItemActivity
+          householdId={householdId}
+          itemId={itemId}
+          item={{
+            added_by: item.added_by,
+            created_at: item.created_at,
+            updated_at: item.updated_at,
+            resolved_at: item.resolved_at,
+            status: item.status,
+          }}
+          comments={comments ?? []}
+          currentUserId={profile.id}
+          memberNames={memberNames}
+        />
       </div>
     </div>
   );

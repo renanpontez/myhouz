@@ -39,10 +39,12 @@ interface ItemRowProps {
     photos: string[] | null;
     tags: string[] | null;
     link: string | null;
+    notes: string | null;
   };
+  onPreview?: () => void;
 }
 
-export function ItemRow({ item }: ItemRowProps) {
+export function ItemRow({ item, onPreview }: ItemRowProps) {
   const t = useTranslations("items");
   const tEnums = useTranslations("enums");
   const { members, household } = useHousehold();
@@ -94,40 +96,78 @@ export function ItemRow({ item }: ItemRowProps) {
         )}
       </button>
 
-      <Link
-        href={`/app/items/${item.id}`}
-        className="flex flex-1 items-center gap-3 min-w-0"
-      >
-        <div
-          className={cn(
-            "flex h-9 w-9 shrink-0 items-center justify-center rounded-lg",
-            PRIORITY_STYLES[item.priority],
-            optimisticDone ? "bg-muted" : "bg-background",
-          )}
+      {onPreview ? (
+        <button
+          type="button"
+          onClick={onPreview}
+          className="flex flex-1 items-center gap-3 min-w-0 text-left"
         >
-          {optimisticDone ? (
-            <Check className="h-4 w-4 text-green-600 dark:text-green-400" />
-          ) : (
-            <Icon className="h-4 w-4" />
-          )}
-        </div>
-        <div className="min-w-0 flex-1">
-          <p
+          <div
             className={cn(
-              "truncate text-sm font-medium",
-              optimisticDone && "text-muted-foreground line-through",
+              "flex h-9 w-9 shrink-0 items-center justify-center rounded-lg",
+              PRIORITY_STYLES[item.priority],
+              optimisticDone ? "bg-muted" : "bg-background",
             )}
           >
-            {item.name}
-          </p>
-          <p className="truncate text-xs text-muted-foreground">
-            {tEnums(`itemType.${item.type}`)}
-            {item.price != null && `  ·  R$ ${item.price.toFixed(2)}`}
-            {assignee && `  ·  ${assignee.name ?? assignee.email}`}
-          </p>
-        </div>
-        <ChevronRight className="h-5 w-5 shrink-0 text-muted-foreground/30" />
-      </Link>
+            {optimisticDone ? (
+              <Check className="h-4 w-4 text-green-600 dark:text-green-400" />
+            ) : (
+              <Icon className="h-4 w-4" />
+            )}
+          </div>
+          <div className="min-w-0 flex-1">
+            <p
+              className={cn(
+                "truncate text-sm font-medium",
+                optimisticDone && "text-muted-foreground line-through",
+              )}
+            >
+              {item.name}
+            </p>
+            <p className="truncate text-xs text-muted-foreground">
+              {tEnums(`itemType.${item.type}`)}
+              {item.price != null && `  ·  R$ ${item.price.toFixed(2)}`}
+              {assignee && `  ·  ${assignee.name ?? assignee.email}`}
+            </p>
+          </div>
+          <ChevronRight className="h-5 w-5 shrink-0 text-muted-foreground/30" />
+        </button>
+      ) : (
+        <Link
+          href={`/app/items/${item.id}`}
+          className="flex flex-1 items-center gap-3 min-w-0"
+        >
+          <div
+            className={cn(
+              "flex h-9 w-9 shrink-0 items-center justify-center rounded-lg",
+              PRIORITY_STYLES[item.priority],
+              optimisticDone ? "bg-muted" : "bg-background",
+            )}
+          >
+            {optimisticDone ? (
+              <Check className="h-4 w-4 text-green-600 dark:text-green-400" />
+            ) : (
+              <Icon className="h-4 w-4" />
+            )}
+          </div>
+          <div className="min-w-0 flex-1">
+            <p
+              className={cn(
+                "truncate text-sm font-medium",
+                optimisticDone && "text-muted-foreground line-through",
+              )}
+            >
+              {item.name}
+            </p>
+            <p className="truncate text-xs text-muted-foreground">
+              {tEnums(`itemType.${item.type}`)}
+              {item.price != null && `  ·  R$ ${item.price.toFixed(2)}`}
+              {assignee && `  ·  ${assignee.name ?? assignee.email}`}
+            </p>
+          </div>
+          <ChevronRight className="h-5 w-5 shrink-0 text-muted-foreground/30" />
+        </Link>
+      )}
     </div>
   );
 }

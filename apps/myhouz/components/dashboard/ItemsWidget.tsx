@@ -3,15 +3,6 @@
 import { useState } from "react";
 import Link from "next/link";
 import { useTranslations } from "next-intl";
-import {
-  Badge,
-  Dialog,
-  DialogContent,
-  DialogHeader,
-  DialogTitle,
-  DialogDescription,
-  Button,
-} from "@home/ui";
 import { cn } from "@home/ui";
 import {
   ShoppingCart,
@@ -20,9 +11,9 @@ import {
   Check,
   Plus,
   ChevronRight,
-  ExternalLink,
   ListFilter,
 } from "lucide-react";
+import { ItemPreviewModal } from "@/components/items/ItemPreviewModal";
 
 const TYPE_ICONS = {
   buy: ShoppingCart,
@@ -47,6 +38,7 @@ interface Item {
   price: number | null;
   notes: string | null;
   link: string | null;
+  assigned_to: string | null;
 }
 
 interface ItemsWidgetProps {
@@ -58,7 +50,6 @@ const TYPE_FILTERS: (ItemType | "all")[] = ["all", "buy", "repair", "fix"];
 export function ItemsWidget({ items }: ItemsWidgetProps) {
   const t = useTranslations("dashboard.itemsWidget");
   const tEnums = useTranslations("enums");
-  const tItems = useTranslations("items");
 
   const [activeFilter, setActiveFilter] = useState<ItemType | "all">("all");
   const [filterOpen, setFilterOpen] = useState(false);
@@ -142,42 +133,45 @@ export function ItemsWidget({ items }: ItemsWidgetProps) {
           </Link>
         </div>
       ) : (
-        <div className="space-y-3">
-          {displayItems.map((item) => {
-            const Icon = TYPE_ICONS[item.type];
-            const isDone = item.status === "done";
+        <div className="rounded-2xl bg-white shadow-sm dark:bg-card overflow-hidden">
+          <div className="divide-y divide-border">
+            {displayItems.map((item) => {
+              const Icon = TYPE_ICONS[item.type];
+              const isDone = item.status === "done";
 
-            return (
-              <button
-                key={item.id}
-                type="button"
-                onClick={() => setSelectedItem(item)}
-                className="flex w-full items-center gap-4 rounded-2xl bg-white px-5 py-4 shadow-sm transition-colors hover:bg-white/80 dark:bg-card dark:hover:bg-card/80"
-              >
-                <div
-                  className={cn(
-                    "flex h-11 w-11 shrink-0 items-center justify-center rounded-full bg-background",
-                    PRIORITY_STYLES[item.priority],
-                  )}
+              return (
+                <button
+                  key={item.id}
+                  type="button"
+                  onClick={() => setSelectedItem(item)}
+                  className="flex w-full items-center gap-3 px-4 py-3 transition-colors hover:bg-accent/40"
                 >
-                  {isDone ? (
-                    <Check className="h-5 w-5 text-green-600 dark:text-green-400" />
-                  ) : (
-                    <Icon className="h-5 w-5" />
-                  )}
-                </div>
-                <div className="min-w-0 flex-1 text-left">
-                  <p className="truncate text-base font-medium">{item.name}</p>
-                  <p className="truncate text-sm text-muted-foreground">
-                    {tEnums(`itemType.${item.type}`)}
-                    {item.price != null &&
-                      `  ·  R$ ${item.price.toFixed(2)}`}
-                  </p>
-                </div>
-                <ChevronRight className="h-6 w-6 shrink-0 text-muted-foreground/40" />
-              </button>
-            );
-          })}
+                  <div
+                    className={cn(
+                      "flex h-9 w-9 shrink-0 items-center justify-center rounded-lg",
+                      PRIORITY_STYLES[item.priority],
+                      isDone ? "bg-muted" : "bg-background",
+                    )}
+                  >
+                    {isDone ? (
+                      <Check className="h-4 w-4 text-green-600 dark:text-green-400" />
+                    ) : (
+                      <Icon className="h-4 w-4" />
+                    )}
+                  </div>
+                  <div className="min-w-0 flex-1 text-left">
+                    <p className="truncate text-sm font-medium">{item.name}</p>
+                    <p className="truncate text-xs text-muted-foreground">
+                      {tEnums(`itemType.${item.type}`)}
+                      {item.price != null &&
+                        `  ·  R$ ${item.price.toFixed(2)}`}
+                    </p>
+                  </div>
+                  <ChevronRight className="h-5 w-5 shrink-0 text-muted-foreground/30" />
+                </button>
+              );
+            })}
+          </div>
         </div>
       )}
 
@@ -194,105 +188,13 @@ export function ItemsWidget({ items }: ItemsWidgetProps) {
       )}
 
       {/* Item detail modal */}
-      <Dialog
+      <ItemPreviewModal
+        item={selectedItem}
         open={selectedItem !== null}
         onOpenChange={(open) => {
           if (!open) setSelectedItem(null);
         }}
-      >
-        {selectedItem && (
-          <DialogContent>
-            <DialogHeader>
-              <div className="flex items-center gap-3">
-                <div
-                  className={cn(
-                    "flex h-12 w-12 shrink-0 items-center justify-center rounded-full bg-background",
-                    PRIORITY_STYLES[selectedItem.priority],
-                  )}
-                >
-                  {(() => {
-                    const Icon = TYPE_ICONS[selectedItem.type];
-                    return <Icon className="h-5 w-5" />;
-                  })()}
-                </div>
-                <div>
-                  <DialogTitle className="text-xl">
-                    {selectedItem.name}
-                  </DialogTitle>
-                  <DialogDescription>
-                    {tEnums(`itemType.${selectedItem.type}`)}
-                    {selectedItem.price != null &&
-                      `  ·  R$ ${selectedItem.price.toFixed(2)}`}
-                  </DialogDescription>
-                </div>
-              </div>
-            </DialogHeader>
-
-            <div className="flex flex-wrap gap-2">
-              <Badge variant="outline">
-                {tEnums(`itemType.${selectedItem.type}`)}
-              </Badge>
-              <Badge variant="outline">
-                {tEnums(`priority.${selectedItem.priority}`)}
-              </Badge>
-              <Badge variant="outline">
-                {tEnums(`status.${selectedItem.status}`)}
-              </Badge>
-            </div>
-
-            {selectedItem.price != null && (
-              <div>
-                <p className="text-xs font-medium text-muted-foreground">
-                  {tItems("priceLabel")}
-                </p>
-                <p className="text-lg font-semibold">
-                  R$ {selectedItem.price.toFixed(2)}
-                </p>
-              </div>
-            )}
-
-            {selectedItem.link && (
-              <a
-                href={selectedItem.link}
-                target="_blank"
-                rel="noopener noreferrer"
-                className="inline-flex items-center gap-1.5 text-sm text-primary hover:underline"
-              >
-                <ExternalLink className="h-3.5 w-3.5" />
-                {tItems("openLink")}
-              </a>
-            )}
-
-            {selectedItem.notes && (
-              <div>
-                <p className="text-xs font-medium text-muted-foreground">
-                  {tItems("notesLabel")}
-                </p>
-                <p className="mt-1 whitespace-pre-wrap text-sm">
-                  {selectedItem.notes}
-                </p>
-              </div>
-            )}
-
-            <div className="flex gap-2 pt-2">
-              <Link
-                href={`/app/items/${selectedItem.id}`}
-                className="flex-1"
-              >
-                <Button variant="outline" className="w-full">
-                  {t("viewDetails")}
-                </Button>
-              </Link>
-              <Link
-                href={`/app/items/${selectedItem.id}/edit`}
-                className="flex-1"
-              >
-                <Button className="w-full">{tItems("editTitle")}</Button>
-              </Link>
-            </div>
-          </DialogContent>
-        )}
-      </Dialog>
+      />
     </div>
   );
 }
