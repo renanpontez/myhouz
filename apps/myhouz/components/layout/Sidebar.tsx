@@ -8,7 +8,6 @@ import {
   AlertTriangle,
   Users,
   Settings,
-  ChevronsLeft,
   ChevronsRight,
 } from "lucide-react";
 import { useTranslations } from "next-intl";
@@ -120,64 +119,47 @@ export function DesktopSidebar() {
   return (
     <aside
       className={cn(
-        "hidden shrink-0 border-r border-border bg-card lg:flex lg:flex-col transition-all duration-300",
+        "relative hidden shrink-0 border-r border-border bg-card lg:flex lg:flex-col transition-all duration-300",
         isExpanded ? "w-60" : "w-[68px]",
       )}
     >
-      {/* Logo + collapse toggle */}
+      {/* Toggle handle — center of right edge */}
+      <button
+        type="button"
+        onClick={toggleExpanded}
+        className="absolute right-0 top-1/2 z-10 -translate-y-1/2 translate-x-1/2 flex h-6 w-6 items-center justify-center rounded-full border bg-card text-muted-foreground shadow-sm transition-colors hover:bg-muted hover:text-foreground"
+        aria-label={isExpanded ? t("collapseSidebar") : t("expandSidebar")}
+      >
+        <ChevronsRight
+          className={cn(
+            "h-3.5 w-3.5 transition-transform duration-300",
+            isExpanded && "rotate-180",
+          )}
+        />
+      </button>
+
+      {/* Logo */}
       <div
         className={cn(
           "flex h-14 items-center border-b border-border",
-          isExpanded ? "justify-between px-4" : "justify-center px-2",
+          isExpanded ? "px-4" : "justify-center px-2",
         )}
       >
-        {isExpanded ? (
-          <img
-            src="/myhouz-logo.svg"
-            alt="myhouz"
-            className="h-6 w-auto dark:brightness-0 dark:invert"
-          />
-        ) : (
-          <img
-            src="/myhouz-symbol.svg"
-            alt="myhouz"
-            className="h-7 w-7"
-          />
-        )}
-        {isExpanded && (
-          <button
-            type="button"
-            onClick={toggleExpanded}
-            className="flex h-7 w-7 items-center justify-center rounded-md text-muted-foreground transition-colors hover:bg-muted hover:text-foreground"
-            aria-label={t("collapseSidebar")}
-          >
-            <ChevronsLeft className="h-4 w-4" />
-          </button>
-        )}
+        <img
+          src="/myhouz-symbol.svg"
+          alt="myhouz"
+          className="h-7 w-7"
+        />
       </div>
 
       {/* Navigation */}
       <SidebarContent expanded={isExpanded} />
-
-      {/* Collapse toggle at the bottom when collapsed */}
-      {!isExpanded && (
-        <div className="flex justify-center border-t border-border py-3">
-          <button
-            type="button"
-            onClick={toggleExpanded}
-            className="flex h-8 w-8 items-center justify-center rounded-md text-muted-foreground transition-colors hover:bg-muted hover:text-foreground"
-            aria-label={t("expandSidebar")}
-          >
-            <ChevronsRight className="h-4 w-4" />
-          </button>
-        </div>
-      )}
     </aside>
   );
 }
 
 export function MobileSidebar() {
-  const { isOpen, close } = useSidebar();
+  const { isOpen, close, toggle } = useSidebar();
 
   return (
     <>

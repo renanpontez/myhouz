@@ -61,48 +61,50 @@ export async function RemindersWidget({ reminders }: RemindersWidgetProps) {
           </Link>
         </div>
       ) : (
-        <div className="space-y-3">
-          {displayReminders.map((reminder) => {
-            const dueDate = new Date(reminder.due_at);
-            const overdue = isPast(dueDate) && !isToday(dueDate);
-            const dueToday = isToday(dueDate);
+        <div className="rounded-2xl bg-white shadow-sm dark:bg-card overflow-hidden">
+          <div className="divide-y divide-border">
+            {displayReminders.map((reminder) => {
+              const dueDate = new Date(reminder.due_at);
+              const overdue = isPast(dueDate) && !isToday(dueDate);
+              const dueToday = isToday(dueDate);
 
-            return (
-              <Link
-                key={reminder.id}
-                href={`/app/reminders/${reminder.id}`}
-                className="flex items-center gap-4 rounded-2xl bg-white px-5 py-4 shadow-sm transition-colors hover:bg-white/80 dark:bg-card dark:hover:bg-card/80"
-              >
-                <div
-                  className={cn(
-                    "flex h-11 w-11 shrink-0 items-center justify-center rounded-full bg-background",
-                    overdue
-                      ? "text-destructive"
-                      : dueToday
-                        ? "text-amber-600 dark:text-amber-400"
-                        : "text-muted-foreground",
-                  )}
+              return (
+                <Link
+                  key={reminder.id}
+                  href={`/app/reminders/${reminder.id}`}
+                  className="flex items-center gap-3 px-4 py-3 transition-colors hover:bg-accent/40"
                 >
-                  {reminder.is_completed ? (
-                    <Check className="h-5 w-5 text-green-600 dark:text-green-400" />
-                  ) : (
-                    <Bell className="h-5 w-5" />
-                  )}
-                </div>
-                <div className="min-w-0 flex-1">
-                  <p className="truncate text-base font-medium">
-                    {reminder.title}
-                  </p>
-                  <p className="truncate text-sm text-muted-foreground">
-                    {format(dueDate, "MMM d, HH:mm")}
-                    {overdue && `  ·  ${t("overdue")}`}
-                    {dueToday && !overdue && `  ·  ${t("dueToday")}`}
-                  </p>
-                </div>
-                <ChevronRight className="h-6 w-6 shrink-0 text-muted-foreground/40" />
-              </Link>
-            );
-          })}
+                  <div
+                    className={cn(
+                      "flex h-9 w-9 shrink-0 items-center justify-center rounded-lg",
+                      overdue
+                        ? "bg-destructive/10 text-destructive"
+                        : dueToday
+                          ? "bg-amber-100 text-amber-600 dark:bg-amber-900/30 dark:text-amber-400"
+                          : "bg-muted text-muted-foreground",
+                    )}
+                  >
+                    {reminder.is_completed ? (
+                      <Check className="h-4 w-4 text-green-600 dark:text-green-400" />
+                    ) : (
+                      <Bell className="h-4 w-4" />
+                    )}
+                  </div>
+                  <div className="min-w-0 flex-1">
+                    <p className="truncate text-sm font-medium">
+                      {reminder.title}
+                    </p>
+                    <p className="truncate text-xs text-muted-foreground">
+                      {format(dueDate, "MMM d, HH:mm")}
+                      {overdue && `  ·  ${t("overdue")}`}
+                      {dueToday && !overdue && `  ·  ${t("dueToday")}`}
+                    </p>
+                  </div>
+                  <ChevronRight className="h-5 w-5 shrink-0 text-muted-foreground/30" />
+                </Link>
+              );
+            })}
+          </div>
         </div>
       )}
 

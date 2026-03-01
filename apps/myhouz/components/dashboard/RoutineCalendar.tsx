@@ -156,7 +156,7 @@ function TimelineTaskRow({
         onClick={disabled ? undefined : handleToggle}
         disabled={disabled}
         className={cn(
-          "relative z-10 flex h-8 w-8 shrink-0 items-center justify-center rounded-full border-2 transition-colors",
+          "relative z-10 flex h-7 w-7 shrink-0 items-center justify-center rounded-full border-2 transition-colors",
           optimisticCompleted
             ? "border-primary bg-primary text-white"
             : "border-muted-foreground/30 bg-background",
@@ -173,23 +173,23 @@ function TimelineTaskRow({
       {/* Card — wraps icon + content + streak */}
       <div
         className={cn(
-          "flex flex-1 items-center gap-3 rounded-2xl px-3 py-3.5 shadow-sm",
+          "flex flex-1 items-center gap-3 rounded-xl px-3 py-2.5 shadow-sm",
           optimisticCompleted
             ? "bg-white/30"
             : "bg-white dark:bg-card",
         )}
       >
         {/* Task icon */}
-        <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-full">
+        <div className="flex h-9 w-9 shrink-0 items-center justify-center rounded-lg">
           {TaskIcon ? (
-            <TaskIcon className="h-5 w-5 text-primary" />
+            <TaskIcon className="h-4 w-4 text-primary" />
           ) : task.icon ? (
             <DynamicIcon
               name={task.icon as IconName}
-              className="h-5 w-5 text-primary"
+              className="h-4 w-4 text-primary"
             />
           ) : (
-            <ListChecks className="h-5 w-5 text-primary" />
+            <ListChecks className="h-4 w-4 text-primary" />
           )}
         </div>
 
@@ -197,7 +197,7 @@ function TimelineTaskRow({
         <div className="min-w-0 flex-1">
           <p
             className={cn(
-              "truncate text-base font-medium",
+              "truncate text-sm font-medium",
               optimisticCompleted && "text-muted-foreground line-through",
             )}
           >
@@ -364,16 +364,16 @@ function WeeklyMatrixView({
             )}
           >
             {/* Task icon */}
-            <div className="flex h-10 w-10 items-center justify-center rounded-full">
+            <div className="flex h-9 w-9 items-center justify-center rounded-lg">
               {TaskIcon ? (
-                <TaskIcon className="h-5 w-5 text-primary" />
+                <TaskIcon className="h-4 w-4 text-primary" />
               ) : task.icon ? (
                 <DynamicIcon
                   name={task.icon as IconName}
-                  className="h-5 w-5 text-primary"
+                  className="h-4 w-4 text-primary"
                 />
               ) : (
-                <ListChecks className="h-5 w-5 text-primary" />
+                <ListChecks className="h-4 w-4 text-primary" />
               )}
             </div>
 
@@ -651,7 +651,7 @@ export function RoutineCalendar({
               {/* Day pill */}
               <div
                 className={cn(
-                  "flex w-full flex-col items-center rounded-2xl py-3 transition-colors",
+                  "flex w-full flex-col items-center rounded-lg py-3 transition-colors",
                   isDayToday && isSelected
                     ? "bg-foreground text-background shadow-md"
                     : isSelected
@@ -785,7 +785,7 @@ export function RoutineCalendar({
             <div className="relative space-y-2">
               {/* Vertical dotted line — through checkbox centers */}
               {visibleTasks.length > 1 && (
-                <div className="absolute left-[15px] top-8 bottom-8 w-px border-l-2 border-dashed border-muted-foreground/20" />
+                <div className="absolute left-[13px] top-7 bottom-7 w-px border-l-2 border-dashed border-muted-foreground/20" />
               )}
               {visibleTasks.map((task) => {
                 const meta = task.recurrence_meta as

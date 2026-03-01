@@ -39,11 +39,10 @@ export function TopBar({ urgentCount, urgentProblems }: TopBarProps) {
         <button
           type="button"
           onClick={toggle}
-          className="inline-flex h-9 w-9 items-center justify-center rounded-full text-muted-foreground transition-colors hover:bg-accent"
+          className="inline-flex h-9 w-9 items-center justify-center rounded-full text-muted-foreground transition-colors hover:bg-accent lg:hidden"
         >
           <Menu className="h-5 w-5" />
         </button>
-        <img src="/myhouz-logo.svg" alt="myhouz" className="hidden h-6 w-auto lg:block" />
         <HouseholdSwitcher />
       </div>
       <div className="flex items-center gap-2">

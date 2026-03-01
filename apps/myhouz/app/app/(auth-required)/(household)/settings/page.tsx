@@ -1,4 +1,6 @@
+import Link from "next/link";
 import { getTranslations } from "next-intl/server";
+import { ChevronRight, Home } from "lucide-react";
 import { LanguageSelector } from "@/components/settings/LanguageSelector";
 
 export default async function SettingsPage() {
@@ -29,6 +31,21 @@ export default async function SettingsPage() {
             {t("appearancePlaceholder")}
           </p>
         </div>
+        <Link
+          href="/app/settings/household"
+          className="flex items-center gap-4 rounded-2xl border p-6 transition-colors hover:bg-accent/40"
+        >
+          <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-lg bg-primary/10 text-primary">
+            <Home className="h-5 w-5" />
+          </div>
+          <div className="min-w-0 flex-1">
+            <h2 className="text-lg font-semibold">{t("householdSettingsLink")}</h2>
+            <p className="text-sm text-muted-foreground">
+              {t("householdSettingsLinkDescription")}
+            </p>
+          </div>
+          <ChevronRight className="h-5 w-5 shrink-0 text-muted-foreground/30" />
+        </Link>
       </div>
     </div>
   );

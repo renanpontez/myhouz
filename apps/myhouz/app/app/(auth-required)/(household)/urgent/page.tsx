@@ -83,14 +83,16 @@ export default async function UrgentPage({ searchParams }: UrgentPageProps) {
           {t("empty")}
         </div>
       ) : (
-        <div className="mt-4 space-y-3">
-          {filtered.map((problem) => (
-            <UrgentProblemRow
-              key={problem.id}
-              problem={problem}
-              reporterName={memberMap.get(problem.reported_by) ?? "?"}
-            />
-          ))}
+        <div className="mt-4 rounded-2xl bg-white shadow-sm dark:bg-card overflow-hidden">
+          <div className="divide-y divide-border">
+            {filtered.map((problem) => (
+              <UrgentProblemRow
+                key={problem.id}
+                problem={problem}
+                reporterName={memberMap.get(problem.reported_by) ?? "?"}
+              />
+            ))}
+          </div>
         </div>
       )}
     </div>
