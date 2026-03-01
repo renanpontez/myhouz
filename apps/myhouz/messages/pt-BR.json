@@ -128,7 +128,12 @@
       "pendingCount": "{count} pendentes",
       "pendingLabel": "itens pendentes",
       "all": "Todos",
-      "viewDetails": "Ver detalhes"
+      "viewDetails": "Ver detalhes",
+      "sortBy": "Ordenar por",
+      "filterBy": "Filtrar por",
+      "sortPriority": "Prioridade",
+      "sortNewest": "Mais recentes",
+      "sortPrice": "Preco"
     },
     "remindersWidget": {
       "title": "Lembretes",
@@ -138,7 +143,16 @@
       "overdue": "Atrasado",
       "dueToday": "Vence hoje",
       "upcoming": "Proximo",
-      "pendingLabel": "proximos"
+      "pendingLabel": "proximos",
+      "sortBy": "Ordenar por",
+      "filterBy": "Filtrar por",
+      "sortDueDate": "Data de vencimento",
+      "sortNewest": "Mais recentes",
+      "filterAll": "Todos",
+      "filterOverdue": "Atrasados",
+      "filterToday": "Vencem hoje",
+      "filterUpcoming": "Proximos",
+      "overdueTooltip": "Este lembrete esta atrasado"
     },
     "urgentBanner": {
       "title": "Problemas Urgentes",

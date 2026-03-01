@@ -3,6 +3,7 @@
 import { useState } from "react";
 import Link from "next/link";
 import { useTranslations } from "next-intl";
+import { Popover, PopoverTrigger, PopoverContent } from "@home/ui";
 import { cn } from "@home/ui";
 import {
   ShoppingCart,
@@ -11,7 +12,7 @@ import {
   Check,
   Plus,
   ChevronRight,
-  ListFilter,
+  SlidersHorizontal,
 } from "lucide-react";
 import { ItemPreviewModal } from "@/components/items/ItemPreviewModal";
 
@@ -27,7 +28,11 @@ const PRIORITY_STYLES = {
   low: "text-muted-foreground",
 } as const;
 
+const PRIORITY_ORDER = { high: 0, medium: 1, low: 2 } as const;
+
 type ItemType = "buy" | "repair" | "fix";
+type SortKey = "priority" | "newest" | "price";
+type FilterKey = ItemType | "all";
 
 interface Item {
   id: string;
@@ -45,83 +50,116 @@ interface ItemsWidgetProps {
   items: Item[];
 }
 
-const TYPE_FILTERS: (ItemType | "all")[] = ["all", "buy", "repair", "fix"];
+const TYPE_FILTERS: FilterKey[] = ["all", "buy", "repair", "fix"];
+const SORT_OPTIONS: SortKey[] = ["priority", "newest", "price"];
 
 export function ItemsWidget({ items }: ItemsWidgetProps) {
   const t = useTranslations("dashboard.itemsWidget");
   const tEnums = useTranslations("enums");
 
-  const [activeFilter, setActiveFilter] = useState<ItemType | "all">("all");
-  const [filterOpen, setFilterOpen] = useState(false);
+  const [activeFilter, setActiveFilter] = useState<FilterKey>("all");
+  const [activeSort, setActiveSort] = useState<SortKey>("priority");
   const [selectedItem, setSelectedItem] = useState<Item | null>(null);
 
   const pendingItems = items.filter((i) => i.status !== "done");
+
   const filteredItems =
     activeFilter === "all"
       ? pendingItems
       : pendingItems.filter((i) => i.type === activeFilter);
-  const displayItems = filteredItems.slice(0, 5);
 
-  const activeFilterLabel =
-    activeFilter === "all"
-      ? `${t("all")} ${t("title").toLowerCase()}`
-      : tEnums(`itemType.${activeFilter}`);
+  const sortedItems = [...filteredItems].sort((a, b) => {
+    if (activeSort === "priority") {
+      return PRIORITY_ORDER[a.priority] - PRIORITY_ORDER[b.priority];
+    }
+    if (activeSort === "price") {
+      return (b.price ?? 0) - (a.price ?? 0);
+    }
+    return 0; // newest — items arrive pre-sorted by created_at desc
+  });
+
+  const displayItems = sortedItems.slice(0, 5);
+
+  const hasActiveFilters = activeFilter !== "all" || activeSort !== "priority";
 
   return (
     <div>
-      {/* Title */}
-      <h2 className="text-2xl font-bold">{t("title")}</h2>
+      {/* Title + filter icon */}
+      <div className="flex items-center justify-between">
+        <h2 className="text-2xl font-bold">{t("title")}</h2>
+        {pendingItems.length > 0 && (
+          <Popover>
+            <PopoverTrigger asChild>
+              <button
+                type="button"
+                className={cn(
+                  "inline-flex h-8 w-8 items-center justify-center rounded-full transition-colors hover:bg-accent",
+                  hasActiveFilters
+                    ? "text-primary"
+                    : "text-muted-foreground",
+                )}
+              >
+                <SlidersHorizontal className="h-4 w-4" />
+              </button>
+            </PopoverTrigger>
+            <PopoverContent align="end" className="w-48 p-1">
+              {/* Sort section */}
+              <p className="px-3 py-1.5 text-[11px] font-semibold uppercase tracking-wider text-muted-foreground/70">
+                {t("sortBy")}
+              </p>
+              {SORT_OPTIONS.map((key) => (
+                <button
+                  key={key}
+                  type="button"
+                  onClick={() => setActiveSort(key)}
+                  className={cn(
+                    "flex w-full items-center justify-between rounded-lg px-3 py-2 text-sm transition-colors hover:bg-accent",
+                    activeSort === key && "font-medium",
+                  )}
+                >
+                  <span>{t(`sort${key.charAt(0).toUpperCase() + key.slice(1)}`)}</span>
+                  {activeSort === key && (
+                    <Check className="h-3.5 w-3.5 text-primary" />
+                  )}
+                </button>
+              ))}
 
-      {/* Filter subtitle */}
-      {pendingItems.length > 0 && (
-        <div className="relative mt-1 mb-6">
-          <button
-            type="button"
-            onClick={() => setFilterOpen(!filterOpen)}
-            className="flex items-center gap-1.5 text-sm text-muted-foreground transition-colors hover:text-foreground"
-          >
-            <ListFilter className="h-3.5 w-3.5" />
-            <span>{activeFilterLabel}</span>
-          </button>
+              <div className="mx-2 my-1 h-px bg-border" />
 
-          {filterOpen && (
-            <>
-              <div
-                className="fixed inset-0 z-10"
-                onClick={() => setFilterOpen(false)}
-              />
-              <div className="absolute left-0 z-20 mt-1.5 rounded-xl border bg-card p-1 shadow-md">
-                {TYPE_FILTERS.map((type) => (
-                  <button
-                    key={type}
-                    type="button"
-                    onClick={() => {
-                      setActiveFilter(type);
-                      setFilterOpen(false);
-                    }}
-                    className={cn(
-                      "flex w-full items-center justify-between gap-6 rounded-lg px-3 py-2 text-sm transition-colors hover:bg-accent",
-                      activeFilter === type && "font-medium",
-                    )}
-                  >
-                    <span>
-                      {type === "all"
-                        ? `${t("all")} ${t("title").toLowerCase()}`
-                        : tEnums(`itemType.${type}`)}
-                    </span>
-                    {activeFilter === type && (
-                      <Check className="h-3.5 w-3.5 text-primary" />
-                    )}
-                  </button>
-                ))}
-              </div>
-            </>
-          )}
-        </div>
-      )}
+              {/* Filter section */}
+              <p className="px-3 py-1.5 text-[11px] font-semibold uppercase tracking-wider text-muted-foreground/70">
+                {t("filterBy")}
+              </p>
+              {TYPE_FILTERS.map((type) => (
+                <button
+                  key={type}
+                  type="button"
+                  onClick={() => setActiveFilter(type)}
+                  className={cn(
+                    "flex w-full items-center justify-between rounded-lg px-3 py-2 text-sm transition-colors hover:bg-accent",
+                    activeFilter === type && "font-medium",
+                  )}
+                >
+                  <span>
+                    {type === "all"
+                      ? t("all")
+                      : tEnums(`itemType.${type}`)}
+                  </span>
+                  {activeFilter === type && (
+                    <Check className="h-3.5 w-3.5 text-primary" />
+                  )}
+                </button>
+              ))}
+            </PopoverContent>
+          </Popover>
+        )}
+      </div>
+
+      {/* Spacer */}
+      <div className="mb-6" />
 
       {pendingItems.length === 0 ? (
-        <div className="flex flex-col items-center gap-3 py-10">
+        <div className="flex flex-col items-center gap-3 py-8">
           <ShoppingCart className="h-10 w-10 text-muted-foreground/40" />
           <p className="text-sm text-muted-foreground">{t("empty")}</p>
           <Link
