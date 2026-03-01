@@ -102,7 +102,7 @@ export default async function DashboardPage() {
   }
 
   return (
-    <div className="p-6">
+    <div className="px-4 py-6 sm:p-6">
       <div className="grid gap-6 lg:grid-cols-3">
         <RoutineCalendar
           tasks={tasks}

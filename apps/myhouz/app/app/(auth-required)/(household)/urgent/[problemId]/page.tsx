@@ -68,7 +68,7 @@ export default async function ProblemDetailPage({
   const resolverName = resolveName(problem.resolved_by);
 
   return (
-    <div className="p-6">
+    <div className="px-4 py-6 sm:p-6">
       <BackLink href="/app/urgent" />
 
       <div className="mt-4 flex items-start justify-between">

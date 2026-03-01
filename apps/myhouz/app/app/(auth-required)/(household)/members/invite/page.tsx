@@ -16,7 +16,7 @@ export default async function InviteMemberPage() {
   if (role !== "owner") redirect("/app/members");
 
   return (
-    <div className="p-6">
+    <div className="px-4 py-6 sm:p-6">
       <BackLink href="/app/members" />
       <div className="mt-4">
         <h1 className="text-2xl font-bold">{t("inviteTitle")}</h1>

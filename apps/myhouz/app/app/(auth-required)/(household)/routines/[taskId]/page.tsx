@@ -84,7 +84,7 @@ export default async function TaskDetailPage({ params }: TaskDetailPageProps) {
     : null;
 
   return (
-    <div className="p-6">
+    <div className="px-4 py-6 sm:p-6">
       <BackLink href="/app/routines" />
 
       <div className="mt-4 flex items-start justify-between">

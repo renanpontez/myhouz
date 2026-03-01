@@ -82,7 +82,7 @@ export default async function ReminderDetailPage({
   const dueDate = new Date(reminder.due_at);
 
   return (
-    <div className="p-6">
+    <div className="px-4 py-6 sm:p-6">
       <BackLink href="/app/reminders" />
 
       <div className="mt-4 flex items-start justify-between">

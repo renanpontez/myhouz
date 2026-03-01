@@ -103,7 +103,7 @@ export default async function ItemDetailPage({
   const TypeIcon = TYPE_ICONS[item.type as keyof typeof TYPE_ICONS];
 
   return (
-    <div className="p-6">
+    <div className="px-4 py-6 sm:p-6">
       <BackLink href="/app/items" />
 
       <div className="mt-4 flex items-start justify-between">

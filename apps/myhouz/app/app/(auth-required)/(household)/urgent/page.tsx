@@ -53,7 +53,7 @@ export default async function UrgentPage({ searchParams }: UrgentPageProps) {
   }
 
   return (
-    <div className="p-6">
+    <div className="px-4 py-6 sm:p-6">
       <PageHeader
         title={t("title")}
         description={t("subtitle")}

@@ -32,7 +32,7 @@ export default async function EditTaskPage({ params }: EditTaskPageProps) {
   if (!task) notFound();
 
   return (
-    <div className="p-6">
+    <div className="px-4 py-6 sm:p-6">
       <BackLink href={`/app/routines/${taskId}`} />
       <div className="mt-4">
         <h1 className="text-2xl font-bold">{t("editTitle")}</h1>

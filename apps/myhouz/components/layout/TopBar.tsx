@@ -34,7 +34,7 @@ export function TopBar({ urgentCount, urgentProblems }: TopBarProps) {
   const dateFnsLocale = DATE_FNS_LOCALES[locale] ?? enUS;
 
   return (
-    <header className="flex h-14 items-center justify-between px-6">
+    <header className="flex h-14 items-center justify-between px-4 sm:px-6">
       <div className="flex items-center gap-3">
         <button
           type="button"
@@ -62,7 +62,7 @@ export function TopBar({ urgentCount, urgentProblems }: TopBarProps) {
             {urgentOpen && (
               <>
                 <div className="fixed inset-0 z-40" onClick={() => setUrgentOpen(false)} />
-                <div className="absolute right-0 z-50 mt-1 w-72 rounded-xl border bg-card p-2 shadow-lg">
+                <div className="absolute right-0 z-50 mt-1 w-[calc(100vw-2rem)] max-w-72 rounded-xl border bg-card p-2 shadow-lg sm:w-72">
                   <p className="px-3 py-1.5 text-xs font-semibold uppercase tracking-wider text-muted-foreground">
                     {t("urgentProblems")}
                   </p>

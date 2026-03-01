@@ -331,7 +331,7 @@ function WeeklyMatrixView({
   return (
     <div className="rounded-2xl bg-white px-3 py-3 shadow-sm dark:bg-card">
       {/* Column headers */}
-      <div className="mb-1 grid grid-cols-[2.5rem_repeat(7,1fr)] items-center gap-x-1">
+      <div className="mb-1 grid grid-cols-[2rem_repeat(7,1fr)] items-center gap-x-0.5 sm:grid-cols-[2.5rem_repeat(7,1fr)] sm:gap-x-1">
         <div />
         {weekDays.map((day) => (
           <span
@@ -359,7 +359,7 @@ function WeeklyMatrixView({
           <div
             key={task.id}
             className={cn(
-              "grid grid-cols-[2.5rem_repeat(7,1fr)] items-center gap-x-1 py-2",
+              "grid grid-cols-[2rem_repeat(7,1fr)] items-center gap-x-0.5 py-2 sm:grid-cols-[2.5rem_repeat(7,1fr)] sm:gap-x-1",
               !isMine && "opacity-75",
             )}
           >
@@ -561,7 +561,7 @@ export function RoutineCalendar({
   return (
     <div>
       {/* Greeting + Week navigation */}
-      <div className="mb-6 flex items-center justify-between">
+      <div className="mb-6 flex flex-col gap-2 sm:flex-row sm:items-center sm:justify-between">
         <h1 className="text-2xl font-semibold tracking-tight">
           {tDashboard("greeting", { name: displayName })}
         </h1>
@@ -596,7 +596,7 @@ export function RoutineCalendar({
       </div>
 
       {/* Day strip */}
-      <div className="mb-8 grid grid-cols-7 gap-2">
+      <div className="mb-8 grid grid-cols-7 gap-1 sm:gap-2">
         {weekDays.map((day, i) => {
           const isDayToday = isDateToday(day);
           const isSelected = isSameDay(day, selectedDay);
@@ -618,7 +618,7 @@ export function RoutineCalendar({
               <div className="relative flex h-7 items-end justify-center">
                 {hasActive && (
                   <>
-                    <svg viewBox="0 0 44 24" className="h-6 w-10">
+                    <svg viewBox="0 0 44 24" className="h-6 w-full max-w-[2.5rem]">
                       <path
                         d="M 2 22 A 20 20 0 0 1 42 22"
                         fill="none"
@@ -651,7 +651,7 @@ export function RoutineCalendar({
               {/* Day pill */}
               <div
                 className={cn(
-                  "flex w-full flex-col items-center rounded-lg py-3 transition-colors",
+                  "flex w-full flex-col items-center rounded-lg py-2 transition-colors sm:py-3",
                   isDayToday && isSelected
                     ? "bg-foreground text-background shadow-md"
                     : isSelected
@@ -663,7 +663,7 @@ export function RoutineCalendar({
               >
                 <span
                   className={cn(
-                    "text-2xl font-bold leading-tight",
+                    "text-xl font-bold leading-tight sm:text-2xl",
                     isDayToday && isSelected
                       ? "text-background"
                       : isSelected
@@ -697,8 +697,8 @@ export function RoutineCalendar({
 
       {/* Task list heading */}
       <div className="mb-4 flex items-center justify-between">
-        <div className="flex items-center gap-2">
-          <h2 className="text-xl font-bold">{taskListHeading}</h2>
+        <div className="flex min-w-0 items-center gap-2">
+          <h2 className="truncate text-xl font-bold">{taskListHeading}</h2>
           <Link
             href="/app/routines/new"
             className="inline-flex h-7 w-7 items-center justify-center rounded-full text-muted-foreground transition-colors hover:bg-accent hover:text-foreground"
@@ -710,7 +710,7 @@ export function RoutineCalendar({
         <div className="flex items-center gap-2">
 
           {viewMode === "timeline" && selectedDayTasks.length > 0 && (
-            <span className="text-sm text-muted-foreground">
+            <span className="hidden text-sm text-muted-foreground sm:inline">
               {t("tasksCompleted", {
                 done: selectedDayDoneCount,
                 total: selectedDayTasks.length,
