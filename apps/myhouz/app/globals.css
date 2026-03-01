@@ -82,6 +82,16 @@
   }
 }
 
+@layer utilities {
+  @media (prefers-reduced-motion: reduce) {
+    .reveal-hidden {
+      opacity: 1 !important;
+      transform: none !important;
+      animation: none !important;
+    }
+  }
+}
+
 @layer components {
   .text-stat {
     @apply text-4xl font-bold tracking-tight;

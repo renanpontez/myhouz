@@ -22,6 +22,7 @@ import { MobileNav } from "@/components/landing/MobileNav";
 import { AppMockup } from "@/components/landing/AppMockup";
 import { DesktopMockup } from "@/components/landing/DesktopMockup";
 import { ParallaxBackground } from "@/components/landing/ParallaxBackground";
+import { RevealOnScroll } from "@/components/landing/RevealOnScroll";
 
 // ---------------------------------------------------------------------------
 // Metadata
@@ -247,7 +248,7 @@ function Problems({ t }: SectionProps) {
       className="py-16 md:py-24"
     >
       <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
-        <div className="text-center mb-12">
+        <RevealOnScroll className="text-center mb-12">
           <h2
             id="problems-heading"
             className="text-3xl md:text-4xl font-bold tracking-tight text-foreground"
@@ -257,22 +258,25 @@ function Problems({ t }: SectionProps) {
           <p className="mt-3 text-muted-foreground text-lg">
             {t("problems.subtitle")}
           </p>
-        </div>
+        </RevealOnScroll>
 
         <div className="grid sm:grid-cols-2 lg:grid-cols-4 gap-5">
-          {painPoints.map((point) => (
-            <PainCard
-              key={point.titleKey}
-              icon={point.icon}
-              heading={t(`problems.${point.titleKey}`)}
-              body={t(`problems.${point.bodyKey}`)}
-            />
+          {painPoints.map((point, index) => (
+            <RevealOnScroll key={point.titleKey} staggerIndex={index}>
+              <PainCard
+                icon={point.icon}
+                heading={t(`problems.${point.titleKey}`)}
+                body={t(`problems.${point.bodyKey}`)}
+              />
+            </RevealOnScroll>
           ))}
         </div>
 
-        <p className="mt-12 text-center text-lg font-semibold text-foreground">
-          {t("problems.fixesAll")}
-        </p>
+        <RevealOnScroll className="mt-12 text-center">
+          <p className="text-lg font-semibold text-foreground">
+            {t("problems.fixesAll")}
+          </p>
+        </RevealOnScroll>
       </div>
     </section>
   );
@@ -362,7 +366,7 @@ function Features({ t }: SectionProps) {
         {/* Features overview — split layout */}
         <div className="grid lg:grid-cols-2 gap-10 lg:gap-16 items-center mb-16">
           {/* Left column — description */}
-          <div>
+          <RevealOnScroll>
             <p className="text-[11px] font-semibold uppercase tracking-widest text-muted-foreground/70 mb-3">
               myhouz
             </p>
@@ -400,25 +404,26 @@ function Features({ t }: SectionProps) {
                 <Link href="/signup">{t("nav.getStarted")}</Link>
               </Button>
             </div>
-          </div>
+          </RevealOnScroll>
 
           {/* Right column — desktop preview */}
-          <div className="flex justify-center lg:justify-end">
+          <RevealOnScroll className="flex justify-center lg:justify-end" staggerIndex={1}>
             <DesktopMockup />
-          </div>
+          </RevealOnScroll>
         </div>
 
         {/* Feature detail cards grid */}
         <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-6">
-          {featureCards.map((feature) => (
-            <FeatureCard
-              key={feature.nameKey}
-              icon={feature.icon}
-              name={t(`features.${feature.nameKey}`)}
-              description={t(`features.${feature.descKey}`)}
-              color={feature.color}
-              accent={feature.accent}
-            />
+          {featureCards.map((feature, index) => (
+            <RevealOnScroll key={feature.nameKey} staggerIndex={index}>
+              <FeatureCard
+                icon={feature.icon}
+                name={t(`features.${feature.nameKey}`)}
+                description={t(`features.${feature.descKey}`)}
+                color={feature.color}
+                accent={feature.accent}
+              />
+            </RevealOnScroll>
           ))}
         </div>
       </div>
@@ -472,7 +477,7 @@ function HowItWorks({ t }: SectionProps) {
       className="py-16 md:py-24"
     >
       <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
-        <div className="text-center mb-14">
+        <RevealOnScroll className="text-center mb-14">
           <h2
             id="how-it-works-heading"
             className="text-3xl md:text-4xl font-bold tracking-tight text-foreground"
@@ -482,7 +487,7 @@ function HowItWorks({ t }: SectionProps) {
           <p className="mt-3 text-muted-foreground text-lg">
             {t("howItWorks.subtitle")}
           </p>
-        </div>
+        </RevealOnScroll>
 
         <div className="grid md:grid-cols-3 gap-8 md:gap-6 relative">
           <div
@@ -490,21 +495,22 @@ function HowItWorks({ t }: SectionProps) {
             aria-hidden="true"
           />
 
-          {steps.map((step) => (
-            <StepCard
-              key={step.number}
-              number={step.number}
-              title={t(`howItWorks.${step.titleKey}`)}
-              description={t(`howItWorks.${step.descKey}`)}
-            />
+          {steps.map((step, index) => (
+            <RevealOnScroll key={step.number} staggerIndex={index}>
+              <StepCard
+                number={step.number}
+                title={t(`howItWorks.${step.titleKey}`)}
+                description={t(`howItWorks.${step.descKey}`)}
+              />
+            </RevealOnScroll>
           ))}
         </div>
 
-        <div className="mt-14 text-center">
+        <RevealOnScroll className="mt-14 text-center">
           <Button asChild size="lg" className="text-base px-8 h-12 rounded-full">
             <Link href="/signup">{t("howItWorks.cta")}</Link>
           </Button>
-        </div>
+        </RevealOnScroll>
       </div>
     </section>
   );
@@ -572,7 +578,7 @@ function SocialProof({ t }: SectionProps) {
       className="py-16 md:py-24"
     >
       <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
-        <div className="text-center mb-14">
+        <RevealOnScroll className="text-center mb-14">
           <h2
             id="social-proof-heading"
             className="text-3xl md:text-4xl font-bold tracking-tight text-foreground"
@@ -582,19 +588,20 @@ function SocialProof({ t }: SectionProps) {
           <p className="mt-3 text-muted-foreground text-lg">
             {t("socialProof.subtitle")}
           </p>
-        </div>
+        </RevealOnScroll>
 
         <div className="grid md:grid-cols-3 gap-6">
-          {testimonials.map((item) => (
-            <TestimonialCard
-              key={item.nameKey}
-              quote={t(`socialProof.${item.quoteKey}`)}
-              name={t(`socialProof.${item.nameKey}`)}
-              age={item.age}
-              location={t(`socialProof.${item.locationKey}`)}
-              initials={item.initials}
-              avatarColor={item.avatarColor}
-            />
+          {testimonials.map((item, index) => (
+            <RevealOnScroll key={item.nameKey} staggerIndex={index}>
+              <TestimonialCard
+                quote={t(`socialProof.${item.quoteKey}`)}
+                name={t(`socialProof.${item.nameKey}`)}
+                age={item.age}
+                location={t(`socialProof.${item.locationKey}`)}
+                initials={item.initials}
+                avatarColor={item.avatarColor}
+              />
+            </RevealOnScroll>
           ))}
         </div>
       </div>
@@ -670,7 +677,7 @@ function Pricing({ t }: SectionProps) {
       className="py-16 md:py-24"
     >
       <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
-        <div className="text-center mb-14">
+        <RevealOnScroll className="text-center mb-14">
           <h2
             id="pricing-heading"
             className="text-3xl md:text-4xl font-bold tracking-tight text-foreground"
@@ -681,80 +688,86 @@ function Pricing({ t }: SectionProps) {
           <p className="mt-3 text-muted-foreground text-lg">
             {t("pricing.subtitle")}
           </p>
-        </div>
+        </RevealOnScroll>
 
         <div className="grid md:grid-cols-2 gap-6 max-w-3xl mx-auto">
           {/* Free plan */}
-          <div className="bg-white dark:bg-card rounded-2xl p-8 shadow-sm flex flex-col">
-            <div className="mb-6">
-              <p className="text-sm font-medium text-muted-foreground uppercase tracking-wide mb-2">
-                {t("pricing.freeName")}
-              </p>
-              <div className="flex items-baseline gap-1">
-                <span className="text-4xl font-bold text-foreground">{t("pricing.freePrice")}</span>
-                <span className="text-muted-foreground text-sm">{t("pricing.freeInterval")}</span>
+          <RevealOnScroll>
+            <div className="bg-white dark:bg-card rounded-2xl p-8 shadow-sm flex flex-col h-full">
+              <div className="mb-6">
+                <p className="text-sm font-medium text-muted-foreground uppercase tracking-wide mb-2">
+                  {t("pricing.freeName")}
+                </p>
+                <div className="flex items-baseline gap-1">
+                  <span className="text-4xl font-bold text-foreground">{t("pricing.freePrice")}</span>
+                  <span className="text-muted-foreground text-sm">{t("pricing.freeInterval")}</span>
+                </div>
+                <p className="text-sm text-muted-foreground mt-1">
+                  {t("pricing.freeDescription")}
+                </p>
               </div>
-              <p className="text-sm text-muted-foreground mt-1">
-                {t("pricing.freeDescription")}
-              </p>
+
+              <ul className="space-y-3 flex-1 mb-8">
+                {freeFeatures.map((f) => (
+                  <PricingFeature key={f} text={f} />
+                ))}
+              </ul>
+
+              <Button asChild variant="outline" size="lg" className="w-full h-11 rounded-full">
+                <Link href="/signup">{t("pricing.freeCta")}</Link>
+              </Button>
             </div>
-
-            <ul className="space-y-3 flex-1 mb-8">
-              {freeFeatures.map((f) => (
-                <PricingFeature key={f} text={f} />
-              ))}
-            </ul>
-
-            <Button asChild variant="outline" size="lg" className="w-full h-11 rounded-full">
-              <Link href="/signup">{t("pricing.freeCta")}</Link>
-            </Button>
-          </div>
+          </RevealOnScroll>
 
           {/* Plus plan */}
-          <div className="bg-primary rounded-2xl p-8 shadow-lg flex flex-col relative overflow-hidden">
-            <div className="absolute top-4 right-4">
-              <span className="text-xs font-semibold bg-primary-foreground/20 text-primary-foreground px-2.5 py-1 rounded-full">
-                {t("pricing.plusRecommended")}
-              </span>
-            </div>
-
-            <div className="mb-6">
-              <p className="text-sm font-medium text-primary-foreground/70 uppercase tracking-wide mb-2">
-                {t("pricing.plusName")}
-              </p>
-              <div className="flex items-baseline gap-1">
-                <span className="text-4xl font-bold text-primary-foreground">
-                  {t("pricing.plusPrice")}
-                </span>
-                <span className="text-primary-foreground/70 text-sm">
-                  {t("pricing.plusInterval")}
+          <RevealOnScroll staggerIndex={1}>
+            <div className="bg-primary rounded-2xl p-8 shadow-lg flex flex-col relative overflow-hidden h-full">
+              <div className="absolute top-4 right-4">
+                <span className="text-xs font-semibold bg-primary-foreground/20 text-primary-foreground px-2.5 py-1 rounded-full">
+                  {t("pricing.plusRecommended")}
                 </span>
               </div>
-              <p className="text-primary-foreground/70 text-sm mt-1">
-                {t("pricing.plusDescription")}
-              </p>
+
+              <div className="mb-6">
+                <p className="text-sm font-medium text-primary-foreground/70 uppercase tracking-wide mb-2">
+                  {t("pricing.plusName")}
+                </p>
+                <div className="flex items-baseline gap-1">
+                  <span className="text-4xl font-bold text-primary-foreground">
+                    {t("pricing.plusPrice")}
+                  </span>
+                  <span className="text-primary-foreground/70 text-sm">
+                    {t("pricing.plusInterval")}
+                  </span>
+                </div>
+                <p className="text-primary-foreground/70 text-sm mt-1">
+                  {t("pricing.plusDescription")}
+                </p>
+              </div>
+
+              <ul className="space-y-3 flex-1 mb-8">
+                {plusFeatures.map((f) => (
+                  <PricingFeature key={f} text={f} inverted />
+                ))}
+              </ul>
+
+              <Button
+                asChild
+                variant="secondary"
+                size="lg"
+                className="w-full h-11 rounded-full bg-primary-foreground text-primary hover:bg-primary-foreground/90 font-semibold"
+              >
+                <Link href="/signup">{t("pricing.plusCta")}</Link>
+              </Button>
             </div>
-
-            <ul className="space-y-3 flex-1 mb-8">
-              {plusFeatures.map((f) => (
-                <PricingFeature key={f} text={f} inverted />
-              ))}
-            </ul>
-
-            <Button
-              asChild
-              variant="secondary"
-              size="lg"
-              className="w-full h-11 rounded-full bg-primary-foreground text-primary hover:bg-primary-foreground/90 font-semibold"
-            >
-              <Link href="/signup">{t("pricing.plusCta")}</Link>
-            </Button>
-          </div>
+          </RevealOnScroll>
         </div>
 
-        <p className="text-center text-sm text-muted-foreground mt-6">
-          {t("pricing.noCreditCard")}
-        </p>
+        <RevealOnScroll className="text-center mt-6">
+          <p className="text-sm text-muted-foreground">
+            {t("pricing.noCreditCard")}
+          </p>
+        </RevealOnScroll>
       </div>
     </section>
   );
@@ -810,7 +823,7 @@ function Team({ t }: SectionProps) {
       className="py-16 md:py-24"
     >
       <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
-        <div className="text-center mb-14">
+        <RevealOnScroll className="text-center mb-14">
           <h2
             id="team-heading"
             className="text-3xl md:text-4xl font-bold tracking-tight text-foreground"
@@ -820,18 +833,19 @@ function Team({ t }: SectionProps) {
           <p className="mt-3 text-muted-foreground text-lg max-w-2xl mx-auto">
             {t("team.subtitle")}
           </p>
-        </div>
+        </RevealOnScroll>
 
         <div className="grid sm:grid-cols-2 gap-6 max-w-2xl mx-auto">
-          {members.map((member) => (
-            <TeamMemberCard
-              key={member.nameKey}
-              name={t(`team.${member.nameKey}.name`)}
-              role={t(`team.${member.nameKey}.role`)}
-              bio={t(`team.${member.nameKey}.bio`)}
-              initials={member.initials}
-              avatarColor={member.avatarColor}
-            />
+          {members.map((member, index) => (
+            <RevealOnScroll key={member.nameKey} staggerIndex={index}>
+              <TeamMemberCard
+                name={t(`team.${member.nameKey}.name`)}
+                role={t(`team.${member.nameKey}.role`)}
+                bio={t(`team.${member.nameKey}.bio`)}
+                initials={member.initials}
+                avatarColor={member.avatarColor}
+              />
+            </RevealOnScroll>
           ))}
         </div>
       </div>
@@ -885,7 +899,7 @@ function FinalCta({ t }: SectionProps) {
       aria-labelledby="final-cta-heading"
       className="py-16 md:py-24"
     >
-      <div className="max-w-3xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
+      <RevealOnScroll className="max-w-3xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
         <h2
           id="final-cta-heading"
           className="text-3xl md:text-4xl font-bold tracking-tight text-foreground"
@@ -907,7 +921,7 @@ function FinalCta({ t }: SectionProps) {
         <p className="mt-4 text-sm text-muted-foreground">
           {t("finalCta.disclaimer")}
         </p>
-      </div>
+      </RevealOnScroll>
     </section>
   );
 }

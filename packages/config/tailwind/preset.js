@@ -84,9 +84,15 @@ module.exports = {
           "0%, 100%": { opacity: "1" },
           "50%": { opacity: "0.4" },
         },
+        "reveal-up": {
+          from: { opacity: "0", transform: "translateY(20px)" },
+          to: { opacity: "1", transform: "translateY(0)" },
+        },
       },
       animation: {
         "pulse-dot": "pulse-dot 2s ease-in-out infinite",
+        "reveal-up":
+          "reveal-up 0.6s cubic-bezier(0.25, 0.46, 0.45, 0.94) both",
       },
     },
   },

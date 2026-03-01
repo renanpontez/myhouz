@@ -44,3 +44,4 @@ export {
 export { useMediaQuery } from "./hooks/use-media-query";
 export { useCopyToClipboard } from "./hooks/use-copy-to-clipboard";
 export { useDebounce } from "./hooks/use-debounce";
+export { useInView } from "./hooks/use-in-view";
