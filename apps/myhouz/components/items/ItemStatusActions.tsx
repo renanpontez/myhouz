@@ -1,9 +1,9 @@
 "use client";
 
-import { useTransition } from "react";
+import { useState, useEffect, useTransition } from "react";
 import { useTranslations } from "next-intl";
-import { Button } from "@home/ui";
-import { Loader2, Circle, Clock, Check } from "lucide-react";
+import { cn } from "@home/ui";
+import { Circle, Clock, Check } from "lucide-react";
 import { changeItemStatus } from "@/actions/items";
 import { toast } from "sonner";
 
@@ -24,42 +24,49 @@ export function ItemStatusActions({
   itemId,
   currentStatus,
 }: ItemStatusActionsProps) {
-  const t = useTranslations("items");
   const tEnums = useTranslations("enums");
   const [isPending, startTransition] = useTransition();
+  const [localStatus, setLocalStatus] = useState(currentStatus);
+
+  useEffect(() => {
+    setLocalStatus(currentStatus);
+  }, [currentStatus]);
 
   function handleStatusChange(status: string) {
-    if (status === currentStatus) return;
+    if (status === localStatus) return;
+    setLocalStatus(status);
     startTransition(async () => {
       const result = await changeItemStatus(householdId, itemId, status);
       if (result.error) {
         toast.error(result.error);
+        setLocalStatus(currentStatus);
       }
     });
   }
 
   return (
-    <div className="space-y-1.5">
-      <label className="text-sm font-medium">{t("statusLabel")}</label>
-      <div className="flex flex-wrap gap-2">
-        {STATUS_CONFIG.map(({ value, icon: Icon }) => (
-          <Button
+    <div className="flex rounded-xl bg-muted/50 p-1">
+      {STATUS_CONFIG.map(({ value, icon: StatusIcon }) => {
+        const isActive = localStatus === value;
+        return (
+          <button
             key={value}
             type="button"
-            variant={currentStatus === value ? "default" : "outline"}
-            size="sm"
             disabled={isPending}
             onClick={() => handleStatusChange(value)}
-          >
-            {isPending && currentStatus !== value ? (
-              <Loader2 className="mr-1.5 h-3.5 w-3.5 animate-spin" />
-            ) : (
-              <Icon className="mr-1.5 h-3.5 w-3.5" />
+            className={cn(
+              "flex flex-1 items-center justify-center gap-1.5 rounded-lg px-3 py-2 text-sm font-medium transition-all",
+              isActive
+                ? "bg-background text-foreground shadow-sm"
+                : "text-muted-foreground hover:text-foreground",
+              isPending && "pointer-events-none",
             )}
+          >
+            <StatusIcon className="h-3.5 w-3.5" />
             {tEnums(`status.${value}`)}
-          </Button>
-        ))}
-      </div>
+          </button>
+        );
+      })}
     </div>
   );
 }

@@ -3,7 +3,7 @@ import { redirect } from "next/navigation";
 import { getTranslations } from "next-intl/server";
 import { createServerClient } from "@home/db";
 import { getUserWithRole } from "@home/auth";
-import { BackLink } from "@/components/shared/BackLink";
+import { Breadcrumb } from "@/components/shared/Breadcrumb";
 import { HouseholdNameForm } from "@/components/settings/HouseholdNameForm";
 import { DeleteHouseholdButton } from "@/components/settings/DeleteHouseholdButton";
 import { TransferOwnershipSection } from "@/components/settings/TransferOwnershipSection";
@@ -11,6 +11,7 @@ import { LeaveHouseholdButton } from "@/components/settings/LeaveHouseholdButton
 
 export default async function HouseholdSettingsPage() {
   const t = await getTranslations("settings");
+  const tNav = await getTranslations("nav");
   const cookieStore = await cookies();
   const householdId = cookieStore.get("activeHouseholdId")?.value;
 
@@ -28,7 +29,11 @@ export default async function HouseholdSettingsPage() {
 
   return (
     <div className="px-4 py-6 sm:p-6">
-      <BackLink href="/app/settings" />
+      <Breadcrumb items={[
+        { label: tNav("dashboard"), href: "/app/dashboard" },
+        { label: t("title"), href: "/app/settings" },
+        { label: t("householdTitle") },
+      ]} />
       <div className="mt-4">
         <h1 className="text-2xl font-bold">{t("householdTitle")}</h1>
         <p className="mt-1 text-sm text-muted-foreground">

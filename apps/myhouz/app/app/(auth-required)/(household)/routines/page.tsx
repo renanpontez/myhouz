@@ -163,8 +163,10 @@ export default async function RoutinesPage() {
           {todayTasks.length > 0 && (
             <div className="space-y-3">
               <TodayProgress done={doneToday} total={todayTasks.length} />
-              <div className="space-y-3">
-                {sortedTodayTasks.map(renderTaskRow)}
+              <div className="rounded-2xl bg-white shadow-sm dark:bg-card overflow-hidden">
+                <div className="divide-y divide-border">
+                  {sortedTodayTasks.map(renderTaskRow)}
+                </div>
               </div>
             </div>
           )}
@@ -175,8 +177,10 @@ export default async function RoutinesPage() {
               <h3 className="text-sm font-medium text-muted-foreground">
                 {t("otherDays")}
               </h3>
-              <div className="space-y-3">
-                {sortedOtherTasks.map(renderTaskRow)}
+              <div className="rounded-2xl bg-white shadow-sm dark:bg-card overflow-hidden">
+                <div className="divide-y divide-border">
+                  {sortedOtherTasks.map(renderTaskRow)}
+                </div>
               </div>
             </div>
           )}

@@ -3,7 +3,7 @@ import { notFound } from "next/navigation";
 import { getTranslations } from "next-intl/server";
 import { createServerClient } from "@home/db";
 import { getUserWithRole } from "@home/auth";
-import { BackLink } from "@/components/shared/BackLink";
+import { Breadcrumb } from "@/components/shared/Breadcrumb";
 import { UrgentProblemForm } from "@/components/urgent/UrgentProblemForm";
 
 interface EditProblemPageProps {
@@ -15,6 +15,7 @@ export default async function EditProblemPage({
 }: EditProblemPageProps) {
   const { problemId } = await params;
   const t = await getTranslations("urgent");
+  const tNav = await getTranslations("nav");
   const cookieStore = await cookies();
   const householdId = cookieStore.get("activeHouseholdId")?.value;
 
@@ -34,7 +35,12 @@ export default async function EditProblemPage({
 
   return (
     <div className="px-4 py-6 sm:p-6">
-      <BackLink href={`/app/urgent/${problemId}`} />
+      <Breadcrumb items={[
+        { label: tNav("dashboard"), href: "/app/dashboard" },
+        { label: t("title"), href: "/app/urgent" },
+        { label: problem.title, href: `/app/urgent/${problemId}` },
+        { label: t("editTitle") },
+      ]} />
       <div className="mt-4">
         <h1 className="text-2xl font-bold">{t("editTitle")}</h1>
       </div>

@@ -74,10 +74,12 @@ export default async function RemindersPage({
           {t("noReminders")}
         </div>
       ) : (
-        <div className="mt-4 space-y-3">
-          {filtered.map((reminder) => (
-            <ReminderRow key={reminder.id} reminder={reminder} />
-          ))}
+        <div className="mt-4 rounded-2xl bg-white shadow-sm dark:bg-card overflow-hidden">
+          <div className="divide-y divide-border">
+            {filtered.map((reminder) => (
+              <ReminderRow key={reminder.id} reminder={reminder} />
+            ))}
+          </div>
         </div>
       )}
     </div>

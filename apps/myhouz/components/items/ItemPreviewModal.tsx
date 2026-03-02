@@ -1,6 +1,6 @@
 "use client";
 
-import { useOptimistic, useTransition } from "react";
+import { useState, useEffect, useTransition } from "react";
 import Link from "next/link";
 import { useTranslations } from "next-intl";
 import { useHousehold } from "@home/auth/hooks";
@@ -72,9 +72,11 @@ export function ItemPreviewModal({
   const tWidget = useTranslations("dashboard.itemsWidget");
   const { household, members } = useHousehold();
   const [isPending, startTransition] = useTransition();
-  const [optimisticStatus, setOptimisticStatus] = useOptimistic(
-    item?.status ?? "pending",
-  );
+  const [localStatus, setLocalStatus] = useState(item?.status ?? "pending");
+
+  useEffect(() => {
+    if (item?.status) setLocalStatus(item.status);
+  }, [item?.status]);
 
   if (!item) return null;
 
@@ -85,12 +87,13 @@ export function ItemPreviewModal({
     : null;
 
   function handleStatusChange(newStatus: string) {
-    if (newStatus === optimisticStatus || !item) return;
+    if (newStatus === localStatus || !item) return;
+    setLocalStatus(newStatus as "pending" | "in_progress" | "done");
     startTransition(async () => {
-      setOptimisticStatus(newStatus as "pending" | "in_progress" | "done");
       const result = await changeItemStatus(household.id, item.id, newStatus);
       if (result.error) {
         toast.error(result.error);
+        setLocalStatus(item.status);
       }
     });
   }
@@ -124,7 +127,7 @@ export function ItemPreviewModal({
         <div className="px-6 pb-4">
           <div className="flex rounded-xl bg-muted/50 p-1">
             {STATUS_CONFIG.map(({ value, icon: StatusIcon }) => {
-              const isActive = optimisticStatus === value;
+              const isActive = localStatus === value;
               return (
                 <button
                   key={value}

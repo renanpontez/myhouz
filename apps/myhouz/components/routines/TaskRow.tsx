@@ -80,7 +80,7 @@ export function TaskRow({
   return (
     <div
       className={cn(
-        "flex items-center gap-4 rounded-2xl bg-white px-5 py-4 shadow-sm transition-opacity dark:bg-card",
+        "flex items-center gap-3 px-4 py-3 transition-opacity hover:bg-accent/40",
         isPending && "opacity-70",
         !isActiveToday && "opacity-60",
       )}
@@ -89,7 +89,7 @@ export function TaskRow({
         type="button"
         onClick={handleToggle}
         className={cn(
-          "flex h-8 w-8 shrink-0 items-center justify-center rounded-full border-2 transition-colors",
+          "flex h-7 w-7 shrink-0 items-center justify-center rounded-full border-2 transition-colors",
           optimisticCompleted
             ? "border-primary bg-primary"
             : "border-muted-foreground/30 bg-background",
@@ -105,9 +105,9 @@ export function TaskRow({
 
       <Link
         href={`/app/routines/${task.id}`}
-        className="flex flex-1 items-center gap-4 min-w-0"
+        className="flex flex-1 items-center gap-3 min-w-0"
       >
-        <div className="flex h-11 w-11 shrink-0 items-center justify-center rounded-full bg-background">
+        <div className="flex h-9 w-9 shrink-0 items-center justify-center rounded-lg bg-background">
           {optimisticCompleted ? (
             <Check className="h-5 w-5 text-green-600 dark:text-green-400" />
           ) : (
@@ -117,7 +117,7 @@ export function TaskRow({
         <div className="min-w-0 flex-1">
           <p
             className={cn(
-              "truncate text-base font-medium",
+              "truncate text-sm font-medium",
               optimisticCompleted && "text-muted-foreground line-through",
             )}
           >
@@ -151,7 +151,7 @@ export function TaskRow({
             )}
           </div>
         </div>
-        <ChevronRight className="h-6 w-6 shrink-0 text-muted-foreground/40" />
+        <ChevronRight className="h-5 w-5 shrink-0 text-muted-foreground/30" />
       </Link>
     </div>
   );

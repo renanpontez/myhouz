@@ -588,16 +588,16 @@ export function RoutineCalendar({
   return (
     <div>
       {/* Greeting + Week navigation */}
-      <div className="mb-6 flex flex-col gap-2 sm:flex-row sm:items-center sm:justify-between">
-        <h1 className="text-2xl font-semibold tracking-tight">
+      <div className="mb-6 flex items-center justify-between gap-2">
+        <h1 className="truncate text-2xl font-semibold tracking-tight">
           {tDashboard("greeting", { name: displayName })}
         </h1>
-        <div className="flex items-center gap-1">
+        <div className="flex shrink-0 items-center gap-0.5">
           {!isCurrentWeek && (
             <button
               type="button"
               onClick={handleGoToToday}
-              className="mr-1 rounded-full bg-accent px-2.5 py-1 text-xs font-medium text-muted-foreground transition-colors hover:bg-accent/80 hover:text-foreground"
+              className="mr-0.5 rounded-full bg-accent px-2.5 py-1 text-xs font-medium text-muted-foreground transition-colors hover:bg-accent/80 hover:text-foreground"
             >
               {t("today")}
             </button>
@@ -605,17 +605,17 @@ export function RoutineCalendar({
           <button
             type="button"
             onClick={handleWeekPrev}
-            className="inline-flex h-8 w-8 items-center justify-center rounded-full text-muted-foreground transition-colors hover:bg-accent hover:text-foreground"
+            className="inline-flex h-7 w-7 items-center justify-center rounded-full text-muted-foreground transition-colors hover:bg-accent hover:text-foreground"
           >
             <ChevronLeft className="h-4 w-4" />
           </button>
-          <span className="min-w-[8rem] text-center text-sm font-medium capitalize text-muted-foreground">
+          <span className="min-w-[6rem] text-center text-sm font-medium capitalize text-muted-foreground">
             {weekLabel}
           </span>
           <button
             type="button"
             onClick={handleWeekNext}
-            className="inline-flex h-8 w-8 items-center justify-center rounded-full text-muted-foreground transition-colors hover:bg-accent hover:text-foreground"
+            className="inline-flex h-7 w-7 items-center justify-center rounded-full text-muted-foreground transition-colors hover:bg-accent hover:text-foreground"
           >
             <ChevronRight className="h-4 w-4" />
           </button>

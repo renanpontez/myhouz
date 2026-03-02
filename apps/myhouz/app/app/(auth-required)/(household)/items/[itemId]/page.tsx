@@ -1,16 +1,14 @@
-import Link from "next/link";
 import { cookies } from "next/headers";
 import { notFound } from "next/navigation";
 import { getTranslations } from "next-intl/server";
 import { createServerClient } from "@home/db";
 import { getUserWithRole } from "@home/auth";
-import { BackLink } from "@/components/shared/BackLink";
-import { DeleteItemButton } from "@/components/items/DeleteItemButton";
+import { cn } from "@home/ui";
+import { Breadcrumb } from "@/components/shared/Breadcrumb";
+import { ItemDetailActions } from "@/components/items/ItemDetailActions";
 import { ItemStatusActions } from "@/components/items/ItemStatusActions";
 import { ItemActivity } from "@/components/items/ItemActivity";
-import { Badge, Button } from "@home/ui";
 import {
-  Pencil,
   User,
   ShoppingCart,
   Wrench,
@@ -24,6 +22,12 @@ const TYPE_ICONS = {
   fix: Settings2,
 } as const;
 
+const PRIORITY_BG = {
+  high: "bg-destructive/10 text-destructive",
+  medium: "bg-muted text-foreground",
+  low: "bg-muted text-muted-foreground",
+} as const;
+
 interface ItemDetailPageProps {
   params: Promise<{ itemId: string }>;
 }
@@ -33,8 +37,8 @@ export default async function ItemDetailPage({
 }: ItemDetailPageProps) {
   const { itemId } = await params;
   const t = await getTranslations("items");
-  const tCommon = await getTranslations("common");
   const tEnums = await getTranslations("enums");
+  const tNav = await getTranslations("nav");
   const cookieStore = await cookies();
   const householdId = cookieStore.get("activeHouseholdId")?.value;
 
@@ -104,47 +108,48 @@ export default async function ItemDetailPage({
 
   return (
     <div className="px-4 py-6 sm:p-6">
-      <BackLink href="/app/items" />
+      <Breadcrumb items={[
+        { label: tNav("dashboard"), href: "/app/dashboard" },
+        { label: t("title"), href: "/app/items" },
+        { label: item.name },
+      ]} />
 
-      <div className="mt-4 flex items-start justify-between">
-        <div className="space-y-2">
-          <div className="flex items-center gap-2">
-            <TypeIcon className="h-5 w-5 text-muted-foreground" />
-            <h1 className="text-2xl font-bold">{item.name}</h1>
-          </div>
-          <div className="flex flex-wrap items-center gap-2">
-            <Badge variant="outline">
-              {tEnums(`itemType.${item.type}`)}
-            </Badge>
-            <Badge variant="outline">
-              {tEnums(`priority.${item.priority}`)}
-            </Badge>
-            <Badge
-              variant={item.status === "done" ? "default" : "outline"}
-            >
-              {tEnums(`status.${item.status}`)}
-            </Badge>
-            {assigneeProfile && (
-              <span className="flex items-center gap-1 text-sm text-muted-foreground">
-                <User className="h-3.5 w-3.5" />
-                {assigneeProfile.name ?? assigneeProfile.email}
-              </span>
+      {/* Header */}
+      <div className="mt-4 flex items-start justify-between gap-3">
+        <div className="flex min-w-0 items-center gap-3">
+          <div
+            className={cn(
+              "flex h-11 w-11 shrink-0 items-center justify-center rounded-xl",
+              PRIORITY_BG[item.priority as keyof typeof PRIORITY_BG],
             )}
+          >
+            <TypeIcon className="h-5 w-5" />
+          </div>
+          <div className="min-w-0">
+            <h1 className="truncate text-xl font-bold sm:text-2xl">
+              {item.name}
+            </h1>
+            <p className="text-sm text-muted-foreground">
+              {tEnums(`itemType.${item.type}`)}
+              <span className="mx-1.5 text-muted-foreground/40">&middot;</span>
+              {tEnums(`priority.${item.priority}`)}
+              {assigneeProfile && (
+                <>
+                  <span className="mx-1.5 text-muted-foreground/40">&middot;</span>
+                  <span className="inline-flex items-center gap-1">
+                    <User className="inline h-3 w-3" />
+                    {assigneeProfile.name ?? assigneeProfile.email}
+                  </span>
+                </>
+              )}
+            </p>
           </div>
         </div>
-        <div className="flex gap-2">
-          <Link href={`/app/items/${itemId}/edit`}>
-            <Button variant="outline" size="sm">
-              <Pencil className="mr-1.5 h-3.5 w-3.5" />
-              {tCommon("edit")}
-            </Button>
-          </Link>
-          <DeleteItemButton householdId={householdId} itemId={itemId} />
-        </div>
+        <ItemDetailActions householdId={householdId} itemId={itemId} />
       </div>
 
-      {/* Status actions */}
-      <div className="mt-6">
+      {/* Status segmented control */}
+      <div className="mt-5">
         <ItemStatusActions
           householdId={householdId}
           itemId={itemId}
@@ -152,42 +157,68 @@ export default async function ItemDetailPage({
         />
       </div>
 
-      {/* Price */}
-      {item.price != null && (
-        <div className="mt-6">
-          <h3 className="text-sm font-medium text-muted-foreground">
-            {t("priceLabel")}
-          </h3>
-          <p className="mt-1 text-lg font-semibold">
-            R$ {Number(item.price).toFixed(2)}
-          </p>
-        </div>
-      )}
+      {/* Metadata card */}
+      {(item.price != null || item.link || (item.tags && item.tags.length > 0)) && (
+        <div className="mt-5 rounded-2xl bg-white shadow-sm dark:bg-card">
+          {/* Price & Link */}
+          {(item.price != null || item.link) && (
+            <div className="grid grid-cols-2 gap-4 px-5 py-4">
+              {item.price != null && (
+                <div>
+                  <p className="text-[11px] font-medium uppercase tracking-wider text-muted-foreground/70">
+                    {t("priceLabel")}
+                  </p>
+                  <p className="mt-1 text-sm font-semibold">
+                    R$ {Number(item.price).toLocaleString("pt-BR", { minimumFractionDigits: 2 })}
+                  </p>
+                </div>
+              )}
+              {item.link && (
+                <div className={item.price != null ? "text-right" : ""}>
+                  <p className="text-[11px] font-medium uppercase tracking-wider text-muted-foreground/70">
+                    {t("linkLabel")}
+                  </p>
+                  <a
+                    href={item.link}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="mt-1 inline-flex items-center gap-1.5 text-sm text-primary hover:underline"
+                  >
+                    <ExternalLink className="h-3.5 w-3.5" />
+                    {t("openLink")}
+                  </a>
+                </div>
+              )}
+            </div>
+          )}
 
-      {/* Link */}
-      {item.link && (
-        <div className="mt-6">
-          <h3 className="text-sm font-medium text-muted-foreground">
-            {t("linkLabel")}
-          </h3>
-          <a
-            href={item.link}
-            target="_blank"
-            rel="noopener noreferrer"
-            className="mt-1 inline-flex items-center gap-1.5 text-sm text-primary hover:underline"
-          >
-            <ExternalLink className="h-3.5 w-3.5" />
-            {t("openLink")}
-          </a>
+          {/* Tags */}
+          {item.tags && item.tags.length > 0 && (
+            <div className="border-t px-5 py-4">
+              <p className="text-[11px] font-medium uppercase tracking-wider text-muted-foreground/70">
+                {t("tagsLabel")}
+              </p>
+              <div className="mt-2 flex flex-wrap gap-1.5">
+                {item.tags.map((tag) => (
+                  <span
+                    key={tag}
+                    className="rounded-full bg-accent px-3 py-1 text-xs font-medium"
+                  >
+                    {tag}
+                  </span>
+                ))}
+              </div>
+            </div>
+          )}
         </div>
       )}
 
       {/* Photos */}
       {item.photos && item.photos.length > 0 && (
-        <div className="mt-6">
-          <h3 className="text-sm font-medium text-muted-foreground">
+        <div className="mt-5">
+          <p className="text-[11px] font-medium uppercase tracking-wider text-muted-foreground/70">
             {t("photosLabel")}
-          </h3>
+          </p>
           <div className="mt-2 flex flex-wrap gap-2">
             {item.photos.map((url) => (
               <a
@@ -208,34 +239,17 @@ export default async function ItemDetailPage({
         </div>
       )}
 
-      {/* Tags */}
-      {item.tags && item.tags.length > 0 && (
-        <div className="mt-6">
-          <h3 className="text-sm font-medium text-muted-foreground">
-            {t("tagsLabel")}
-          </h3>
-          <div className="mt-2 flex flex-wrap gap-1.5">
-            {item.tags.map((tag) => (
-              <span
-                key={tag}
-                className="rounded-full bg-accent px-3 py-1 text-xs font-medium"
-              >
-                {tag}
-              </span>
-            ))}
-          </div>
+      {/* Notes */}
+      {item.notes && (
+        <div className="mt-5">
+          <p className="text-[11px] font-medium uppercase tracking-wider text-muted-foreground/70">
+            {t("notesLabel")}
+          </p>
+          <p className="mt-2 whitespace-pre-wrap rounded-lg bg-muted/40 px-3 py-2.5 text-sm">
+            {item.notes}
+          </p>
         </div>
       )}
-
-      {/* Notes */}
-      <div className="mt-6">
-        <h3 className="text-sm font-medium text-muted-foreground">
-          {t("notesLabel")}
-        </h3>
-        <p className="mt-1 whitespace-pre-wrap text-sm">
-          {item.notes || t("noNotes")}
-        </p>
-      </div>
 
       {/* Activity timeline + comments */}
       <div className="mt-8">

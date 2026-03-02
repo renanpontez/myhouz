@@ -52,7 +52,7 @@ export function ReminderRow({ reminder }: ReminderRowProps) {
   return (
     <div
       className={cn(
-        "flex items-center gap-4 rounded-2xl bg-white px-5 py-4 shadow-sm transition-opacity dark:bg-card",
+        "flex items-center gap-3 px-4 py-3 transition-opacity hover:bg-accent/40",
         isPending && "opacity-70",
       )}
     >
@@ -60,7 +60,7 @@ export function ReminderRow({ reminder }: ReminderRowProps) {
         type="button"
         onClick={handleToggle}
         className={cn(
-          "flex h-8 w-8 shrink-0 items-center justify-center rounded-full border-2 transition-colors",
+          "flex h-7 w-7 shrink-0 items-center justify-center rounded-full border-2 transition-colors",
           optimisticCompleted
             ? "border-primary bg-primary"
             : "border-muted-foreground/30 bg-background",
@@ -76,11 +76,11 @@ export function ReminderRow({ reminder }: ReminderRowProps) {
 
       <Link
         href={`/app/reminders/${reminder.id}`}
-        className="flex flex-1 items-center gap-4 min-w-0"
+        className="flex flex-1 items-center gap-3 min-w-0"
       >
         <div
           className={cn(
-            "flex h-11 w-11 shrink-0 items-center justify-center rounded-full bg-background",
+            "flex h-9 w-9 shrink-0 items-center justify-center rounded-lg bg-background",
             overdue
               ? "text-destructive"
               : dueToday
@@ -97,7 +97,7 @@ export function ReminderRow({ reminder }: ReminderRowProps) {
         <div className="min-w-0 flex-1">
           <p
             className={cn(
-              "truncate text-base font-medium",
+              "truncate text-sm font-medium",
               optimisticCompleted && "text-muted-foreground line-through",
             )}
           >
@@ -110,7 +110,7 @@ export function ReminderRow({ reminder }: ReminderRowProps) {
             {assignee && `  ·  ${assignee.name ?? assignee.email}`}
           </p>
         </div>
-        <ChevronRight className="h-6 w-6 shrink-0 text-muted-foreground/40" />
+        <ChevronRight className="h-5 w-5 shrink-0 text-muted-foreground/30" />
       </Link>
     </div>
   );

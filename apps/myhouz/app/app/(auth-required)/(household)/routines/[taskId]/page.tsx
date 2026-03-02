@@ -1,19 +1,17 @@
-import Link from "next/link";
 import { cookies } from "next/headers";
 import { notFound } from "next/navigation";
 import { getTranslations } from "next-intl/server";
 import { createServerClient } from "@home/db";
 import { getUserWithRole } from "@home/auth";
-import { BackLink } from "@/components/shared/BackLink";
+import { Breadcrumb } from "@/components/shared/Breadcrumb";
 import { RecurrenceBadge } from "@/components/routines/RecurrenceBadge";
 import { StreakBadge } from "@/components/routines/StreakBadge";
 import { TaskRow } from "@/components/routines/TaskRow";
 import { CompletionHistory } from "@/components/routines/CompletionHistory";
-import { DeleteTaskButton } from "@/components/routines/DeleteTaskButton";
+import { RoutineDetailActions } from "@/components/routines/RoutineDetailActions";
 import { isCompletedThisCycle, isActiveToday } from "@/lib/cycle";
 import { calculateStreak } from "@/lib/streak";
-import { Button } from "@home/ui";
-import { Pencil, User, CalendarClock } from "lucide-react";
+import { User, CalendarClock } from "lucide-react";
 import { startOfDay, format } from "date-fns";
 import type { RecurrenceType, RecurrenceMeta } from "@home/types";
 
@@ -24,7 +22,7 @@ interface TaskDetailPageProps {
 export default async function TaskDetailPage({ params }: TaskDetailPageProps) {
   const { taskId } = await params;
   const t = await getTranslations("routines");
-  const tCommon = await getTranslations("common");
+  const tNav = await getTranslations("nav");
   const cookieStore = await cookies();
   const householdId = cookieStore.get("activeHouseholdId")?.value;
 
@@ -89,11 +87,15 @@ export default async function TaskDetailPage({ params }: TaskDetailPageProps) {
 
   return (
     <div className="px-4 py-6 sm:p-6">
-      <BackLink href="/app/routines" />
+      <Breadcrumb items={[
+        { label: tNav("dashboard"), href: "/app/dashboard" },
+        { label: t("title"), href: "/app/routines" },
+        { label: task.title },
+      ]} />
 
-      <div className="mt-4 flex items-start justify-between">
-        <div className="space-y-2">
-          <h1 className="text-2xl font-bold">{task.title}</h1>
+      <div className="mt-4 flex items-start justify-between gap-3">
+        <div className="min-w-0 space-y-2">
+          <h1 className="truncate text-xl font-bold sm:text-2xl">{task.title}</h1>
           <div className="flex flex-wrap items-center gap-2">
             <RecurrenceBadge recurrence={recurrence} recurrenceMeta={meta} />
             <StreakBadge count={streak} />
@@ -116,15 +118,7 @@ export default async function TaskDetailPage({ params }: TaskDetailPageProps) {
             )}
           </div>
         </div>
-        <div className="flex gap-2">
-          <Link href={`/app/routines/${taskId}/edit`}>
-            <Button variant="outline" size="sm">
-              <Pencil className="mr-1.5 h-3.5 w-3.5" />
-              {tCommon("edit")}
-            </Button>
-          </Link>
-          <DeleteTaskButton householdId={householdId} taskId={taskId} />
-        </div>
+        <RoutineDetailActions householdId={householdId} taskId={taskId} />
       </div>
 
       {/* Large toggle for today's completion */}

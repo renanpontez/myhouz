@@ -3,7 +3,7 @@ import { notFound } from "next/navigation";
 import { getTranslations } from "next-intl/server";
 import { createServerClient } from "@home/db";
 import { getUserWithRole } from "@home/auth";
-import { BackLink } from "@/components/shared/BackLink";
+import { Breadcrumb } from "@/components/shared/Breadcrumb";
 import { TaskForm } from "@/components/routines/TaskForm";
 import type { RecurrenceType, RecurrenceMeta } from "@home/types";
 
@@ -14,6 +14,7 @@ interface EditTaskPageProps {
 export default async function EditTaskPage({ params }: EditTaskPageProps) {
   const { taskId } = await params;
   const t = await getTranslations("routines");
+  const tNav = await getTranslations("nav");
   const cookieStore = await cookies();
   const householdId = cookieStore.get("activeHouseholdId")?.value;
 
@@ -33,7 +34,12 @@ export default async function EditTaskPage({ params }: EditTaskPageProps) {
 
   return (
     <div className="px-4 py-6 sm:p-6">
-      <BackLink href={`/app/routines/${taskId}`} />
+      <Breadcrumb items={[
+        { label: tNav("dashboard"), href: "/app/dashboard" },
+        { label: t("title"), href: "/app/routines" },
+        { label: task.title, href: `/app/routines/${taskId}` },
+        { label: t("editTitle") },
+      ]} />
       <div className="mt-4">
         <h1 className="text-2xl font-bold">{t("editTitle")}</h1>
       </div>

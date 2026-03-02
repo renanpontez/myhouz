@@ -3,17 +3,22 @@
 import { useActionState } from "react";
 import { Input, Label } from "@home/ui";
 import { SubmitButton } from "@/components/shared/SubmitButton";
-import { BackLink } from "@/components/shared/BackLink";
+import { Breadcrumb } from "@/components/shared/Breadcrumb";
 import { createHousehold } from "@/actions/household";
 import { useTranslations } from "next-intl";
 
 export default function CreateHouseholdPage() {
   const [state, formAction] = useActionState(createHousehold, undefined);
   const t = useTranslations("onboarding");
+  const tNav = useTranslations("nav");
 
   return (
     <div className="space-y-6">
-      <BackLink href="/app/onboarding" />
+      <Breadcrumb items={[
+        { label: tNav("dashboard"), href: "/app/dashboard" },
+        { label: t("createHousehold"), href: "/app/onboarding" },
+        { label: t("createTitle") },
+      ]} />
 
       <div className="text-center">
         <h1 className="text-2xl font-bold">{t("createTitle")}</h1>

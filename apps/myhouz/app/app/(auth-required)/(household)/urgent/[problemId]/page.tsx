@@ -1,14 +1,13 @@
-import Link from "next/link";
 import { cookies } from "next/headers";
 import { notFound } from "next/navigation";
 import { getTranslations } from "next-intl/server";
 import { createServerClient } from "@home/db";
 import { getUserWithRole } from "@home/auth";
-import { BackLink } from "@/components/shared/BackLink";
+import { Badge } from "@home/ui";
+import { Breadcrumb } from "@/components/shared/Breadcrumb";
 import { ResolveProblemButton } from "@/components/urgent/ResolveProblemButton";
-import { DeleteProblemButton } from "@/components/urgent/DeleteProblemButton";
-import { Badge, Button } from "@home/ui";
-import { Pencil, AlertTriangle } from "lucide-react";
+import { UrgentDetailActions } from "@/components/urgent/UrgentDetailActions";
+import { AlertTriangle, User } from "lucide-react";
 import { formatRelativeTime } from "@/lib/utils";
 
 interface ProblemDetailPageProps {
@@ -20,7 +19,7 @@ export default async function ProblemDetailPage({
 }: ProblemDetailPageProps) {
   const { problemId } = await params;
   const t = await getTranslations("urgent");
-  const tCommon = await getTranslations("common");
+  const tNav = await getTranslations("nav");
   const cookieStore = await cookies();
   const householdId = cookieStore.get("activeHouseholdId")?.value;
 
@@ -69,15 +68,19 @@ export default async function ProblemDetailPage({
 
   return (
     <div className="px-4 py-6 sm:p-6">
-      <BackLink href="/app/urgent" />
+      <Breadcrumb items={[
+        { label: tNav("dashboard"), href: "/app/dashboard" },
+        { label: t("title"), href: "/app/urgent" },
+        { label: problem.title },
+      ]} />
 
-      <div className="mt-4 flex items-start justify-between">
-        <div className="space-y-2">
+      <div className="mt-4 flex items-start justify-between gap-3">
+        <div className="min-w-0 space-y-2">
           <div className="flex items-center gap-2">
             {problem.is_active && (
               <span className="h-2.5 w-2.5 shrink-0 rounded-full bg-destructive animate-pulse-dot" />
             )}
-            <h1 className="text-2xl font-bold">{problem.title}</h1>
+            <h1 className="truncate text-xl font-bold sm:text-2xl">{problem.title}</h1>
           </div>
           <div className="flex flex-wrap items-center gap-2">
             {problem.is_active ? (
@@ -87,20 +90,14 @@ export default async function ProblemDetailPage({
             )}
           </div>
         </div>
-        <div className="flex gap-2">
+        <div className="flex shrink-0 items-center gap-1">
           {problem.is_active && (
             <ResolveProblemButton
               householdId={householdId}
               problemId={problemId}
             />
           )}
-          <Link href={`/app/urgent/${problemId}/edit`}>
-            <Button variant="outline" size="sm">
-              <Pencil className="mr-1.5 h-3.5 w-3.5" />
-              {tCommon("edit")}
-            </Button>
-          </Link>
-          <DeleteProblemButton
+          <UrgentDetailActions
             householdId={householdId}
             problemId={problemId}
           />
@@ -108,39 +105,47 @@ export default async function ProblemDetailPage({
       </div>
 
       {/* Description */}
-      <div className="mt-6">
-        <p className="whitespace-pre-wrap text-sm">{problem.description}</p>
-      </div>
-
-      {/* Reporter */}
-      {reporterName && (
-        <div className="mt-6">
-          <h3 className="text-sm font-medium text-muted-foreground">
-            {t("reportedBy")}
-          </h3>
-          <p className="mt-1 text-sm">
-            {reporterName}
-            <span className="ml-2 text-xs text-muted-foreground">
-              {formatRelativeTime(problem.created_at)}
-            </span>
+      {problem.description && (
+        <div className="mt-5">
+          <p className="whitespace-pre-wrap rounded-lg bg-muted/40 px-3 py-2.5 text-sm">
+            {problem.description}
           </p>
         </div>
       )}
 
-      {/* Resolver */}
-      {!problem.is_active && resolverName && (
-        <div className="mt-6">
-          <h3 className="text-sm font-medium text-muted-foreground">
-            {t("resolvedBy")}
-          </h3>
-          <p className="mt-1 text-sm">
-            {resolverName}
-            {problem.resolved_at && (
-              <span className="ml-2 text-xs text-muted-foreground">
-                {formatRelativeTime(problem.resolved_at)}
-              </span>
-            )}
-          </p>
+      {/* Details card */}
+      {(reporterName || (!problem.is_active && resolverName)) && (
+        <div className="mt-5 rounded-2xl bg-white shadow-sm dark:bg-card">
+          {reporterName && (
+            <div className="px-5 py-4">
+              <p className="text-[11px] font-medium uppercase tracking-wider text-muted-foreground/70">
+                {t("reportedBy")}
+              </p>
+              <p className="mt-1 flex items-center gap-1.5 text-sm font-medium">
+                <User className="h-3.5 w-3.5 text-muted-foreground" />
+                {reporterName}
+                <span className="text-xs font-normal text-muted-foreground">
+                  {formatRelativeTime(problem.created_at)}
+                </span>
+              </p>
+            </div>
+          )}
+          {!problem.is_active && resolverName && (
+            <div className="border-t px-5 py-4">
+              <p className="text-[11px] font-medium uppercase tracking-wider text-muted-foreground/70">
+                {t("resolvedBy")}
+              </p>
+              <p className="mt-1 flex items-center gap-1.5 text-sm font-medium">
+                <User className="h-3.5 w-3.5 text-muted-foreground" />
+                {resolverName}
+                {problem.resolved_at && (
+                  <span className="text-xs font-normal text-muted-foreground">
+                    {formatRelativeTime(problem.resolved_at)}
+                  </span>
+                )}
+              </p>
+            </div>
+          )}
         </div>
       )}
     </div>

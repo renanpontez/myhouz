@@ -1,20 +1,20 @@
-import Link from "next/link";
 import { cookies } from "next/headers";
 import { notFound } from "next/navigation";
 import { getTranslations } from "next-intl/server";
 import { createServerClient } from "@home/db";
 import { getUserWithRole } from "@home/auth";
-import { BackLink } from "@/components/shared/BackLink";
-import { DeleteReminderButton } from "@/components/reminders/DeleteReminderButton";
+import { cn } from "@home/ui";
+import { Breadcrumb } from "@/components/shared/Breadcrumb";
+import { ReminderDetailActions } from "@/components/reminders/ReminderDetailActions";
 import { ToggleReminderButton } from "@/components/reminders/ToggleReminderButton";
-import { Badge, Button } from "@home/ui";
-import { Pencil, User, Clock, Calendar } from "lucide-react";
+import { Bell, User, Calendar, Clock, CheckCircle2 } from "lucide-react";
 
 interface ReminderDetailPageProps {
   params: Promise<{ reminderId: string }>;
 }
 
-function getDueStatus(dueAt: string): "overdue" | "dueToday" | "future" {
+function getDueStatus(dueAt: string, isCompleted: boolean): "completed" | "overdue" | "dueToday" | "future" {
+  if (isCompleted) return "completed";
   const now = new Date();
   const due = new Date(dueAt);
   const todayStart = new Date(now.getFullYear(), now.getMonth(), now.getDate());
@@ -25,12 +25,19 @@ function getDueStatus(dueAt: string): "overdue" | "dueToday" | "future" {
   return "future";
 }
 
+const STATUS_STYLES = {
+  completed: "bg-muted text-muted-foreground",
+  overdue: "bg-destructive/10 text-destructive",
+  dueToday: "bg-muted text-foreground",
+  future: "bg-muted text-muted-foreground",
+} as const;
+
 export default async function ReminderDetailPage({
   params,
 }: ReminderDetailPageProps) {
   const { reminderId } = await params;
   const t = await getTranslations("reminders");
-  const tCommon = await getTranslations("common");
+  const tNav = await getTranslations("nav");
   const cookieStore = await cookies();
   const householdId = cookieStore.get("activeHouseholdId")?.value;
 
@@ -78,54 +85,62 @@ export default async function ReminderDetailPage({
   const creatorName = resolveName(reminder.created_by);
   const completedByName = resolveName(reminder.completed_by);
 
-  const dueStatus = getDueStatus(reminder.due_at);
+  const dueStatus = getDueStatus(reminder.due_at, reminder.is_completed);
   const dueDate = new Date(reminder.due_at);
+
+  const StatusIcon = dueStatus === "completed" ? CheckCircle2 : Bell;
 
   return (
     <div className="px-4 py-6 sm:p-6">
-      <BackLink href="/app/reminders" />
+      <Breadcrumb items={[
+        { label: tNav("dashboard"), href: "/app/dashboard" },
+        { label: t("title"), href: "/app/reminders" },
+        { label: reminder.title },
+      ]} />
 
-      <div className="mt-4 flex items-start justify-between">
-        <div className="space-y-2">
-          <h1 className="text-2xl font-bold">{reminder.title}</h1>
-          <div className="flex flex-wrap items-center gap-2">
-            {reminder.is_completed ? (
-              <Badge variant="default">{t("completed")}</Badge>
-            ) : dueStatus === "overdue" ? (
-              <Badge variant="destructive">{t("overdue")}</Badge>
-            ) : dueStatus === "dueToday" ? (
-              <Badge
-                variant="outline"
-                className="border-amber-500/30 text-amber-600 dark:text-amber-500"
-              >
-                {t("dueToday")}
-              </Badge>
-            ) : null}
-
-            {assigneeName && (
-              <span className="flex items-center gap-1 text-sm text-muted-foreground">
-                <User className="h-3.5 w-3.5" />
-                {assigneeName}
-              </span>
+      {/* Header */}
+      <div className="mt-4 flex items-start justify-between gap-3">
+        <div className="flex min-w-0 items-center gap-3">
+          <div
+            className={cn(
+              "flex h-11 w-11 shrink-0 items-center justify-center rounded-xl",
+              STATUS_STYLES[dueStatus],
             )}
+          >
+            <StatusIcon className="h-5 w-5" />
+          </div>
+          <div className="min-w-0">
+            <h1 className="truncate text-xl font-bold sm:text-2xl">
+              {reminder.title}
+            </h1>
+            <p className="text-sm text-muted-foreground">
+              {dueStatus === "completed"
+                ? t("completed")
+                : dueStatus === "overdue"
+                  ? t("overdue")
+                  : dueStatus === "dueToday"
+                    ? t("dueToday")
+                    : t("upcoming")}
+              {assigneeName && (
+                <>
+                  <span className="mx-1.5 text-muted-foreground/40">&middot;</span>
+                  <span className="inline-flex items-center gap-1">
+                    <User className="inline h-3 w-3" />
+                    {assigneeName}
+                  </span>
+                </>
+              )}
+            </p>
           </div>
         </div>
-        <div className="flex gap-2">
-          <Link href={`/app/reminders/${reminderId}/edit`}>
-            <Button variant="outline" size="sm">
-              <Pencil className="mr-1.5 h-3.5 w-3.5" />
-              {tCommon("edit")}
-            </Button>
-          </Link>
-          <DeleteReminderButton
-            householdId={householdId}
-            reminderId={reminderId}
-          />
-        </div>
+        <ReminderDetailActions
+          householdId={householdId}
+          reminderId={reminderId}
+        />
       </div>
 
       {/* Toggle action */}
-      <div className="mt-6">
+      <div className="mt-5">
         <ToggleReminderButton
           householdId={householdId}
           reminderId={reminderId}
@@ -133,53 +148,75 @@ export default async function ReminderDetailPage({
         />
       </div>
 
-      {/* Due date */}
-      <div className="mt-6">
-        <h3 className="text-sm font-medium text-muted-foreground">
-          {t("dueAtLabel")}
-        </h3>
-        <p className="mt-1 flex items-center gap-2 text-sm">
-          <Calendar className="h-4 w-4 text-muted-foreground" />
-          {dueDate.toLocaleDateString(undefined, {
-            weekday: "long",
-            year: "numeric",
-            month: "long",
-            day: "numeric",
-          })}
-          <Clock className="ml-2 h-4 w-4 text-muted-foreground" />
-          {dueDate.toLocaleTimeString(undefined, {
-            hour: "2-digit",
-            minute: "2-digit",
-          })}
-        </p>
-      </div>
-
-      {/* Creator */}
-      {creatorName && (
-        <div className="mt-6">
-          <h3 className="text-sm font-medium text-muted-foreground">
-            {t("createdBy")}
-          </h3>
-          <p className="mt-1 text-sm">{creatorName}</p>
-        </div>
-      )}
-
-      {/* Completed by */}
-      {reminder.is_completed && completedByName && (
-        <div className="mt-6">
-          <h3 className="text-sm font-medium text-muted-foreground">
-            {t("completedBy")}
-          </h3>
-          <p className="mt-1 text-sm">
-            {completedByName}
-            {reminder.completed_at && (
-              <span className="ml-2 text-xs text-muted-foreground">
-                {new Date(reminder.completed_at).toLocaleString()}
-              </span>
-            )}
+      {/* Details card */}
+      <div className="mt-5 rounded-2xl bg-white shadow-sm dark:bg-card">
+        {/* Due date */}
+        <div className="px-5 py-4">
+          <p className="text-[11px] font-medium uppercase tracking-wider text-muted-foreground/70">
+            {t("dueAtLabel")}
+          </p>
+          <p className="mt-1 flex items-center gap-2 text-sm font-medium">
+            <Calendar className="h-4 w-4 text-muted-foreground" />
+            {dueDate.toLocaleDateString(undefined, {
+              weekday: "long",
+              year: "numeric",
+              month: "long",
+              day: "numeric",
+            })}
+            <Clock className="ml-1 h-4 w-4 text-muted-foreground" />
+            {dueDate.toLocaleTimeString(undefined, {
+              hour: "2-digit",
+              minute: "2-digit",
+            })}
           </p>
         </div>
-      )}
+
+        {/* Creator & Assignee */}
+        {(creatorName || assigneeName) && (
+          <div className="grid grid-cols-2 gap-4 border-t px-5 py-4">
+            {creatorName && (
+              <div>
+                <p className="text-[11px] font-medium uppercase tracking-wider text-muted-foreground/70">
+                  {t("createdBy")}
+                </p>
+                <p className="mt-1 flex items-center gap-1.5 text-sm font-medium">
+                  <User className="h-3.5 w-3.5 text-muted-foreground" />
+                  {creatorName}
+                </p>
+              </div>
+            )}
+            {assigneeName && (
+              <div>
+                <p className="text-[11px] font-medium uppercase tracking-wider text-muted-foreground/70">
+                  {t("assignedToLabel")}
+                </p>
+                <p className="mt-1 flex items-center gap-1.5 text-sm font-medium">
+                  <User className="h-3.5 w-3.5 text-muted-foreground" />
+                  {assigneeName}
+                </p>
+              </div>
+            )}
+          </div>
+        )}
+
+        {/* Completed by */}
+        {reminder.is_completed && completedByName && (
+          <div className="border-t px-5 py-4">
+            <p className="text-[11px] font-medium uppercase tracking-wider text-muted-foreground/70">
+              {t("completedBy")}
+            </p>
+            <p className="mt-1 flex items-center gap-1.5 text-sm font-medium">
+              <User className="h-3.5 w-3.5 text-muted-foreground" />
+              {completedByName}
+              {reminder.completed_at && (
+                <span className="text-xs font-normal text-muted-foreground">
+                  {new Date(reminder.completed_at).toLocaleString()}
+                </span>
+              )}
+            </p>
+          </div>
+        )}
+      </div>
     </div>
   );
 }
