@@ -33,9 +33,13 @@ export function UserMenu() {
         onClick={() => setOpen(!open)}
         className="flex items-center gap-2 rounded-lg px-2 py-1.5 hover:bg-accent"
       >
-        <div className="flex h-8 w-8 items-center justify-center rounded-full bg-primary text-xs font-medium text-primary-foreground">
-          {user.name ? user.name[0]?.toUpperCase() : "?"}
-        </div>
+        {user.avatar_url ? (
+          <img src={user.avatar_url} alt="" className="h-8 w-8 rounded-full bg-muted" />
+        ) : (
+          <div className="flex h-8 w-8 items-center justify-center rounded-full bg-primary text-xs font-medium text-primary-foreground">
+            {user.name ? user.name[0]?.toUpperCase() : "?"}
+          </div>
+        )}
         <span className="hidden text-sm font-medium lg:inline">{user.name}</span>
       </button>
 

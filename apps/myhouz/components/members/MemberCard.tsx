@@ -22,9 +22,13 @@ export function MemberCard({ member, membership }: MemberCardProps) {
   return (
     <div className="flex items-center justify-between rounded-2xl bg-white px-5 py-4 shadow-sm dark:bg-card">
       <div className="flex items-center gap-4">
-        <div className="flex h-11 w-11 items-center justify-center rounded-full bg-muted text-sm font-semibold">
-          {initial}
-        </div>
+        {member.avatar_url ? (
+          <img src={member.avatar_url} alt="" className="h-11 w-11 rounded-full bg-muted" />
+        ) : (
+          <div className="flex h-11 w-11 items-center justify-center rounded-full bg-muted text-sm font-semibold">
+            {initial}
+          </div>
+        )}
         <div>
           <div className="flex items-center gap-2">
             <span className="text-base font-medium">

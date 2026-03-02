@@ -1,10 +1,13 @@
 import Link from "next/link";
 import { getTranslations } from "next-intl/server";
+import { getUser } from "@home/auth";
 import { ChevronRight, Home } from "lucide-react";
 import { LanguageSelector } from "@/components/settings/LanguageSelector";
+import { ProfileForm } from "@/components/settings/ProfileForm";
 
 export default async function SettingsPage() {
   const t = await getTranslations("settings");
+  const user = await getUser();
 
   return (
     <div className="px-4 py-6 sm:p-6">
@@ -14,10 +17,11 @@ export default async function SettingsPage() {
       </p>
       <div className="mt-6 max-w-2xl space-y-6">
         <div className="rounded-2xl border p-6">
-          <h2 className="text-lg font-semibold">{t("profileSection")}</h2>
-          <p className="mt-1 text-sm text-muted-foreground">
-            {t("profilePlaceholder")}
-          </p>
+          <h2 className="mb-4 text-lg font-semibold">{t("profileSection")}</h2>
+          <ProfileForm
+            initialName={user.name}
+            initialAvatarUrl={user.avatar_url}
+          />
         </div>
         <div className="rounded-2xl border p-6">
           <h2 className="text-lg font-semibold">{t("languageSection")}</h2>

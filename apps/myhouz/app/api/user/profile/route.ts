@@ -28,6 +28,7 @@ export const PATCH = withAuth(async (request, { user, supabase }) => {
 
   const updateData: Record<string, unknown> = {};
   if (result.data.name !== undefined) updateData.name = result.data.name;
+  if (result.data.avatar_url !== undefined) updateData.avatar_url = result.data.avatar_url;
 
   const { data: profile, error } = await supabase
     .from("profile")
