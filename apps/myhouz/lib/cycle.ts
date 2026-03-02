@@ -57,7 +57,11 @@ export function isActiveOnDate(
   recurrence: RecurrenceArg,
   meta: RecurrenceMeta | undefined,
   date: Date,
+  startsAt?: Date | null,
 ): boolean {
+  // Guard: if task has a start date and the queried date is before it, inactive
+  if (startsAt && date < startOfDay(startsAt)) return false;
+
   const dayOfWeek = getDay(date); // 0=Sun, 1=Mon, ..., 6=Sat
 
   switch (recurrence) {
@@ -95,8 +99,9 @@ export function isActiveOnDate(
 export function isActiveToday(
   recurrence: RecurrenceArg,
   meta?: RecurrenceMeta,
+  startsAt?: Date | null,
 ): boolean {
-  return isActiveOnDate(recurrence, meta, new Date());
+  return isActiveOnDate(recurrence, meta, new Date(), startsAt);
 }
 
 /**

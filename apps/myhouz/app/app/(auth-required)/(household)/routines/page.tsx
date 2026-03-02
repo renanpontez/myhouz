@@ -2,7 +2,7 @@ import Link from "next/link";
 import { cookies } from "next/headers";
 import { getTranslations } from "next-intl/server";
 import { createServerClient } from "@home/db";
-import { getUserWithRole } from "@home/auth";
+import { getUser, getUserWithRole } from "@home/auth";
 import { PageHeader } from "@/components/layout/PageHeader";
 import { EmptyState } from "@/components/shared/EmptyState";
 import { TaskRow } from "@/components/routines/TaskRow";
@@ -26,7 +26,7 @@ export default async function RoutinesPage() {
   const { data: tasks } = await supabase
     .from("routine_task")
     .select(
-      "id, title, recurrence, recurrence_meta, assigned_to, last_completed_at, sort_order, icon",
+      "id, title, recurrence, recurrence_meta, assigned_to, last_completed_at, sort_order, icon, starts_at",
     )
     .eq("household_id", householdId)
     .eq("is_active", true)
@@ -61,7 +61,8 @@ export default async function RoutinesPage() {
   const otherTasks: typeof allTasks = [];
   for (const task of allTasks) {
     const meta = task.recurrence_meta as RecurrenceMeta;
-    if (isActiveToday(task.recurrence as RecurrenceType, meta)) {
+    const startsAt = task.starts_at ? new Date(task.starts_at) : null;
+    if (isActiveToday(task.recurrence as RecurrenceType, meta, startsAt)) {
       todayTasks.push(task);
     } else {
       otherTasks.push(task);
@@ -77,7 +78,8 @@ export default async function RoutinesPage() {
     );
   }).length;
 
-  // Sort: incomplete first, then completed
+  // Sort: incomplete first, then personal tasks, then sort_order
+  const user = await getUser();
   const sortedTodayTasks = [...todayTasks].sort((a, b) => {
     const aMeta = a.recurrence_meta as RecurrenceMeta;
     const bMeta = b.recurrence_meta as RecurrenceMeta;
@@ -92,6 +94,10 @@ export default async function RoutinesPage() {
       bMeta,
     );
     if (aDone !== bDone) return aDone ? 1 : -1;
+    // Personal tasks (assigned to me or unassigned) first
+    const aMine = !a.assigned_to || a.assigned_to === user.id;
+    const bMine = !b.assigned_to || b.assigned_to === user.id;
+    if (aMine !== bMine) return aMine ? -1 : 1;
     return a.sort_order - b.sort_order;
   });
 
@@ -120,6 +126,7 @@ export default async function RoutinesPage() {
         isActiveToday={isActiveToday(
           task.recurrence as RecurrenceType,
           meta,
+          task.starts_at ? new Date(task.starts_at) : null,
         )}
         streak={streak}
       />

@@ -24,7 +24,7 @@ export default async function EditTaskPage({ params }: EditTaskPageProps) {
   const supabase = createServerClient();
   const { data: task } = await supabase
     .from("routine_task")
-    .select("id, title, recurrence, recurrence_meta, assigned_to, household_id, icon")
+    .select("id, title, recurrence, recurrence_meta, assigned_to, household_id, icon, starts_at")
     .eq("id", taskId)
     .eq("household_id", householdId)
     .single();
@@ -47,6 +47,7 @@ export default async function EditTaskPage({ params }: EditTaskPageProps) {
             recurrence_meta: task.recurrence_meta as RecurrenceMeta,
             assigned_to: task.assigned_to,
             icon: task.icon,
+            starts_at: task.starts_at,
           }}
         />
       </div>

@@ -40,6 +40,7 @@ export default async function DashboardPage() {
     last_completed_at: string | null;
     assigned_to: string | null;
     icon: string | null;
+    starts_at: string | null;
   }[] = [];
   let completionsByTask: Record<string, { completed_at: string }[]> = {};
 
@@ -69,7 +70,7 @@ export default async function DashboardPage() {
         supabase
           .from("routine_task")
           .select(
-            "id, title, recurrence, recurrence_meta, last_completed_at, assigned_to, icon",
+            "id, title, recurrence, recurrence_meta, last_completed_at, assigned_to, icon, starts_at",
           )
           .eq("household_id", householdId)
           .eq("is_active", true)

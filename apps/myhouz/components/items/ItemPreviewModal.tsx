@@ -5,7 +5,6 @@ import Link from "next/link";
 import { useTranslations } from "next-intl";
 import { useHousehold } from "@home/auth/hooks";
 import {
-  Badge,
   Button,
   Dialog,
   DialogContent,
@@ -22,7 +21,7 @@ import {
   Circle,
   Clock,
   Check,
-  Loader2,
+  User,
 } from "lucide-react";
 import { changeItemStatus } from "@/actions/items";
 import { toast } from "sonner";
@@ -33,10 +32,10 @@ const TYPE_ICONS = {
   fix: Settings2,
 } as const;
 
-const PRIORITY_STYLES = {
-  high: "text-destructive",
-  medium: "text-amber-600 dark:text-amber-400",
-  low: "text-muted-foreground",
+const PRIORITY_BG = {
+  high: "bg-destructive/10 text-destructive",
+  medium: "bg-amber-100 text-amber-600 dark:bg-amber-900/30 dark:text-amber-400",
+  low: "bg-muted text-muted-foreground",
 } as const;
 
 const STATUS_CONFIG = [
@@ -98,97 +97,116 @@ export function ItemPreviewModal({
 
   return (
     <Dialog open={open} onOpenChange={onOpenChange}>
-      <DialogContent>
-        <DialogHeader>
+      <DialogContent className="gap-0 p-0">
+        {/* Header with priority-tinted icon */}
+        <DialogHeader className="p-6 pb-4">
           <div className="flex items-center gap-3">
             <div
               className={cn(
-                "flex h-12 w-12 shrink-0 items-center justify-center rounded-full bg-background",
-                PRIORITY_STYLES[item.priority],
+                "flex h-11 w-11 shrink-0 items-center justify-center rounded-xl",
+                PRIORITY_BG[item.priority],
               )}
             >
               <Icon className="h-5 w-5" />
             </div>
-            <div>
-              <DialogTitle className="text-xl">{item.name}</DialogTitle>
-              <DialogDescription>
+            <div className="min-w-0">
+              <DialogTitle className="text-lg">{item.name}</DialogTitle>
+              <DialogDescription className="flex items-center gap-1.5">
                 {tEnums(`itemType.${item.type}`)}
-                {item.price != null &&
-                  `  ·  R$ ${Number(item.price).toFixed(2)}`}
+                <span className="text-muted-foreground/40">·</span>
+                {tEnums(`priority.${item.priority}`)}
               </DialogDescription>
             </div>
           </div>
         </DialogHeader>
 
-        <div className="flex flex-wrap gap-2">
-          <Badge variant="outline">{tEnums(`itemType.${item.type}`)}</Badge>
-          <Badge variant="outline">
-            {tEnums(`priority.${item.priority}`)}
-          </Badge>
-          <Badge variant={optimisticStatus === "done" ? "default" : "outline"}>
-            {tEnums(`status.${optimisticStatus}`)}
-          </Badge>
-          {assignee && (
-            <Badge variant="secondary">
-              {assignee.name ?? assignee.email}
-            </Badge>
-          )}
+        {/* Status segmented control */}
+        <div className="px-6 pb-4">
+          <div className="flex rounded-xl bg-muted/50 p-1">
+            {STATUS_CONFIG.map(({ value, icon: StatusIcon }) => {
+              const isActive = optimisticStatus === value;
+              return (
+                <button
+                  key={value}
+                  type="button"
+                  disabled={isPending}
+                  onClick={() => handleStatusChange(value)}
+                  className={cn(
+                    "flex flex-1 items-center justify-center gap-1.5 rounded-lg px-3 py-2 text-sm font-medium transition-all",
+                    isActive
+                      ? "bg-background text-foreground shadow-sm"
+                      : "text-muted-foreground hover:text-foreground",
+                    isPending && "pointer-events-none",
+                  )}
+                >
+                  <StatusIcon className="h-3.5 w-3.5" />
+                  <span className="hidden sm:inline">
+                    {tEnums(`status.${value}`)}
+                  </span>
+                </button>
+              );
+            })}
+          </div>
         </div>
 
-        {/* Status change buttons */}
-        <div className="flex flex-wrap gap-2">
-          {STATUS_CONFIG.map(({ value, icon: StatusIcon }) => (
-            <Button
-              key={value}
-              type="button"
-              variant={optimisticStatus === value ? "default" : "outline"}
-              size="sm"
-              disabled={isPending}
-              onClick={() => handleStatusChange(value)}
-            >
-              {isPending && optimisticStatus !== value ? (
-                <Loader2 className="mr-1.5 h-3.5 w-3.5 animate-spin" />
-              ) : (
-                <StatusIcon className="mr-1.5 h-3.5 w-3.5" />
-              )}
-              {tEnums(`status.${value}`)}
-            </Button>
-          ))}
-        </div>
-
-        {item.price != null && (
-          <div>
-            <p className="text-xs font-medium text-muted-foreground">
-              {t("priceLabel")}
-            </p>
-            <p className="text-lg font-semibold">
-              R$ {Number(item.price).toFixed(2)}
-            </p>
+        {/* Metadata grid */}
+        {(assignee || item.price != null) && (
+          <div className="grid grid-cols-2 gap-4 border-t px-6 py-4">
+            {assignee && (
+              <div>
+                <p className="text-[11px] font-medium uppercase tracking-wider text-muted-foreground/70">
+                  {t("assignedToLabel")}
+                </p>
+                <p className="mt-1 flex items-center gap-1.5 text-sm font-medium">
+                  <User className="h-3.5 w-3.5 text-muted-foreground" />
+                  {assignee.name ?? assignee.email}
+                </p>
+              </div>
+            )}
+            {item.price != null && (
+              <div className={assignee ? "text-right" : ""}>
+                <p className="text-[11px] font-medium uppercase tracking-wider text-muted-foreground/70">
+                  {t("priceLabel")}
+                </p>
+                <p className="mt-1 text-sm font-semibold">
+                  R$ {Number(item.price).toLocaleString("pt-BR", {
+                    minimumFractionDigits: 2,
+                  })}
+                </p>
+              </div>
+            )}
           </div>
         )}
 
+        {/* Link */}
         {item.link && (
-          <a
-            href={item.link}
-            target="_blank"
-            rel="noopener noreferrer"
-            className="inline-flex items-center gap-1.5 text-sm text-primary hover:underline"
-          >
-            <ExternalLink className="h-3.5 w-3.5" />
-            {t("openLink")}
-          </a>
+          <div className="border-t px-6 py-3">
+            <a
+              href={item.link}
+              target="_blank"
+              rel="noopener noreferrer"
+              className="inline-flex items-center gap-1.5 text-sm text-primary hover:underline"
+            >
+              <ExternalLink className="h-3.5 w-3.5" />
+              {t("openLink")}
+            </a>
+          </div>
         )}
 
+        {/* Notes */}
         {item.notes && (
-          <div>
-            <p className="text-xs font-medium text-muted-foreground">
+          <div className="border-t px-6 py-4">
+            <p className="text-[11px] font-medium uppercase tracking-wider text-muted-foreground/70">
               {t("notesLabel")}
             </p>
-            <p className="mt-1 whitespace-pre-wrap text-sm">{item.notes}</p>
+            <p className="mt-2 whitespace-pre-wrap rounded-lg bg-muted/40 px-3 py-2.5 text-sm">
+              {item.notes}
+            </p>
           </div>
         )}
 
-        <div className="flex gap-2 pt-2">
+        {/* Footer actions */}
+        <div className="flex gap-2 border-t px-6 py-4">
           <Link href={`/app/items/${item.id}`} className="flex-1">
             <Button variant="outline" className="w-full">
               {tWidget("viewDetails")}

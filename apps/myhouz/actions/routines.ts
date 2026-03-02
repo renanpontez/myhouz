@@ -6,7 +6,8 @@ import { createServerClient } from "@home/db";
 import { getUserWithRole } from "@home/auth";
 import { createTaskSchema, createUpdateTaskSchema } from "@home/types";
 import { getTranslations } from "next-intl/server";
-import { getCycleStart } from "@/lib/cycle";
+import { getCycleStart, hasCompletionOnDate } from "@/lib/cycle";
+import { startOfDay, endOfDay, isSameDay } from "date-fns";
 import type { RecurrenceType, RecurrenceMeta } from "@home/types";
 
 function parseRecurrenceMeta(raw: string | null): RecurrenceMeta {
@@ -32,6 +33,7 @@ export async function createTask(
   );
 
   const rawIcon = formData.get("icon") as string | null;
+  const rawStartsAt = formData.get("starts_at") as string | null;
 
   const schema = createTaskSchema(t);
   const parsed = schema.safeParse({
@@ -40,6 +42,7 @@ export async function createTask(
     recurrence_meta: recurrenceMeta,
     assigned_to: (formData.get("assigned_to") as string) || undefined,
     icon: rawIcon || null,
+    starts_at: rawStartsAt || null,
   });
 
   if (!parsed.success) {
@@ -58,6 +61,7 @@ export async function createTask(
     recurrence_meta: parsed.data.recurrence_meta ?? null,
     assigned_to: parsed.data.assigned_to ?? null,
     icon: parsed.data.icon ?? null,
+    starts_at: parsed.data.starts_at ?? null,
     created_by: profile.id,
   });
 
@@ -84,6 +88,7 @@ export async function updateTask(
   const recurrenceMeta = parseRecurrenceMeta(rawMeta);
   const rawAssignedTo = formData.get("assigned_to") as string | null;
   const rawIcon = formData.get("icon") as string | null;
+  const rawStartsAt = formData.get("starts_at") as string | null;
 
   const schema = createUpdateTaskSchema(t);
   const parsed = schema.safeParse({
@@ -92,6 +97,7 @@ export async function updateTask(
     recurrence_meta: recurrenceMeta,
     assigned_to: rawAssignedTo || null,
     icon: rawIcon || null,
+    starts_at: rawStartsAt || null,
   });
 
   if (!parsed.success) {
@@ -112,6 +118,8 @@ export async function updateTask(
   if (parsed.data.assigned_to !== undefined)
     updateData.assigned_to = parsed.data.assigned_to;
   if (parsed.data.icon !== undefined) updateData.icon = parsed.data.icon;
+  if (parsed.data.starts_at !== undefined)
+    updateData.starts_at = parsed.data.starts_at;
   // Always set recurrence_meta when recurrence is provided
   if (parsed.data.recurrence) {
     updateData.recurrence_meta = parsed.data.recurrence_meta ?? null;
@@ -158,6 +166,7 @@ export async function deleteTask(
 
 export async function toggleTask(
   taskId: string,
+  date?: string,
 ): Promise<{ error?: string }> {
   const tError = await getTranslations("error");
 
@@ -178,53 +187,128 @@ export async function toggleTask(
   const { profile } = await getUserWithRole(task.household_id);
 
   const meta = task.recurrence_meta as RecurrenceMeta;
-  const cycleStart = getCycleStart(
-    task.recurrence as RecurrenceType,
-    meta,
-  );
-  const isCompleted =
-    task.last_completed_at && new Date(task.last_completed_at) >= cycleStart;
+  const today = new Date();
+  const targetDate = date ? new Date(date) : null;
+  const isToggleForToday = !targetDate || isSameDay(targetDate, today);
 
-  if (isCompleted) {
-    // Un-complete: clear task fields + delete completion record for this cycle
-    const { error: updateError } = await supabase
-      .from("routine_task")
-      .update({ last_completed_at: null, completed_by: null })
-      .eq("id", taskId);
+  if (isToggleForToday) {
+    // Current cycle logic (unchanged behavior)
+    const cycleStart = getCycleStart(
+      task.recurrence as RecurrenceType,
+      meta,
+    );
+    const isCompleted =
+      task.last_completed_at && new Date(task.last_completed_at) >= cycleStart;
 
-    if (updateError) {
-      return { error: tError("toggleTaskError") };
-    }
+    if (isCompleted) {
+      const { error: updateError } = await supabase
+        .from("routine_task")
+        .update({ last_completed_at: null, completed_by: null })
+        .eq("id", taskId);
 
-    // Delete the completion record for this cycle
-    await supabase
-      .from("routine_task_completion")
-      .delete()
-      .eq("task_id", taskId)
-      .gte("completed_at", cycleStart.toISOString());
-  } else {
-    // Complete: set task fields + insert completion record
-    const now = new Date().toISOString();
+      if (updateError) {
+        return { error: tError("toggleTaskError") };
+      }
 
-    const { error: updateError } = await supabase
-      .from("routine_task")
-      .update({ last_completed_at: now, completed_by: profile.id })
-      .eq("id", taskId);
+      await supabase
+        .from("routine_task_completion")
+        .delete()
+        .eq("task_id", taskId)
+        .gte("completed_at", cycleStart.toISOString());
+    } else {
+      const now = new Date().toISOString();
 
-    if (updateError) {
-      return { error: tError("toggleTaskError") };
-    }
+      const { error: updateError } = await supabase
+        .from("routine_task")
+        .update({ last_completed_at: now, completed_by: profile.id })
+        .eq("id", taskId);
 
-    const { error: insertError } = await supabase
-      .from("routine_task_completion")
-      .insert({
+      if (updateError) {
+        return { error: tError("toggleTaskError") };
+      }
+
+      await supabase.from("routine_task_completion").insert({
         task_id: taskId,
         completed_at: now,
         completed_by: profile.id,
       });
+    }
+  } else {
+    // Past-day toggle: only affects the completion log, not last_completed_at
+    // (unless the past day is more recent than last_completed_at)
+    const dayStart = startOfDay(targetDate).toISOString();
+    const dayEnd = endOfDay(targetDate).toISOString();
 
-    if (insertError) {
-      return { error: tError("toggleTaskError") };
+    // Check if there's already a completion on this date
+    const { data: existing } = await supabase
+      .from("routine_task_completion")
+      .select("id, completed_at")
+      .eq("task_id", taskId)
+      .gte("completed_at", dayStart)
+      .lte("completed_at", dayEnd);
+
+    if (existing && existing.length > 0) {
+      // Un-complete: remove the completion for this past day
+      await supabase
+        .from("routine_task_completion")
+        .delete()
+        .eq("task_id", taskId)
+        .gte("completed_at", dayStart)
+        .lte("completed_at", dayEnd);
+
+      // If last_completed_at was from this day, recompute it
+      if (
+        task.last_completed_at &&
+        isSameDay(new Date(task.last_completed_at), targetDate)
+      ) {
+        // Find the most recent remaining completion
+        const { data: latest } = await supabase
+          .from("routine_task_completion")
+          .select("completed_at, completed_by")
+          .eq("task_id", taskId)
+          .order("completed_at", { ascending: false })
+          .limit(1);
+
+        const latestRecord = latest?.[0];
+        if (latestRecord) {
+          await supabase
+            .from("routine_task")
+            .update({
+              last_completed_at: latestRecord.completed_at,
+              completed_by: latestRecord.completed_by,
+            })
+            .eq("id", taskId);
+        } else {
+          await supabase
+            .from("routine_task")
+            .update({ last_completed_at: null, completed_by: null })
+            .eq("id", taskId);
+        }
+      }
+    } else {
+      // Complete: insert a completion record timestamped to noon of that day
+      const completedAt = new Date(targetDate);
+      completedAt.setHours(12, 0, 0, 0);
+
+      await supabase.from("routine_task_completion").insert({
+        task_id: taskId,
+        completed_at: completedAt.toISOString(),
+        completed_by: profile.id,
+      });
+
+      // Update last_completed_at only if this date is more recent
+      if (
+        !task.last_completed_at ||
+        completedAt > new Date(task.last_completed_at)
+      ) {
+        await supabase
+          .from("routine_task")
+          .update({
+            last_completed_at: completedAt.toISOString(),
+            completed_by: profile.id,
+          })
+          .eq("id", taskId);
+      }
     }
   }
 

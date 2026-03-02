@@ -13,7 +13,8 @@ import { DeleteTaskButton } from "@/components/routines/DeleteTaskButton";
 import { isCompletedThisCycle, isActiveToday } from "@/lib/cycle";
 import { calculateStreak } from "@/lib/streak";
 import { Button } from "@home/ui";
-import { Pencil, User } from "lucide-react";
+import { Pencil, User, CalendarClock } from "lucide-react";
+import { startOfDay, format } from "date-fns";
 import type { RecurrenceType, RecurrenceMeta } from "@home/types";
 
 interface TaskDetailPageProps {
@@ -36,7 +37,7 @@ export default async function TaskDetailPage({ params }: TaskDetailPageProps) {
   const { data: task } = await supabase
     .from("routine_task")
     .select(
-      "id, title, recurrence, recurrence_meta, is_active, household_id, assigned_to, last_completed_at, created_by, created_at, icon",
+      "id, title, recurrence, recurrence_meta, is_active, household_id, assigned_to, last_completed_at, created_by, created_at, icon, starts_at",
     )
     .eq("id", taskId)
     .eq("household_id", householdId)
@@ -60,7 +61,10 @@ export default async function TaskDetailPage({ params }: TaskDetailPageProps) {
 
   const recurrence = task.recurrence as RecurrenceType;
   const meta = task.recurrence_meta as RecurrenceMeta;
-  const activeToday = isActiveToday(recurrence, meta);
+  const startsAt = task.starts_at ? new Date(task.starts_at) : null;
+  const activeToday = isActiveToday(recurrence, meta, startsAt);
+  const hasFutureStart =
+    startsAt !== null && startOfDay(startsAt) > startOfDay(new Date());
   const completedThisCycle = isCompletedThisCycle(
     task.last_completed_at,
     recurrence,
@@ -99,7 +103,13 @@ export default async function TaskDetailPage({ params }: TaskDetailPageProps) {
                 {assigneeProfile.name ?? assigneeProfile.email}
               </span>
             )}
-            {!activeToday && (
+            {hasFutureStart && (
+              <span className="flex items-center gap-1 text-xs text-muted-foreground italic">
+                <CalendarClock className="h-3.5 w-3.5" />
+                {t("startsOn", { date: format(startsAt!, "MMM d, yyyy") })}
+              </span>
+            )}
+            {!activeToday && !hasFutureStart && (
               <span className="text-xs text-muted-foreground italic">
                 {t("notActiveToday")}
               </span>

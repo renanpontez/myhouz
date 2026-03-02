@@ -19,6 +19,7 @@ interface TaskFormProps {
     recurrence_meta?: RecurrenceMeta;
     assigned_to?: string | null;
     icon?: string | null;
+    starts_at?: string | null;
   };
 }
 
@@ -71,6 +72,9 @@ export function TaskForm({ mode, taskId, defaultValues }: TaskFormProps) {
   );
   const [assignedTo, setAssignedTo] = useState(
     defaultValues?.assigned_to ?? "",
+  );
+  const [startsAt, setStartsAt] = useState(
+    defaultValues?.starts_at ?? "",
   );
 
   // Determine initial recurrence: map legacy values to closest match
@@ -129,6 +133,11 @@ export function TaskForm({ mode, taskId, defaultValues }: TaskFormProps) {
     // Set assigned_to
     if (assignedTo) {
       formData.set("assigned_to", assignedTo);
+    }
+
+    // Set starts_at
+    if (startsAt) {
+      formData.set("starts_at", startsAt);
     }
 
     startTransition(async () => {
@@ -284,6 +293,21 @@ export function TaskForm({ mode, taskId, defaultValues }: TaskFormProps) {
           )}
         </div>
       )}
+
+      {/* Start date */}
+      <div className="space-y-1.5">
+        <label htmlFor="starts_at" className="text-sm font-medium">
+          {t("startsAtLabel")}
+        </label>
+        <input
+          id="starts_at"
+          type="date"
+          value={startsAt}
+          onChange={(e) => setStartsAt(e.target.value)}
+          className="w-full rounded-md border border-input bg-background px-3 py-2 text-sm"
+        />
+        <p className="text-xs text-muted-foreground">{t("startsAtHint")}</p>
+      </div>
 
       {/* Assigned to */}
       <div className="space-y-1.5">

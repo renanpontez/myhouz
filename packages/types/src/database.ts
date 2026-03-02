@@ -620,6 +620,7 @@ export type Database = {
           recurrence: Database["public"]["Enums"]["recurrence_type"]
           recurrence_meta: Json | null
           sort_order: number
+          starts_at: string | null
           title: string
           updated_at: string
         }
@@ -636,6 +637,7 @@ export type Database = {
           recurrence?: Database["public"]["Enums"]["recurrence_type"]
           recurrence_meta?: Json | null
           sort_order?: number
+          starts_at?: string | null
           title: string
           updated_at?: string
         }
@@ -652,6 +654,7 @@ export type Database = {
           recurrence?: Database["public"]["Enums"]["recurrence_type"]
           recurrence_meta?: Json | null
           sort_order?: number
+          starts_at?: string | null
           title?: string
           updated_at?: string
         }

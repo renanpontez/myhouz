@@ -47,6 +47,7 @@ interface Task {
   last_completed_at: string | null;
   assigned_to: string | null;
   icon: string | null;
+  starts_at: string | null;
 }
 
 interface RoutineCalendarProps {
@@ -114,12 +115,14 @@ function TimelineTaskRow({
   recurrenceLabel,
   streak,
   disabled,
+  selectedDay,
 }: {
   task: Task;
   isCompleted: boolean;
   recurrenceLabel: string;
   streak: number;
   disabled?: boolean;
+  selectedDay?: Date;
 }) {
   const { members } = useHousehold();
   const [isPending, startTransition] = useTransition();
@@ -134,7 +137,12 @@ function TimelineTaskRow({
     if (disabled) return;
     startTransition(async () => {
       setOptimisticCompleted(!optimisticCompleted);
-      const result = await toggleTask(task.id);
+      // Pass date string for non-today days
+      const dateStr =
+        selectedDay && !isDateToday(selectedDay)
+          ? format(selectedDay, "yyyy-MM-dd")
+          : undefined;
+      const result = await toggleTask(task.id, dateStr);
       if (result.error) {
         toast.error(result.error);
       }
@@ -235,21 +243,26 @@ function MatrixCell({
   isToday,
   isActive,
   isFutureDay,
+  day,
 }: {
   task: Task;
   isCompleted: boolean;
   isToday: boolean;
   isActive: boolean;
   isFutureDay: boolean;
+  day: Date;
 }) {
   const [isPending, startTransition] = useTransition();
   const [optimistic, setOptimistic] = useOptimistic(isCompleted);
 
+  const canToggle = isActive && !isFutureDay;
+
   function handleToggle() {
-    if (!isToday || !isActive) return;
+    if (!canToggle) return;
     startTransition(async () => {
       setOptimistic(!optimistic);
-      const result = await toggleTask(task.id);
+      const dateStr = !isToday ? format(day, "yyyy-MM-dd") : undefined;
+      const result = await toggleTask(task.id, dateStr);
       if (result.error) toast.error(result.error);
     });
   }
@@ -274,17 +287,17 @@ function MatrixCell({
     <div className="flex justify-center">
       <button
         type="button"
-        onClick={isToday ? handleToggle : undefined}
-        disabled={!isToday}
+        onClick={canToggle ? handleToggle : undefined}
+        disabled={!canToggle}
         className={cn(
           "flex h-7 w-7 items-center justify-center rounded-full transition-colors",
           optimistic
             ? "bg-green-500 dark:bg-green-400"
-            : isToday
+            : canToggle
               ? "border-2 border-primary/40 hover:border-primary/60"
               : "border-2 border-muted-foreground/20",
           isPending && "opacity-60",
-          !isToday && "cursor-default",
+          !canToggle && "cursor-default",
         )}
       >
         {optimistic && (
@@ -315,7 +328,8 @@ function WeeklyMatrixView({
     () =>
       tasks.filter((task) => {
         const meta = task.recurrence_meta as RecurrenceMeta | undefined;
-        return weekDays.some((day) => isActiveOnDate(task.recurrence, meta, day));
+        const startsAt = task.starts_at ? new Date(task.starts_at) : null;
+        return weekDays.some((day) => isActiveOnDate(task.recurrence, meta, day, startsAt));
       }),
     [tasks, weekDays],
   );
@@ -360,7 +374,7 @@ function WeeklyMatrixView({
             key={task.id}
             className={cn(
               "grid grid-cols-[2rem_repeat(7,1fr)] items-center gap-x-0.5 py-2 sm:grid-cols-[2.5rem_repeat(7,1fr)] sm:gap-x-1",
-              !isMine && "opacity-75",
+              !isMine && "opacity-80",
             )}
           >
             {/* Task icon */}
@@ -381,7 +395,8 @@ function WeeklyMatrixView({
             {weekDays.map((day) => {
               const isDayToday = isDateToday(day);
               const isFutureDay = isFuture(day) && !isDayToday;
-              const active = isActiveOnDate(task.recurrence, meta, day);
+              const startsAt = task.starts_at ? new Date(task.starts_at) : null;
+              const active = isActiveOnDate(task.recurrence, meta, day, startsAt);
 
               let completed = false;
               if (active && !isFutureDay) {
@@ -407,6 +422,7 @@ function WeeklyMatrixView({
                   isToday={isDayToday}
                   isActive={active}
                   isFutureDay={isFutureDay}
+                  day={day}
                 />
               );
             })}
@@ -430,6 +446,7 @@ export function RoutineCalendar({
   const locale = useLocale();
   const dateFnsLocale = DATE_FNS_LOCALES[locale] ?? enUS;
 
+  const user = useUser();
   const today = new Date();
   const [weekStart, setWeekStart] = useState(() =>
     startOfWeek(today, { weekStartsOn: 1 }),
@@ -467,11 +484,20 @@ export function RoutineCalendar({
   // Tasks active on the selected day
   const selectedDayTasks = useMemo(
     () =>
-      tasks.filter((task) => {
-        const meta = task.recurrence_meta as RecurrenceMeta | undefined;
-        return isActiveOnDate(task.recurrence, meta, selectedDay);
-      }),
-    [tasks, selectedDay],
+      tasks
+        .filter((task) => {
+          const meta = task.recurrence_meta as RecurrenceMeta | undefined;
+          const startsAt = task.starts_at ? new Date(task.starts_at) : null;
+          return isActiveOnDate(task.recurrence, meta, selectedDay, startsAt);
+        })
+        .sort((a, b) => {
+          // Personal tasks (assigned to me or unassigned) first
+          const aMine = !a.assigned_to || a.assigned_to === user.id;
+          const bMine = !b.assigned_to || b.assigned_to === user.id;
+          if (aMine !== bMine) return aMine ? -1 : 1;
+          return 0; // preserve original sort_order within groups
+        }),
+    [tasks, selectedDay, user.id],
   );
 
   // Completion count for selected day
@@ -498,7 +524,8 @@ export function RoutineCalendar({
         let done = 0;
         for (const task of tasks) {
           const meta = task.recurrence_meta as RecurrenceMeta | undefined;
-          if (!isActiveOnDate(task.recurrence, meta, day)) continue;
+          const startsAt = task.starts_at ? new Date(task.starts_at) : null;
+          if (!isActiveOnDate(task.recurrence, meta, day, startsAt)) continue;
           active++;
           if (isFutureDay) {
             // Future days: no completions yet
@@ -813,6 +840,8 @@ export function RoutineCalendar({
 
                 const label = tEnums(`recurrence.${task.recurrence}`);
                 const streak = getStreak(completionsByTask[task.id] ?? []);
+                const isFutureDay =
+                  isFuture(selectedDay) && !isDateToday(selectedDay);
                 return (
                   <TimelineTaskRow
                     key={task.id}
@@ -820,7 +849,8 @@ export function RoutineCalendar({
                     isCompleted={completed}
                     recurrenceLabel={label}
                     streak={streak}
-                    disabled={!isSelectedToday}
+                    disabled={isFutureDay}
+                    selectedDay={selectedDay}
                   />
                 );
               })}
