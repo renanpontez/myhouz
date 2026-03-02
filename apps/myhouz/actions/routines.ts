@@ -6,9 +6,15 @@ import { createServerClient } from "@home/db";
 import { getUserWithRole } from "@home/auth";
 import { createTaskSchema, createUpdateTaskSchema } from "@home/types";
 import { getTranslations } from "next-intl/server";
-import { getCycleStart, hasCompletionOnDate } from "@/lib/cycle";
+import { getCycleStart } from "@/lib/cycle";
 import { startOfDay, endOfDay, isSameDay } from "date-fns";
 import type { RecurrenceType, RecurrenceMeta } from "@home/types";
+
+/** Parse "YYYY-MM-DD" as local midnight (not UTC). */
+function parseLocalDate(dateStr: string): Date {
+  const [y, m, d] = dateStr.split("-");
+  return new Date(Number(y), Number(m) - 1, Number(d));
+}
 
 function parseRecurrenceMeta(raw: string | null): RecurrenceMeta {
   if (!raw) return null;
@@ -188,7 +194,7 @@ export async function toggleTask(
 
   const meta = task.recurrence_meta as RecurrenceMeta;
   const today = new Date();
-  const targetDate = date ? new Date(date) : null;
+  const targetDate = date ? parseLocalDate(date) : null;
   const isToggleForToday = !targetDate || isSameDay(targetDate, today);
 
   if (isToggleForToday) {

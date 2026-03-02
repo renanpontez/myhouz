@@ -4,6 +4,12 @@ import { getCycleStart } from "@/lib/cycle";
 import { startOfDay, endOfDay, isSameDay } from "date-fns";
 import type { RecurrenceType, RecurrenceMeta } from "@home/types";
 
+/** Parse "YYYY-MM-DD" as local midnight (not UTC). */
+function parseLocalDate(dateStr: string): Date {
+  const [y, m, d] = dateStr.split("-");
+  return new Date(Number(y), Number(m) - 1, Number(d));
+}
+
 export const POST = withHouseholdAuth(
   async (request, { household, user, supabase }, params) => {
     const taskId = params.taskId!;
@@ -13,7 +19,7 @@ export const POST = withHouseholdAuth(
     try {
       const body = await request.json();
       if (body.date) {
-        targetDate = new Date(body.date);
+        targetDate = parseLocalDate(body.date);
       }
     } catch {
       // No body or invalid JSON — toggle for today
