@@ -55,16 +55,14 @@ export const POST = withHouseholdAuth(
         new Date(task.last_completed_at) >= cycleStart;
 
       if (isCompleted) {
-        const { data: updated, error: updateError } = await supabase
+        const { error: updateError } = await supabase
           .from("routine_task")
           .update({ last_completed_at: null, completed_by: null })
-          .eq("id", taskId)
-          .select("id, last_completed_at")
-          .single();
+          .eq("id", taskId);
 
         if (updateError) {
           return NextResponse.json(
-            { error: "Failed to toggle task", detail: updateError.message },
+            { error: "Failed to toggle task" },
             { status: 500 },
           );
         }
@@ -75,36 +73,19 @@ export const POST = withHouseholdAuth(
           .eq("task_id", taskId)
           .gte("completed_at", cycleStart.toISOString());
 
-        // Verify: read back to confirm write persisted
-        const { data: verify } = await supabase
-          .from("routine_task")
-          .select("last_completed_at")
-          .eq("id", taskId)
-          .single();
-
-        return NextResponse.json({
-          data: {
-            completed: false,
-            _verify: {
-              updatedRow: updated?.last_completed_at,
-              readBack: verify?.last_completed_at,
-            },
-          },
-        });
+        return NextResponse.json({ data: { completed: false } });
       }
 
       const now = new Date().toISOString();
 
-      const { data: updated, error: updateError } = await supabase
+      const { error: updateError } = await supabase
         .from("routine_task")
         .update({ last_completed_at: now, completed_by: user.id })
-        .eq("id", taskId)
-        .select("id, last_completed_at")
-        .single();
+        .eq("id", taskId);
 
       if (updateError) {
         return NextResponse.json(
-          { error: "Failed to toggle task", detail: updateError.message },
+          { error: "Failed to toggle task" },
           { status: 500 },
         );
       }
@@ -115,14 +96,7 @@ export const POST = withHouseholdAuth(
         completed_by: user.id,
       });
 
-      return NextResponse.json({
-        data: {
-          completed: true,
-          _verify: {
-            updatedRow: updated?.last_completed_at,
-          },
-        },
-      });
+      return NextResponse.json({ data: { completed: true } });
     }
 
     // Past-day toggle — targetDate is guaranteed non-null here
