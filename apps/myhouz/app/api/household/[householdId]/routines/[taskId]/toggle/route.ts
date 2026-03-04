@@ -62,18 +62,20 @@ export const POST = withHouseholdAuth(
 
         if (updateError) {
           return NextResponse.json(
-            { error: "Failed to toggle task" },
+            { error: "Failed to toggle task", details: updateError.message },
             { status: 500 },
           );
         }
 
-        await supabase
+        const { error: delError } = await supabase
           .from("routine_task_completion")
           .delete()
           .eq("task_id", taskId)
           .gte("completed_at", cycleStart.toISOString());
 
-        return NextResponse.json({ data: { completed: false } });
+        return NextResponse.json({
+          data: { completed: false, _debug: { delError: delError?.message, cycleStart: cycleStart.toISOString() } },
+        });
       }
 
       const now = new Date().toISOString();
@@ -85,18 +87,20 @@ export const POST = withHouseholdAuth(
 
       if (updateError) {
         return NextResponse.json(
-          { error: "Failed to toggle task" },
+          { error: "Failed to toggle task", details: updateError.message },
           { status: 500 },
         );
       }
 
-      await supabase.from("routine_task_completion").insert({
+      const { error: insertError } = await supabase.from("routine_task_completion").insert({
         task_id: taskId,
         completed_at: now,
         completed_by: user.id,
       });
 
-      return NextResponse.json({ data: { completed: true } });
+      return NextResponse.json({
+        data: { completed: true, _debug: { insertError: insertError?.message } },
+      });
     }
 
     // Past-day toggle — targetDate is guaranteed non-null here
