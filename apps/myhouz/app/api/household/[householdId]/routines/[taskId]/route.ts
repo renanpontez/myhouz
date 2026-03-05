@@ -10,7 +10,7 @@ export const GET = withHouseholdAuth(
     const { data: task, error } = await supabase
       .from("routine_task")
       .select(
-        "id, title, recurrence, recurrence_meta, last_completed_at, completed_by, assigned_to, icon, is_active, created_at, created_by",
+        "id, title, recurrence, recurrence_meta, last_completed_at, completed_by, assigned_to, icon, is_active, starts_at, created_at, created_by",
       )
       .eq("id", taskId)
       .eq("household_id", household.id)
@@ -55,6 +55,8 @@ export const PATCH = withHouseholdAuth(
     if (result.data.recurrence) {
       updateData.recurrence_meta = result.data.recurrence_meta ?? null;
     }
+    if (result.data.starts_at !== undefined)
+      updateData.starts_at = result.data.starts_at;
 
     if (Object.keys(updateData).length === 0) {
       return NextResponse.json(

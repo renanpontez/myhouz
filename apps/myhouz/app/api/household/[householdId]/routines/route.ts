@@ -12,7 +12,7 @@ export const GET = withHouseholdAuth(
     const { data: tasks, error } = await supabase
       .from("routine_task")
       .select(
-        "id, title, recurrence, recurrence_meta, last_completed_at, completed_by, assigned_to, icon, is_active, created_at",
+        "id, title, recurrence, recurrence_meta, last_completed_at, completed_by, assigned_to, icon, is_active, starts_at, created_at",
       )
       .eq("household_id", household.id)
       .order("created_at", { ascending: false });
@@ -72,6 +72,7 @@ export const POST = withHouseholdAuth(
         recurrence_meta: result.data.recurrence_meta ?? null,
         assigned_to: result.data.assigned_to ?? null,
         icon: result.data.icon ?? null,
+        starts_at: result.data.starts_at ?? null,
         created_by: profile?.id ?? user.id,
       })
       .select()
