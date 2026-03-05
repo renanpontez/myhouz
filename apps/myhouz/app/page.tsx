@@ -545,30 +545,24 @@ function StepCard({
 // ---------------------------------------------------------------------------
 
 function SocialProof({ t }: SectionProps) {
-  const testimonials = [
+  const personas = [
     {
-      quoteKey: "quote1" as const,
-      nameKey: "name1" as const,
-      locationKey: "location1" as const,
-      age: 29,
-      initials: "L",
-      avatarColor: "bg-primary/20 text-primary",
+      key: "persona1",
+      emoji: "🏠",
+      accentColor: "text-primary",
+      borderGradient: "from-primary/30 via-primary/10 to-transparent",
     },
     {
-      quoteKey: "quote2" as const,
-      nameKey: "name2" as const,
-      locationKey: "location2" as const,
-      age: 26,
-      initials: "M",
-      avatarColor: "bg-success/20 text-success",
+      key: "persona2",
+      emoji: "🤝",
+      accentColor: "text-success",
+      borderGradient: "from-success/30 via-success/10 to-transparent",
     },
     {
-      quoteKey: "quote3" as const,
-      nameKey: "name3" as const,
-      locationKey: "location3" as const,
-      age: 37,
-      initials: "J",
-      avatarColor: "bg-brand-accent/20 text-brand-accent",
+      key: "persona3",
+      emoji: "👨‍👩‍👧",
+      accentColor: "text-brand-accent",
+      borderGradient: "from-brand-accent/30 via-brand-accent/10 to-transparent",
     },
   ];
 
@@ -591,15 +585,19 @@ function SocialProof({ t }: SectionProps) {
         </RevealOnScroll>
 
         <div className="grid md:grid-cols-3 gap-6">
-          {testimonials.map((item, index) => (
-            <RevealOnScroll key={item.nameKey} staggerIndex={index}>
-              <TestimonialCard
-                quote={t(`socialProof.${item.quoteKey}`)}
-                name={t(`socialProof.${item.nameKey}`)}
-                age={item.age}
-                location={t(`socialProof.${item.locationKey}`)}
-                initials={item.initials}
-                avatarColor={item.avatarColor}
+          {personas.map((persona, index) => (
+            <RevealOnScroll key={persona.key} staggerIndex={index}>
+              <PersonaCard
+                emoji={persona.emoji}
+                name={t(`socialProof.${persona.key}Name`)}
+                tagline={t(`socialProof.${persona.key}Tagline`)}
+                bullets={[
+                  t(`socialProof.${persona.key}Bullet1`),
+                  t(`socialProof.${persona.key}Bullet2`),
+                  t(`socialProof.${persona.key}Bullet3`),
+                ]}
+                accentColor={persona.accentColor}
+                borderGradient={persona.borderGradient}
               />
             </RevealOnScroll>
           ))}
@@ -609,39 +607,57 @@ function SocialProof({ t }: SectionProps) {
   );
 }
 
-function TestimonialCard({
-  quote,
+function PersonaCard({
+  emoji,
   name,
-  age,
-  location,
-  initials,
-  avatarColor,
+  tagline,
+  bullets,
+  accentColor,
+  borderGradient,
 }: {
-  quote: string;
+  emoji: string;
   name: string;
-  age: number;
-  location: string;
-  initials: string;
-  avatarColor: string;
+  tagline: string;
+  bullets: string[];
+  accentColor: string;
+  borderGradient: string;
 }) {
   return (
-    <div className="bg-white dark:bg-card rounded-2xl p-6 shadow-sm flex flex-col gap-4">
-      <div className="text-4xl font-serif leading-none text-primary/30 select-none">
-        &ldquo;
-      </div>
-      <p className="text-base text-foreground leading-relaxed -mt-3">
-        {quote}
-      </p>
-      <div className="mt-auto flex items-center gap-3 pt-4">
-        <div
-          className={`w-10 h-10 rounded-full flex items-center justify-center text-sm font-bold flex-shrink-0 ${avatarColor}`}
-        >
-          {initials}
+    <div className="relative bg-white dark:bg-card rounded-2xl shadow-sm overflow-hidden">
+      {/* Gradient top border */}
+      <div
+        className={`absolute inset-x-0 top-0 h-1 bg-gradient-to-r ${borderGradient}`}
+        aria-hidden="true"
+      />
+
+      <div className="p-6 pt-7">
+        {/* Persona header */}
+        <div className="flex items-center gap-3 mb-5">
+          <div className="w-12 h-12 rounded-full bg-secondary/80 flex items-center justify-center text-xl flex-shrink-0">
+            {emoji}
+          </div>
+          <div>
+            <p className="text-base font-semibold text-foreground leading-snug">
+              {name}
+            </p>
+            <p className="text-sm text-muted-foreground">{tagline}</p>
+          </div>
         </div>
-        <div>
-          <p className="text-sm font-semibold text-foreground">{name}, {age}</p>
-          <p className="text-xs text-muted-foreground">{location}</p>
-        </div>
+
+        {/* Bullet points */}
+        <ul className="space-y-3">
+          {bullets.map((bullet) => (
+            <li key={bullet} className="flex items-start gap-2.5">
+              <Check
+                size={16}
+                className={`mt-0.5 flex-shrink-0 ${accentColor}`}
+              />
+              <span className="text-sm text-muted-foreground leading-relaxed">
+                {bullet}
+              </span>
+            </li>
+          ))}
+        </ul>
       </div>
     </div>
   );
