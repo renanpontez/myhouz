@@ -227,6 +227,7 @@ export type Database = {
           assigned_to: string | null
           created_at: string
           household_id: string
+          icon: string | null
           id: string
           link: string | null
           name: string
@@ -245,6 +246,7 @@ export type Database = {
           assigned_to?: string | null
           created_at?: string
           household_id: string
+          icon?: string | null
           id?: string
           link?: string | null
           name: string
@@ -263,6 +265,7 @@ export type Database = {
           assigned_to?: string | null
           created_at?: string
           household_id?: string
+          icon?: string | null
           id?: string
           link?: string | null
           name?: string
@@ -544,6 +547,7 @@ export type Database = {
           created_by: string
           due_at: string
           household_id: string
+          icon: string | null
           id: string
           is_completed: boolean
           title: string
@@ -557,6 +561,7 @@ export type Database = {
           created_by: string
           due_at: string
           household_id: string
+          icon?: string | null
           id?: string
           is_completed?: boolean
           title: string
@@ -570,6 +575,7 @@ export type Database = {
           created_by?: string
           due_at?: string
           household_id?: string
+          icon?: string | null
           id?: string
           is_completed?: boolean
           title?: string

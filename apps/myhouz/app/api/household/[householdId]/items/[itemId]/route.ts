@@ -10,7 +10,7 @@ export const GET = withHouseholdAuth(
     const { data: item, error } = await supabase
       .from("household_item")
       .select(
-        "id, name, type, priority, status, assigned_to, notes, price, photos, link, tags, added_by, created_at, resolved_at, updated_at",
+        "id, name, type, priority, status, assigned_to, notes, price, photos, link, tags, icon, added_by, created_at, resolved_at, updated_at",
       )
       .eq("id", itemId)
       .eq("household_id", household.id)
@@ -47,6 +47,7 @@ export const PATCH = withHouseholdAuth(
       updateData.photos = result.data.photos;
     if (result.data.link !== undefined) updateData.link = result.data.link;
     if (result.data.tags !== undefined) updateData.tags = result.data.tags;
+    if (result.data.icon !== undefined) updateData.icon = result.data.icon;
 
     const { data: item, error } = await supabase
       .from("household_item")

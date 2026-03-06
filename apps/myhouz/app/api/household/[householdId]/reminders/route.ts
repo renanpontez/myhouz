@@ -8,11 +8,12 @@ export const GET = withHouseholdAuth(
   async (request, { household, supabase }) => {
     const { searchParams } = new URL(request.url);
     const completed = searchParams.get("completed");
+    const search = searchParams.get("search");
 
     let query = supabase
       .from("reminder")
       .select(
-        "id, title, due_at, assigned_to, created_by, is_completed, completed_at, completed_by, created_at",
+        "id, title, due_at, assigned_to, created_by, is_completed, completed_at, completed_by, icon, created_at",
       )
       .eq("household_id", household.id)
       .order("due_at", { ascending: true });
@@ -21,6 +22,9 @@ export const GET = withHouseholdAuth(
       query = query.eq("is_completed", true);
     } else if (completed === "false") {
       query = query.eq("is_completed", false);
+    }
+    if (search) {
+      query = query.ilike("title", `%${search}%`);
     }
 
     const { data: reminders, error } = await query;
@@ -55,6 +59,7 @@ export const POST = withHouseholdAuth(
         title: result.data.title,
         due_at: result.data.due_at,
         assigned_to: result.data.assigned_to ?? null,
+        icon: result.data.icon ?? null,
         created_by: profile?.id ?? user.id,
       })
       .select()

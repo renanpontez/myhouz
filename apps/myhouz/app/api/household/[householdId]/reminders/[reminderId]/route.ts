@@ -10,7 +10,7 @@ export const GET = withHouseholdAuth(
     const { data: reminder, error } = await supabase
       .from("reminder")
       .select(
-        "id, title, due_at, assigned_to, created_by, is_completed, completed_at, completed_by, created_at, updated_at",
+        "id, title, due_at, assigned_to, created_by, is_completed, completed_at, completed_by, icon, created_at, updated_at",
       )
       .eq("id", reminderId)
       .eq("household_id", household.id)
@@ -40,6 +40,7 @@ export const PATCH = withHouseholdAuth(
     if (result.data.due_at !== undefined) updateData.due_at = result.data.due_at;
     if (result.data.assigned_to !== undefined)
       updateData.assigned_to = result.data.assigned_to;
+    if (result.data.icon !== undefined) updateData.icon = result.data.icon;
 
     const { data: reminder, error } = await supabase
       .from("reminder")

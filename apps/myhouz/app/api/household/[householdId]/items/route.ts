@@ -14,11 +14,12 @@ export const GET = withHouseholdAuth(
     const status = searchParams.get("status");
     const type = searchParams.get("type");
     const tag = searchParams.get("tag");
+    const search = searchParams.get("search");
 
     let query = supabase
       .from("household_item")
       .select(
-        "id, name, type, priority, status, assigned_to, notes, price, photos, link, tags, added_by, created_at, resolved_at",
+        "id, name, type, priority, status, assigned_to, notes, price, photos, link, tags, icon, added_by, created_at, resolved_at",
       )
       .eq("household_id", household.id)
       .order("created_at", { ascending: false });
@@ -31,6 +32,9 @@ export const GET = withHouseholdAuth(
     }
     if (tag) {
       query = query.contains("tags", [tag]);
+    }
+    if (search) {
+      query = query.ilike("name", `%${search}%`);
     }
 
     const { data: items, error } = await query;
@@ -71,6 +75,7 @@ export const POST = withHouseholdAuth(
         photos: result.data.photos ?? [],
         link: result.data.link || null,
         tags: result.data.tags ?? [],
+        icon: result.data.icon ?? null,
         added_by: profile?.id ?? user.id,
       })
       .select()

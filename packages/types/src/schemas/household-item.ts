@@ -18,6 +18,7 @@ export const createItemSchema = (t: (key: string) => string) =>
       .array(z.string().max(50, t("tagMax")))
       .max(10, t("tagsMax"))
       .optional(),
+    icon: z.string().max(50).nullable().optional(),
   });
 
 export const createUpdateItemSchema = (t: (key: string) => string) =>
@@ -36,6 +37,7 @@ export const createUpdateItemSchema = (t: (key: string) => string) =>
       .max(10, t("tagsMax"))
       .nullable()
       .optional(),
+    icon: z.string().max(50).nullable().optional(),
   });
 
 export type CreateItemInput = z.infer<ReturnType<typeof createItemSchema>>;

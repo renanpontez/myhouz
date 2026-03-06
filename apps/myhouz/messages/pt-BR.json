@@ -654,5 +654,67 @@
       "routine2": "Diário: regar plantas",
       "routineDone": "Feito"
     }
+  },
+  "legal": {
+    "backHome": "Voltar ao início",
+    "privacyTitle": "Política de Privacidade",
+    "effectiveDate": "Em vigor desde {date}",
+
+    "p1Title": "1. Introdução",
+    "p1Body": "myhouz (\"nós\", \"nosso\") tem o compromisso de proteger sua privacidade. Esta Política de Privacidade explica como coletamos, usamos, divulgamos e protegemos suas informações quando você utiliza nossa plataforma de gestão doméstica, incluindo o site e o aplicativo móvel (coletivamente, o \"Serviço\"). Ao utilizar o Serviço, você concorda com a coleta e uso de informações de acordo com esta política.",
+
+    "p2Title": "2. Dados que Coletamos",
+    "p2Intro": "Coletamos informações nas seguintes categorias:",
+    "p2aTitle": "Informações da Conta",
+    "p2a1": "Nome, endereço de e-mail e foto de perfil (quando fornecida)",
+    "p2a2": "Dados de autenticação gerenciados pelo Supabase Auth",
+    "p2a3": "Informações de associação e função na residência",
+    "p2bTitle": "Dados de Uso",
+    "p2b1": "Itens, rotinas, lembretes e problemas urgentes que você cria",
+    "p2b2": "Conclusões de tarefas, sequências e histórico de atividades",
+    "p2b3": "Convites para a residência e interações entre membros",
+    "p2b4": "Informações do dispositivo (tipo de navegador, sistema operacional, tamanho da tela)",
+    "p2cTitle": "Dados Técnicos",
+    "p2c1": "Endereço IP e localização aproximada (apenas nível de país/região)",
+    "p2c2": "Cookies de autenticação e tokens de sessão necessários para acesso seguro",
+
+    "p3Title": "3. Como Usamos Seus Dados",
+    "p3a": "Fornecer, operar e manter o Serviço",
+    "p3b": "Gerenciar sua conta e associações de residência",
+    "p3c": "Enviar comunicações essenciais do serviço (redefinição de senha, convites)",
+    "p3d": "Melhorar e otimizar a plataforma com base em padrões de uso",
+    "p3e": "Prevenir fraudes, abusos e garantir a segurança do Serviço",
+
+    "p4Title": "4. Compartilhamento de Dados",
+    "p4Intro": "Não vendemos seus dados pessoais. Compartilhamos dados apenas com os seguintes serviços terceiros, estritamente para fins operacionais:",
+    "p4a": "Supabase — hospedagem de banco de dados, autenticação e aplicação de Row Level Security",
+    "p4b": "Sentry — monitoramento de erros e relatórios de falhas (apenas dados diagnósticos anonimizados)",
+    "p4c": "Autoridades legais — apenas quando exigido por lei ou para proteger nossos direitos legais",
+
+    "p5Title": "5. Retenção de Dados",
+    "p5Body": "Seus dados são mantidos enquanto sua conta estiver ativa. Quando você exclui sua conta, todos os dados pessoais são permanentemente removidos em até 30 dias. Dados de residência de propriedade exclusiva de uma conta excluída também são deletados. Dados anonimizados e agregados podem ser mantidos para fins analíticos.",
+
+    "p6Title": "6. Seus Direitos",
+    "p6Intro": "Você possui os seguintes direitos em relação aos seus dados pessoais:",
+    "p6a": "Acesso — solicitar uma cópia dos dados pessoais que mantemos sobre você",
+    "p6b": "Correção — solicitar que corrijamos dados imprecisos ou incompletos",
+    "p6c": "Exclusão — solicitar que excluamos seus dados pessoais e conta",
+    "p6d": "Exportação — solicitar uma exportação legível por máquina dos seus dados",
+    "p6e": "Revogar consentimento — cancelar o processamento não essencial de dados a qualquer momento",
+
+    "p7Title": "7. Segurança",
+    "p7Body": "Implementamos medidas de segurança padrão da indústria, incluindo criptografia em trânsito (TLS), criptografia em repouso e políticas de Row Level Security (RLS) no nível do banco de dados para garantir que os usuários só possam acessar dados dentro de sua própria residência. No entanto, nenhum método de transmissão ou armazenamento eletrônico é 100% seguro.",
+
+    "p8Title": "8. Privacidade de Crianças",
+    "p8Body": "O Serviço não é direcionado a crianças menores de 13 anos. Não coletamos conscientemente dados pessoais de crianças menores de 13 anos. Se você acredita que coletamos inadvertidamente tais dados, entre em contato conosco para que possamos excluí-los prontamente.",
+
+    "p9Title": "9. Conformidade com a LGPD (Brasil)",
+    "p9Body": "Se você está localizado no Brasil, você tem direito às garantias previstas na Lei Geral de Proteção de Dados (LGPD), incluindo o direito de acessar, corrigir, excluir e portar seus dados. Nosso processamento de dados é baseado no seu consentimento e no interesse legítimo de fornecer o Serviço. Você pode exercer seus direitos entrando em contato conosco pelo e-mail abaixo.",
+
+    "p10Title": "10. Alterações nesta Política",
+    "p10Body": "Podemos atualizar esta Política de Privacidade periodicamente. Notificaremos você sobre quaisquer alterações materiais publicando a nova política nesta página e atualizando a data de vigência. O uso continuado do Serviço após quaisquer alterações constitui aceitação da política atualizada.",
+
+    "p11Title": "11. Contato",
+    "p11Body": "Se você tiver dúvidas sobre esta Política de Privacidade, entre em contato conosco em"
   }
 }

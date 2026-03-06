@@ -654,5 +654,67 @@
       "routine2": "Daily: water plants",
       "routineDone": "Done"
     }
+  },
+  "legal": {
+    "backHome": "Back to home",
+    "privacyTitle": "Privacy Policy",
+    "effectiveDate": "Effective {date}",
+
+    "p1Title": "1. Introduction",
+    "p1Body": "myhouz (\"we\", \"our\", \"us\") is committed to protecting your privacy. This Privacy Policy explains how we collect, use, disclose, and safeguard your information when you use our household management platform, including the website and mobile application (collectively, the \"Service\"). By using the Service, you agree to the collection and use of information in accordance with this policy.",
+
+    "p2Title": "2. Data We Collect",
+    "p2Intro": "We collect information in the following categories:",
+    "p2aTitle": "Account Information",
+    "p2a1": "Name, email address, and profile photo (when provided)",
+    "p2a2": "Authentication data managed through Supabase Auth",
+    "p2a3": "Household membership and role information",
+    "p2bTitle": "Usage Data",
+    "p2b1": "Items, routines, reminders, and urgent problems you create",
+    "p2b2": "Task completions, streaks, and activity history",
+    "p2b3": "Household invitations and member interactions",
+    "p2b4": "Device information (browser type, operating system, screen size)",
+    "p2cTitle": "Technical Data",
+    "p2c1": "IP address and approximate location (country/region level only)",
+    "p2c2": "Authentication cookies and session tokens required for secure access",
+
+    "p3Title": "3. How We Use Your Data",
+    "p3a": "Provide, operate, and maintain the Service",
+    "p3b": "Manage your account and household memberships",
+    "p3c": "Send essential service communications (password resets, invitations)",
+    "p3d": "Improve and optimize the platform based on usage patterns",
+    "p3e": "Prevent fraud, abuse, and ensure the security of the Service",
+
+    "p4Title": "4. Data Sharing",
+    "p4Intro": "We do not sell your personal data. We share data only with the following third-party services, strictly for operational purposes:",
+    "p4a": "Supabase — database hosting, authentication, and Row Level Security enforcement",
+    "p4b": "Sentry — error monitoring and crash reporting (anonymized diagnostic data only)",
+    "p4c": "Legal authorities — only when required by law or to protect our legal rights",
+
+    "p5Title": "5. Data Retention",
+    "p5Body": "Your data is retained as long as your account is active. When you delete your account, all personal data is permanently removed within 30 days. Household data owned solely by a deleted account is also deleted. Anonymized, aggregated data may be retained for analytics purposes.",
+
+    "p6Title": "6. Your Rights",
+    "p6Intro": "You have the following rights regarding your personal data:",
+    "p6a": "Access — request a copy of the personal data we hold about you",
+    "p6b": "Correction — request that we correct inaccurate or incomplete data",
+    "p6c": "Deletion — request that we delete your personal data and account",
+    "p6d": "Export — request a machine-readable export of your data",
+    "p6e": "Withdraw consent — opt out of non-essential data processing at any time",
+
+    "p7Title": "7. Security",
+    "p7Body": "We implement industry-standard security measures including encryption in transit (TLS), encryption at rest, and Row Level Security (RLS) policies at the database level to ensure that users can only access data within their own household. However, no method of electronic transmission or storage is 100% secure.",
+
+    "p8Title": "8. Children's Privacy",
+    "p8Body": "The Service is not directed to children under the age of 13. We do not knowingly collect personal data from children under 13. If you believe we have inadvertently collected such data, please contact us so we can promptly delete it.",
+
+    "p9Title": "9. LGPD Compliance (Brazil)",
+    "p9Body": "If you are located in Brazil, you are entitled to the rights provided under the Lei Geral de Proteção de Dados (LGPD), including the right to access, correct, delete, and port your data. Our data processing is based on your consent and the legitimate interest of providing the Service. You may exercise your rights by contacting us at the email below.",
+
+    "p10Title": "10. Changes to This Policy",
+    "p10Body": "We may update this Privacy Policy from time to time. We will notify you of any material changes by posting the new policy on this page and updating the effective date. Your continued use of the Service after any changes constitutes acceptance of the updated policy.",
+
+    "p11Title": "11. Contact",
+    "p11Body": "If you have any questions about this Privacy Policy, please contact us at"
   }
 }
