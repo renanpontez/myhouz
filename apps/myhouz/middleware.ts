@@ -3,7 +3,7 @@ import { createServerClient } from "@supabase/ssr";
 import type { CookieOptions } from "@supabase/ssr";
 import { handlePreflight, setCorsHeaders } from "@/lib/cors";
 
-const PUBLIC_ROUTE_PREFIXES = ["/login", "/signup", "/invite", "/auth/callback"];
+const PUBLIC_ROUTE_PREFIXES = ["/login", "/signup", "/invite", "/auth/callback", "/privacy", "/terms"];
 
 function isPublicRoute(pathname: string): boolean {
   if (pathname === "/") return true;

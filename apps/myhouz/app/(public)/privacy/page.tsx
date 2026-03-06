@@ -3,8 +3,8 @@ import Link from "next/link";
 import { getTranslations } from "next-intl/server";
 
 export const metadata: Metadata = {
-  title: "Privacy Policy | myhouz",
-  description: "myhouz Privacy Policy — how we collect, use, and protect your data.",
+  title: "Privacy Policy & Terms of Use | myhouz",
+  description: "myhouz Privacy Policy & Terms of Use — how we collect, use, and protect your data.",
 };
 
 export default async function PrivacyPage() {
@@ -20,21 +20,75 @@ export default async function PrivacyPage() {
           &larr; {t("backHome")}
         </Link>
 
-        <h1 className="text-3xl font-bold tracking-tight mb-2">{t("privacyTitle")}</h1>
+        <h1 className="text-3xl font-bold tracking-tight mb-2">{t("pageTitle")}</h1>
         <p className="text-sm text-muted-foreground mb-12">
           {t("effectiveDate", { date: "March 5, 2026" })}
         </p>
 
+        {/* ── Terms of Use ── */}
+        <div className="prose prose-neutral dark:prose-invert max-w-none space-y-8 mb-16">
+          <h2 className="text-2xl font-bold tracking-tight">{t("termsHeading")}</h2>
+
+          <section>
+            <h3 className="text-xl font-semibold mb-3">{t("t1Title")}</h3>
+            <p className="text-muted-foreground leading-relaxed">{t("t1Body")}</p>
+          </section>
+
+          <section>
+            <h3 className="text-xl font-semibold mb-3">{t("t2Title")}</h3>
+            <ul className="list-disc pl-6 space-y-1 text-muted-foreground">
+              <li>{t("t2a")}</li>
+              <li>{t("t2b")}</li>
+              <li>{t("t2c")}</li>
+            </ul>
+          </section>
+
+          <section>
+            <h3 className="text-xl font-semibold mb-3">{t("t3Title")}</h3>
+            <p className="text-muted-foreground leading-relaxed">{t("t3Body")}</p>
+          </section>
+
+          <section>
+            <h3 className="text-xl font-semibold mb-3">{t("t4Title")}</h3>
+            <ul className="list-disc pl-6 space-y-1 text-muted-foreground">
+              <li>{t("t4a")}</li>
+              <li>{t("t4b")}</li>
+              <li>{t("t4c")}</li>
+              <li>{t("t4d")}</li>
+              <li>{t("t4e")}</li>
+              <li>{t("t4f")}</li>
+            </ul>
+          </section>
+
+          <section>
+            <h3 className="text-xl font-semibold mb-3">{t("t5Title")}</h3>
+            <p className="text-muted-foreground leading-relaxed">{t("t5Body")}</p>
+          </section>
+
+          <section>
+            <h3 className="text-xl font-semibold mb-3">{t("t6Title")}</h3>
+            <p className="text-muted-foreground leading-relaxed">{t("t6Body")}</p>
+          </section>
+
+          <section>
+            <h3 className="text-xl font-semibold mb-3">{t("t7Title")}</h3>
+            <p className="text-muted-foreground leading-relaxed">{t("t7Body")}</p>
+          </section>
+        </div>
+
+        {/* ── Privacy Policy ── */}
         <div className="prose prose-neutral dark:prose-invert max-w-none space-y-8">
+          <h2 className="text-2xl font-bold tracking-tight">{t("privacyHeading")}</h2>
+
           {/* 1. Introduction */}
           <section>
-            <h2 className="text-xl font-semibold mb-3">{t("p1Title")}</h2>
+            <h3 className="text-xl font-semibold mb-3">{t("p1Title")}</h3>
             <p className="text-muted-foreground leading-relaxed">{t("p1Body")}</p>
           </section>
 
           {/* 2. Data We Collect */}
           <section>
-            <h2 className="text-xl font-semibold mb-3">{t("p2Title")}</h2>
+            <h3 className="text-xl font-semibold mb-3">{t("p2Title")}</h3>
             <p className="text-muted-foreground leading-relaxed mb-4">{t("p2Intro")}</p>
 
             <h3 className="text-base font-medium mb-2">{t("p2aTitle")}</h3>
@@ -61,7 +115,7 @@ export default async function PrivacyPage() {
 
           {/* 3. How We Use Your Data */}
           <section>
-            <h2 className="text-xl font-semibold mb-3">{t("p3Title")}</h2>
+            <h3 className="text-xl font-semibold mb-3">{t("p3Title")}</h3>
             <ul className="list-disc pl-6 space-y-1 text-muted-foreground">
               <li>{t("p3a")}</li>
               <li>{t("p3b")}</li>
@@ -73,7 +127,7 @@ export default async function PrivacyPage() {
 
           {/* 4. Data Sharing */}
           <section>
-            <h2 className="text-xl font-semibold mb-3">{t("p4Title")}</h2>
+            <h3 className="text-xl font-semibold mb-3">{t("p4Title")}</h3>
             <p className="text-muted-foreground leading-relaxed mb-4">{t("p4Intro")}</p>
             <ul className="list-disc pl-6 space-y-1 text-muted-foreground">
               <li>{t("p4a")}</li>
@@ -84,13 +138,13 @@ export default async function PrivacyPage() {
 
           {/* 5. Data Retention */}
           <section>
-            <h2 className="text-xl font-semibold mb-3">{t("p5Title")}</h2>
+            <h3 className="text-xl font-semibold mb-3">{t("p5Title")}</h3>
             <p className="text-muted-foreground leading-relaxed">{t("p5Body")}</p>
           </section>
 
           {/* 6. Your Rights */}
           <section>
-            <h2 className="text-xl font-semibold mb-3">{t("p6Title")}</h2>
+            <h3 className="text-xl font-semibold mb-3">{t("p6Title")}</h3>
             <p className="text-muted-foreground leading-relaxed mb-4">{t("p6Intro")}</p>
             <ul className="list-disc pl-6 space-y-1 text-muted-foreground">
               <li>{t("p6a")}</li>
@@ -103,31 +157,31 @@ export default async function PrivacyPage() {
 
           {/* 7. Security */}
           <section>
-            <h2 className="text-xl font-semibold mb-3">{t("p7Title")}</h2>
+            <h3 className="text-xl font-semibold mb-3">{t("p7Title")}</h3>
             <p className="text-muted-foreground leading-relaxed">{t("p7Body")}</p>
           </section>
 
           {/* 8. Children */}
           <section>
-            <h2 className="text-xl font-semibold mb-3">{t("p8Title")}</h2>
+            <h3 className="text-xl font-semibold mb-3">{t("p8Title")}</h3>
             <p className="text-muted-foreground leading-relaxed">{t("p8Body")}</p>
           </section>
 
           {/* 9. LGPD */}
           <section>
-            <h2 className="text-xl font-semibold mb-3">{t("p9Title")}</h2>
+            <h3 className="text-xl font-semibold mb-3">{t("p9Title")}</h3>
             <p className="text-muted-foreground leading-relaxed">{t("p9Body")}</p>
           </section>
 
           {/* 10. Changes */}
           <section>
-            <h2 className="text-xl font-semibold mb-3">{t("p10Title")}</h2>
+            <h3 className="text-xl font-semibold mb-3">{t("p10Title")}</h3>
             <p className="text-muted-foreground leading-relaxed">{t("p10Body")}</p>
           </section>
 
           {/* 11. Contact */}
           <section>
-            <h2 className="text-xl font-semibold mb-3">{t("p11Title")}</h2>
+            <h3 className="text-xl font-semibold mb-3">{t("p11Title")}</h3>
             <p className="text-muted-foreground leading-relaxed">
               {t("p11Body")}{" "}
               <a href="mailto:hello@myhouz.app" className="text-primary hover:underline">
