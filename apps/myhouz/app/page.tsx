@@ -65,8 +65,8 @@ export default async function LandingPage() {
         <Hero t={t} />
         <Problems t={t} />
         <Features t={t} />
-        <HowItWorks t={t} />
         <SocialProof t={t} />
+        <HowItWorks t={t} />
         <Pricing t={t} />
         <Team t={t} />
         <FinalCta t={t} />
