@@ -10,9 +10,8 @@ import {
 } from "@/lib/cycle";
 import { isToday as isDateToday, isFuture } from "date-fns";
 import { Check, ListChecks } from "lucide-react";
-import { DynamicIcon, type IconName } from "lucide-react/dynamic";
 import { cn } from "@home/ui";
-import { getTaskIcon } from "@/lib/task-icons";
+import { isEmoji } from "@/lib/is-emoji";
 import type { RecurrenceMeta } from "@home/types";
 
 interface CalendarTaskRowProps {
@@ -66,16 +65,11 @@ export function CalendarTaskRow({
     >
       {/* Task icon */}
       <div className="flex items-center justify-center">
-        {(() => {
-          const TaskIcon = getTaskIcon(task.icon);
-          if (TaskIcon) {
-            return <TaskIcon className="h-4 w-4 text-primary" />;
-          }
-          if (task.icon) {
-            return <DynamicIcon name={task.icon as IconName} className="h-4 w-4 text-primary" />;
-          }
-          return <ListChecks className="h-4 w-4 text-muted-foreground" />;
-        })()}
+        {isEmoji(task.icon) ? (
+          <span className="text-base leading-none">{task.icon}</span>
+        ) : (
+          <ListChecks className="h-4 w-4 text-muted-foreground" />
+        )}
       </div>
 
       {/* 7 day dots */}

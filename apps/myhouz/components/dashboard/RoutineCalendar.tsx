@@ -25,7 +25,6 @@ import {
   List,
   LayoutGrid,
 } from "lucide-react";
-import { DynamicIcon, type IconName } from "lucide-react/dynamic";
 import { cn } from "@home/ui";
 import Link from "next/link";
 import {
@@ -33,7 +32,7 @@ import {
   isCompletedThisCycle,
   hasCompletionOnDate,
 } from "@/lib/cycle";
-import { getTaskIcon } from "@/lib/task-icons";
+import { isEmoji } from "@/lib/is-emoji";
 import { toggleTask } from "@/actions/routines";
 import { toast } from "sonner";
 import { useHousehold, useUser } from "@home/auth/hooks";
@@ -149,8 +148,6 @@ function TimelineTaskRow({
     });
   }
 
-  const TaskIcon = getTaskIcon(task.icon);
-
   return (
     <div
       className={cn(
@@ -189,13 +186,8 @@ function TimelineTaskRow({
       >
         {/* Task icon */}
         <div className="flex h-9 w-9 shrink-0 items-center justify-center rounded-lg">
-          {TaskIcon ? (
-            <TaskIcon className="h-4 w-4 text-primary" />
-          ) : task.icon ? (
-            <DynamicIcon
-              name={task.icon as IconName}
-              className="h-4 w-4 text-primary"
-            />
+          {isEmoji(task.icon) ? (
+            <span className="text-base leading-none">{task.icon}</span>
           ) : (
             <ListChecks className="h-4 w-4 text-primary" />
           )}
@@ -365,8 +357,6 @@ function WeeklyMatrixView({
       {/* Task rows */}
       {weekActiveTasks.map((task) => {
         const meta = task.recurrence_meta as RecurrenceMeta | undefined;
-        const TaskIcon = getTaskIcon(task.icon);
-
         const isMine = !task.assigned_to || task.assigned_to === user.id;
 
         return (
@@ -379,13 +369,8 @@ function WeeklyMatrixView({
           >
             {/* Task icon */}
             <div className="flex h-9 w-9 items-center justify-center rounded-lg">
-              {TaskIcon ? (
-                <TaskIcon className="h-4 w-4 text-primary" />
-              ) : task.icon ? (
-                <DynamicIcon
-                  name={task.icon as IconName}
-                  className="h-4 w-4 text-primary"
-                />
+              {isEmoji(task.icon) ? (
+                <span className="text-base leading-none">{task.icon}</span>
               ) : (
                 <ListChecks className="h-4 w-4 text-primary" />
               )}

@@ -8,10 +8,9 @@ import { cn } from "@home/ui";
 import { toggleTask } from "@/actions/routines";
 import { toast } from "sonner";
 import { formatDistanceToNow } from "date-fns";
-import { Check, ChevronRight, User, Flame } from "lucide-react";
-import { DynamicIcon, type IconName } from "lucide-react/dynamic";
+import { Check, ChevronRight, ListChecks, Flame } from "lucide-react";
 import { RecurrenceBadgeClient } from "./RecurrenceBadgeClient";
-import { getTaskIcon } from "@/lib/task-icons";
+import { isEmoji } from "@/lib/is-emoji";
 import type { RecurrenceMeta } from "@home/types";
 
 interface TaskRowProps {
@@ -64,17 +63,11 @@ export function TaskRow({
         ? "text-orange-600 dark:text-orange-400"
         : "text-amber-600 dark:text-amber-400";
 
+  const emoji = isEmoji(task.icon) ? task.icon : null;
+
   function renderTaskIcon() {
-    const StaticIcon = getTaskIcon(task.icon ?? null);
-    if (StaticIcon) return <StaticIcon className="h-5 w-5 text-primary" />;
-    if (task.icon)
-      return (
-        <DynamicIcon
-          name={task.icon as IconName}
-          className="h-5 w-5 text-primary"
-        />
-      );
-    return <User className="h-5 w-5 text-primary" />;
+    if (emoji) return <span className="text-lg leading-none">{emoji}</span>;
+    return <ListChecks className="h-5 w-5 text-primary" />;
   }
 
   return (
