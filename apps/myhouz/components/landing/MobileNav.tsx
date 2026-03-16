@@ -5,6 +5,9 @@ import Link from "next/link";
 import { X, Menu } from "lucide-react";
 import { Button } from "@home/ui";
 import { useTranslations } from "next-intl";
+import { LocaleSwitcher } from "@/components/landing/LocaleSwitcher";
+
+const APP_STORE_URL = "https://apps.apple.com/br/app/myhouz/id6760033780";
 
 export function MobileNav() {
   const [open, setOpen] = useState(false);
@@ -46,16 +49,31 @@ export function MobileNav() {
             >
               {t("pricing")}
             </Link>
-            <div className="pt-2 border-t border-border/40 mt-1">
+            <Link
+              href="#faq"
+              onClick={() => setOpen(false)}
+              className="px-3 py-2.5 text-sm font-medium text-foreground hover:text-primary hover:bg-muted rounded-full transition-colors"
+            >
+              {t("faq")}
+            </Link>
+            <div className="pt-2 border-t border-border/40 mt-1 space-y-3">
               <Button
                 asChild
                 className="w-full rounded-full bg-foreground text-background hover:bg-foreground/90 font-medium"
                 size="default"
               >
-                <Link href="/signup" onClick={() => setOpen(false)}>
-                  {t("getStarted")}
-                </Link>
+                <a
+                  href={APP_STORE_URL}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  onClick={() => setOpen(false)}
+                >
+                  {t("downloadApp")}
+                </a>
               </Button>
+              <div className="flex justify-center pt-1">
+                <LocaleSwitcher />
+              </div>
             </div>
           </nav>
         </div>

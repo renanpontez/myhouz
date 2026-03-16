@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import Link from "next/link";
 import { getTranslations } from "next-intl/server";
+import { LocaleSwitcher } from "@/components/landing/LocaleSwitcher";
 
 export const metadata: Metadata = {
   title: "Privacy Policy and Terms of Use | myhouz",
@@ -13,12 +14,15 @@ export default async function PrivacyPage() {
   return (
     <main className="min-h-screen bg-background">
       <div className="mx-auto max-w-3xl px-6 py-16 md:py-24">
-        <Link
-          href="/"
-          className="mb-8 inline-flex items-center gap-1.5 text-sm text-muted-foreground hover:text-foreground transition-colors"
-        >
-          &larr; {t("backHome")}
-        </Link>
+        <div className="mb-8 flex items-center justify-between">
+          <Link
+            href="/"
+            className="inline-flex items-center gap-1.5 text-sm text-muted-foreground hover:text-foreground transition-colors"
+          >
+            &larr; {t("backHome")}
+          </Link>
+          <LocaleSwitcher />
+        </div>
 
         <h1 className="text-3xl font-bold tracking-tight mb-2">{t("pageTitle")}</h1>
         <p className="text-sm text-muted-foreground mb-12">
