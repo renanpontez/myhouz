@@ -7,6 +7,7 @@ import { getUserWithRole } from "@home/auth";
 import {
   createUrgentProblemSchema,
   createUpdateUrgentProblemSchema,
+  type TablesUpdate,
 } from "@home/types";
 import { getTranslations } from "next-intl/server";
 import { notifyHouseholdMembers } from "@/lib/notifications";
@@ -94,7 +95,7 @@ export async function updateUrgentProblem(
 
   const supabase = createServerClient();
 
-  const updateData: Record<string, unknown> = {};
+  const updateData: TablesUpdate<"urgent_problem"> = {};
   if (parsed.data.title !== undefined) updateData.title = parsed.data.title;
   if (parsed.data.description !== undefined)
     updateData.description = parsed.data.description;

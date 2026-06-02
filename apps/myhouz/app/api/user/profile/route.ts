@@ -1,7 +1,7 @@
 import { NextResponse } from "next/server";
 import { withAuth } from "@/lib/api-middleware";
 import { parseJsonBody, apiTranslator } from "@/lib/api-helpers";
-import { createUpdateProfileSchema } from "@home/types";
+import { createUpdateProfileSchema, type TablesUpdate } from "@home/types";
 import { createAdminClient } from "@home/db";
 
 export const GET = withAuth(async (_request, { user, supabase }) => {
@@ -26,7 +26,7 @@ export const PATCH = withAuth(async (request, { user, supabase }) => {
   const result = await parseJsonBody(request, schema);
   if (result.error) return result.error;
 
-  const updateData: Record<string, unknown> = {};
+  const updateData: TablesUpdate<"profile"> = {};
   if (result.data.name !== undefined) updateData.name = result.data.name;
   if (result.data.avatar_url !== undefined) updateData.avatar_url = result.data.avatar_url;
 

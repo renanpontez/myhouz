@@ -4,7 +4,7 @@ import { redirect } from "next/navigation";
 import { revalidatePath } from "next/cache";
 import { createServerClient } from "@home/db";
 import { getUserWithRole } from "@home/auth";
-import { createReminderSchema, createUpdateReminderSchema } from "@home/types";
+import { createReminderSchema, createUpdateReminderSchema, type TablesUpdate } from "@home/types";
 import { getTranslations } from "next-intl/server";
 
 export async function createReminder(
@@ -80,7 +80,7 @@ export async function updateReminder(
 
   const supabase = createServerClient();
 
-  const updateData: Record<string, unknown> = {};
+  const updateData: TablesUpdate<"reminder"> = {};
   if (parsed.data.title !== undefined) updateData.title = parsed.data.title;
   if (parsed.data.due_at !== undefined) updateData.due_at = parsed.data.due_at;
   if (parsed.data.assigned_to !== undefined)
