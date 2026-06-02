@@ -1,7 +1,7 @@
 import { NextResponse } from "next/server";
 import { withHouseholdAuth } from "@/lib/api-middleware";
 import { parseJsonBody, apiTranslator } from "@/lib/api-helpers";
-import { createUpdateUrgentProblemSchema } from "@home/types";
+import { createUpdateUrgentProblemSchema, type TablesUpdate } from "@home/types";
 import { notifyHouseholdMembers } from "@/lib/notifications";
 
 export const GET = withHouseholdAuth(
@@ -88,7 +88,7 @@ export const PATCH = withHouseholdAuth(
     const result = await parseJsonBody(request, schema);
     if (result.error) return result.error;
 
-    const updateData: Record<string, unknown> = {};
+    const updateData: TablesUpdate<"urgent_problem"> = {};
     if (result.data.title !== undefined) updateData.title = result.data.title;
     if (result.data.description !== undefined)
       updateData.description = result.data.description;

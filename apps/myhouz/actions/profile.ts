@@ -3,7 +3,7 @@
 import { revalidatePath } from "next/cache";
 import { createServerClient } from "@home/db";
 import { getUser } from "@home/auth";
-import { createUpdateProfileSchema } from "@home/types";
+import { createUpdateProfileSchema, type TablesUpdate } from "@home/types";
 import { getTranslations } from "next-intl/server";
 
 export async function updateProfile(
@@ -31,7 +31,7 @@ export async function updateProfile(
 
   const supabase = createServerClient();
 
-  const updateData: Record<string, unknown> = {};
+  const updateData: TablesUpdate<"profile"> = {};
   if (parsed.data.name !== undefined) updateData.name = parsed.data.name;
   if (parsed.data.avatar_url !== undefined)
     updateData.avatar_url = parsed.data.avatar_url;

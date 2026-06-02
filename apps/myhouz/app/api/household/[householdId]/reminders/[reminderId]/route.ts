@@ -1,7 +1,7 @@
 import { NextResponse } from "next/server";
 import { withHouseholdAuth } from "@/lib/api-middleware";
 import { parseJsonBody, apiTranslator } from "@/lib/api-helpers";
-import { createUpdateReminderSchema } from "@home/types";
+import { createUpdateReminderSchema, type TablesUpdate } from "@home/types";
 
 export const GET = withHouseholdAuth(
   async (_request, { household, supabase }, params) => {
@@ -35,7 +35,7 @@ export const PATCH = withHouseholdAuth(
     const result = await parseJsonBody(request, schema);
     if (result.error) return result.error;
 
-    const updateData: Record<string, unknown> = {};
+    const updateData: TablesUpdate<"reminder"> = {};
     if (result.data.title !== undefined) updateData.title = result.data.title;
     if (result.data.due_at !== undefined) updateData.due_at = result.data.due_at;
     if (result.data.assigned_to !== undefined)

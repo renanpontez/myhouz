@@ -1,7 +1,7 @@
 import { NextResponse } from "next/server";
 import { withHouseholdAuth } from "@/lib/api-middleware";
 import { parseJsonBody, apiTranslator } from "@/lib/api-helpers";
-import { createUpdateItemSchema } from "@home/types";
+import { createUpdateItemSchema, type TablesUpdate } from "@home/types";
 
 export const GET = withHouseholdAuth(
   async (_request, { household, supabase }, params) => {
@@ -32,7 +32,7 @@ export const PATCH = withHouseholdAuth(
     const result = await parseJsonBody(request, schema);
     if (result.error) return result.error;
 
-    const updateData: Record<string, unknown> = {};
+    const updateData: TablesUpdate<"household_item"> = {};
     if (result.data.name !== undefined) updateData.name = result.data.name;
     if (result.data.type !== undefined) updateData.type = result.data.type;
     if (result.data.priority !== undefined)

@@ -4,7 +4,7 @@ import { redirect } from "next/navigation";
 import { revalidatePath } from "next/cache";
 import { createServerClient } from "@home/db";
 import { getUserWithRole } from "@home/auth";
-import { createItemSchema, createUpdateItemSchema, itemStatusSchema } from "@home/types";
+import { createItemSchema, createUpdateItemSchema, itemStatusSchema, type TablesUpdate } from "@home/types";
 import { getTranslations } from "next-intl/server";
 
 function parseJsonField<T>(raw: string | null): T | undefined {
@@ -130,7 +130,7 @@ export async function updateItem(
 
   const supabase = createServerClient();
 
-  const updateData: Record<string, unknown> = {};
+  const updateData: TablesUpdate<"household_item"> = {};
   if (parsed.data.name !== undefined) updateData.name = parsed.data.name;
   if (parsed.data.type !== undefined) updateData.type = parsed.data.type;
   if (parsed.data.priority !== undefined)

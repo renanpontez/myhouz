@@ -4,7 +4,7 @@ import { redirect } from "next/navigation";
 import { revalidatePath } from "next/cache";
 import { createServerClient } from "@home/db";
 import { getUserWithRole } from "@home/auth";
-import { createTaskSchema, createUpdateTaskSchema } from "@home/types";
+import { createTaskSchema, createUpdateTaskSchema, type TablesUpdate } from "@home/types";
 import { getTranslations } from "next-intl/server";
 import { getCycleStart } from "@/lib/cycle";
 import { startOfDay, endOfDay, isSameDay } from "date-fns";
@@ -116,7 +116,7 @@ export async function updateTask(
 
   const supabase = createServerClient();
 
-  const updateData: Record<string, unknown> = {};
+  const updateData: TablesUpdate<"routine_task"> = {};
   if (parsed.data.title) updateData.title = parsed.data.title;
   if (parsed.data.recurrence) updateData.recurrence = parsed.data.recurrence;
   if (parsed.data.is_active !== undefined)
